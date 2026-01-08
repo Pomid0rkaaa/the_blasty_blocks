@@ -212,31 +212,10 @@ export const SHAPES = [
             [0, 1, 0],
         ],
     },
-    {
-        name: "Cross7",
-        color: "bg-green-500",
-        layout: [
-            [0, 1, 0],
-            [1, 1, 1],
-            [0, 1, 0],
-            [0, 1, 0],
-        ],
-    },
-    {
-        name: "BigPlus",
-        color: "bg-teal-400",
-        layout: [
-            [0, 0, 1, 0, 0],
-            [0, 0, 1, 0, 0],
-            [1, 1, 1, 1, 1],
-            [0, 0, 1, 0, 0],
-            [0, 0, 1, 0, 0],
-        ],
-    },
 
     // U
     {
-        name: "U",
+        name: "U0",
         color: "bg-amber-500",
         layout: [
             [1, 0, 1],
@@ -244,7 +223,7 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Ub",
+        name: "U1",
         color: "bg-amber-500",
         layout: [
             [1, 1],
@@ -253,7 +232,7 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Uc",
+        name: "U2",
         color: "bg-amber-500",
         layout: [
             [1, 1, 1],
@@ -261,7 +240,7 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Ud",
+        name: "U3",
         color: "bg-amber-500",
         layout: [
             [1, 1],
@@ -307,42 +286,6 @@ export const SHAPES = [
         ],
     },
 
-    // Hook
-    {
-        name: "Hook0",
-        color: "bg-red-500",
-        layout: [
-            [1, 1, 1],
-            [1, 0, 0],
-        ],
-    },
-    {
-        name: "Hook1",
-        color: "bg-red-500",
-        layout: [
-            [1, 1],
-            [0, 1],
-            [0, 1],
-        ],
-    },
-    {
-        name: "Hook2",
-        color: "bg-red-500",
-        layout: [
-            [0, 0, 1],
-            [1, 1, 1],
-        ],
-    },
-    {
-        name: "Hook3",
-        color: "bg-red-500",
-        layout: [
-            [1, 0],
-            [1, 0],
-            [1, 1],
-        ],
-    },
-
     // Diagonals & Stairs
     {
         name: "Stair",
@@ -380,26 +323,6 @@ export const SHAPES = [
             [1, 0, 0],
         ],
     },
-    {
-        name: "Diag4",
-        color: "bg-sky-500",
-        layout: [
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1],
-        ],
-    },
-    {
-        name: "ZigZag",
-        color: "bg-pink-400",
-        layout: [
-            [1, 0, 0],
-            [0, 1, 0],
-            [0, 0, 1],
-            [0, 0, 0],
-        ],
-    },
 
     // Complex / Unique
     {
@@ -409,16 +332,6 @@ export const SHAPES = [
             [1, 1, 1],
             [1, 0, 1],
             [1, 1, 1],
-        ],
-    },
-    {
-        name: "SquareDonut",
-        color: "bg-fuchsia-400",
-        layout: [
-            [1, 1, 1, 1],
-            [1, 0, 0, 1],
-            [1, 0, 0, 1],
-            [1, 1, 1, 1],
         ],
     },
     {
@@ -460,53 +373,6 @@ export const SHAPES = [
         color: "bg-pink-500",
         layout: [
             [0, 1, 1],
-            [1, 1, 0],
-            [1, 0, 0],
-        ],
-    },
-
-    // New / Fixed Colors
-    {
-        name: "W",
-        color: "bg-orange-400",
-        layout: [
-            [1, 0, 0],
-            [1, 1, 0],
-            [0, 1, 1],
-        ],
-    },
-    {
-        name: "M",
-        color: "bg-orange-400",
-        layout: [
-            [1, 1],
-            [1, 1],
-            [1, 1],
-        ],
-    }, // actually rect, replaced
-    {
-        name: "W2",
-        color: "bg-orange-400",
-        layout: [
-            [1, 0, 1],
-            [1, 1, 1],
-        ],
-    },
-    {
-        name: "F",
-        color: "bg-gray-400",
-        layout: [
-            [1, 1],
-            [1, 0],
-            [1, 0],
-        ],
-    }, // small F
-    {
-        name: "BigF",
-        color: "bg-gray-400",
-        layout: [
-            [1, 1, 1],
-            [1, 0, 0],
             [1, 1, 0],
             [1, 0, 0],
         ],
@@ -559,14 +425,6 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Bridge",
-        color: "bg-yellow-600",
-        layout: [
-            [1, 0, 1],
-            [1, 1, 1],
-        ],
-    },
-    {
         name: "Dot3",
         color: "bg-slate-200",
         layout: [
@@ -589,36 +447,6 @@ export const SHAPES = [
         layout: [
             [1, 1, 1],
             [1, 0, 0],
-            [1, 1, 1],
-        ],
-    },
-    {
-        name: "SmallC",
-        color: "bg-cyan-400",
-        layout: [
-            [1, 1],
-            [1, 0],
-            [1, 1],
-        ],
-    },
-    {
-        name: "E",
-        color: "bg-rose-400",
-        layout: [
-            [1, 1, 1],
-            [1, 0, 0],
-            [1, 1, 0],
-            [1, 0, 0],
-            [1, 1, 1],
-        ],
-    },
-    {
-        name: "G",
-        color: "bg-emerald-400",
-        layout: [
-            [0, 1, 1],
-            [1, 0, 0],
-            [1, 0, 1],
             [1, 1, 1],
         ],
     },

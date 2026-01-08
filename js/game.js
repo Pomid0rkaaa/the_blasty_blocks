@@ -9,7 +9,7 @@ import { soundManager } from './soundManager.js';
 import { UI } from './ui.js';
 import { Logger } from './logger.js'
 
-let GRID_SIZE = 8;
+let GRID_SIZE = 5;
 
 export class BlockGame {
     constructor() {
@@ -161,8 +161,6 @@ export class BlockGame {
             tempHandPlus: 0,
             startClean: 0,
             startEnemyChill: 0,
-            gridSize: 8,
-            cellSize: "36px",
         };
     }
 
@@ -801,12 +799,6 @@ export class BlockGame {
 
         // Apply hazard effects on grid
         this.applyStartGridEffects();
-        if (this.hazardMods.gridSize && this.hazardMods.gridSize !== GRID_SIZE) {
-            this.resizeGrid(this.hazardMods.gridSize, this.hazardMods.cellSize);
-            Logger.log(
-                `Благословение: сетка ${this.hazardMods.gridSize}x${this.hazardMods.gridSize}`
-            );
-        }
 
         // Grid cleanser artifact
         if (this.hasArtifact("cleanser"))
@@ -856,23 +848,6 @@ export class BlockGame {
 
         if (isBossFloor) Logger.log(`БОСС: ${enemyTemplate.name}`);
         else Logger.log(`Враг: ${enemyTemplate.name}`);
-    }
-
-    resizeGrid(newSize, scale = "36px") {
-        GRID_SIZE = newSize;
-        document.documentElement.style.setProperty(
-            "--grid-size",
-            String(newSize)
-        );
-        document.documentElement.style.setProperty(
-            "--cell-size",
-            scale
-        );
-        
-        this.grid = Array.from({ length: newSize }, () =>
-            Array.from({ length: newSize }, () => null)
-        );
-        this.renderGrid();
     }
 
     applyStartGridEffects() {

@@ -12,9 +12,8 @@ body {
 }
 
 :root {
-	--cell-size: 36px;
 	--grid-gap: 4px;
-    --grid-size: 8;
+    --grid-size: 5;
 	--bg-color: #0f172a;
 	--ui-bg: #1e293b;
 	--accent-color: #3b82f6;
@@ -71,8 +70,8 @@ main {
 }
 
 .cell {
-	width: var(--cell-size);
-	height: var(--cell-size);
+	width: 36px;
+	height: 36px;
 	background-color: #334155;
 	border-radius: 6px;
 	transition: background-color 0.2s, transform 0.1s, filter 0.2s;
