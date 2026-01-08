@@ -1082,12 +1082,6 @@ export class BlockGame {
         }
     }
 
-    // Backward-compatible: we no longer use HOLE (too punishing).
-    // If any enemy/hazard still calls spawnHoles, it will create ROCK instead.
-    spawnHoles(count) {
-        this.spawnRocks(count);
-    }
-
     spawnGarbage(count) {
         let tries = 0;
         while (count > 0 && tries < 500) {
