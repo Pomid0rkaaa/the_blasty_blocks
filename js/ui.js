@@ -1,7 +1,7 @@
 import { STATUS_META } from './data/status_meta.js';
 import { ELEMENTS } from './data/elements.js';
 
-const UIElements = {
+export const UIElements = {
     level: document.getElementById("level-display"),
     score: document.getElementById("score-display"),
     gold: document.getElementById("gold-display"),
