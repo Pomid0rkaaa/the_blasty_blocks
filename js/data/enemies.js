@@ -603,7 +603,7 @@ export const ENEMIES = [
         desc: "Тянет на дно: провалы и заморозка.",
         ability: (g) => {
             if (Math.random() < 0.5) {
-                g.spawnHoles(1);
+                g.spawnRocks(1);
                 g.log("Кракен: провал");
             }
             if (Math.random() < 0.35) {
