@@ -15,7 +15,10 @@ window.game = game;
 window.toggleMuteFromPanel = toggleMuteFromPanel;
 
 document.addEventListener("click", (event) => {
-    switch (event.target.id) {
+    const btn = event.target.closest("button");
+    if (!btn) return;
+
+    switch (btn.id) {
         case "volume-btn":
             document.body.classList.toggle('show-volume')
             break;
@@ -46,7 +49,7 @@ document.addEventListener("click", (event) => {
         case "new-game-btn":
             game.showDifficultyModal();
             break;
-        case "close-help":
+        case "close-help-btn":
             game.closeHelp();
             break;
         case "clear-log-btn":
