@@ -7,15 +7,14 @@ import { SHAPES } from './data/shapes.js';
 import { STATUS_META } from './data/status_meta.js';
 import { soundManager } from './soundManager.js';
 import { UI } from './ui.js';
+import { Logger } from './logger.js'
 
 let GRID_SIZE = 8;
 
 export class BlockGame {
     constructor() {
         this.resetRun();
-
         this.ui = UI.elements;
-
         this.init();
     }
 
@@ -96,7 +95,7 @@ export class BlockGame {
         this.damageTakenThisFight = 0;
 
         // Log
-        this.logLines = [];
+        Logger.clear();
 
         // Achievements
         this.achUnlocked = new Set();
@@ -112,7 +111,7 @@ export class BlockGame {
     toggleGodMode() {
         this.godMode = !this.godMode;
         if (this.godMode) {
-            this.log("GOD MODE ACTIVATED");
+            Logger.log("GOD MODE ACTIVATED");
             this.gold += 9999;
             this.hp = 999;
             this.maxHp = 999;
@@ -124,7 +123,7 @@ export class BlockGame {
                 "#fbbf24"
             );
         } else {
-            this.log("GOD MODE DEACTIVATED");
+            Logger.log("GOD MODE DEACTIVATED");
         }
     }
 
@@ -172,7 +171,7 @@ export class BlockGame {
         this.spawnEnemy();
         this.fillHand();
         this.updateUI();
-        this.log("Начало забега.");
+        Logger.log("Начало забега.");
 
         const dragMove = (e) => this.handleDragMove(e);
         const dragEnd = (e) => this.handleDragEnd(e);
@@ -194,7 +193,7 @@ export class BlockGame {
         // this.keyBuffer = "";
         document.addEventListener("keydown", (e) => {
             if (e.key === "?") this.openHelp();
-            if (e.key.toLowerCase() === "l") this.openLog();
+            if (e.key.toLowerCase() === "l") Logger.open();
             if (e.key.toLowerCase() === "a")
                 this.openAchievements();
 
@@ -265,7 +264,7 @@ export class BlockGame {
         this.saveAchievements();
         const meta = ACHIEVEMENTS.find((a) => a.id === id);
         if (meta) {
-            this.log(`Ачивка: ${meta.name}`);
+            Logger.log(`Ачивка: ${meta.name}`);
             this.spawnFloatingText(
                 `🏆 ${meta.name}`,
                 this.ui.enemySprite,
@@ -324,13 +323,12 @@ export class BlockGame {
         this.achUnlocked = new Set();
         this.saveAchievements();
         this.renderAchievements();
-        this.log("Ачивки сброшены.");
+        Logger.log("Ачивки сброшены.");
     }
 
     // ------------------------------
     // Helpers
     // ------------------------------
-    
     getCellTotal() {
         const rootStyles = getComputedStyle(
             document.documentElement
@@ -414,18 +412,18 @@ export class BlockGame {
         if (artifact.id === "sturdy") {
             this.maxHp += 15;
             this.healPlayer(15);
-            this.log("Амулет: +15 Max HP");
+            Logger.log("Амулет: +15 Max HP");
         }
         if (artifact.id === "glass_cannon") {
             this.maxHp = Math.floor(this.maxHp * 0.7);
             this.hp = Math.min(this.hp, this.maxHp);
-            this.log("Стеклянная пушка: HP снижено");
+            Logger.log("Стеклянная пушка: HP снижено");
         }
         if (artifact.id === "blood_pact") {
             this.gold += 100;
             this.hp -= 25;
             if (this.hp <= 0) this.hp = 1;
-            this.log("Пакт: +100 золота, -25 HP");
+            Logger.log("Пакт: +100 золота, -25 HP");
         }
         if (artifact.id === "spike_armor") {
             this.shield += 15;
@@ -437,7 +435,7 @@ export class BlockGame {
                 color: "#16a34a",
                 rarity: 0,
             }); // reuse existing logic
-            this.log("Шипастый доспех: броня + шипы");
+            Logger.log("Шипастый доспех: броня + шипы");
         }
         if (artifact.id === "inferno_ring") {
             this.addStatus("enemy", "burn", 5);
@@ -624,8 +622,8 @@ export class BlockGame {
         this.spawnEnemy();
         this.fillHand();
         this.updateUI();
-        this.logLines = [];
-        this.log("Новый забег.");
+        Logger.clear();
+        Logger.log("Новый забег.");
         this.renderCodex();
     }
 
@@ -789,7 +787,7 @@ export class BlockGame {
                     0,
                     (this.playerStatuses[pick] || 0) - 1
                 );
-                this.log("Ореол: очищение статуса");
+                Logger.log("Ореол: очищение статуса");
             }
         }
 
@@ -805,7 +803,7 @@ export class BlockGame {
         this.applyStartGridEffects();
         if (this.hazardMods.gridSize && this.hazardMods.gridSize !== GRID_SIZE) {
             this.resizeGrid(this.hazardMods.gridSize, this.hazardMods.cellSize);
-            this.log(
+            Logger.log(
                 `Благословение: сетка ${this.hazardMods.gridSize}x${this.hazardMods.gridSize}`
             );
         }
@@ -817,19 +815,19 @@ export class BlockGame {
         // Boon starts
         if (this.hazardMods.startShield) {
             this.shield += this.hazardMods.startShield;
-            this.log(
+            Logger.log(
                 `Благословение: +${this.hazardMods.startShield} щита`
             );
         }
         if (this.hazardMods.startHeal) {
             this.healPlayer(this.hazardMods.startHeal);
-            this.log(
+            Logger.log(
                 `Благословение: +${this.hazardMods.startHeal} HP`
             );
         }
         if (this.hazardMods.startGold) {
             this.gold += this.hazardMods.startGold;
-            this.log(
+            Logger.log(
                 `Благословение: +${this.hazardMods.startGold} золота`
             );
         }
@@ -837,7 +835,7 @@ export class BlockGame {
             this.removeRandomFilledCells(
                 this.hazardMods.startClean
             );
-            this.log(
+            Logger.log(
                 `Благословение: очищение (${this.hazardMods.startClean})`
             );
         }
@@ -856,8 +854,8 @@ export class BlockGame {
         if (this.level >= 10) this.unlockAchievement("depth10");
         if (this.level >= 20) this.unlockAchievement("depth20");
 
-        if (isBossFloor) this.log(`БОСС: ${enemyTemplate.name}`);
-        else this.log(`Враг: ${enemyTemplate.name}`);
+        if (isBossFloor) Logger.log(`БОСС: ${enemyTemplate.name}`);
+        else Logger.log(`Враг: ${enemyTemplate.name}`);
     }
 
     resizeGrid(newSize, scale = "36px") {
@@ -909,7 +907,7 @@ export class BlockGame {
                 ["ROCK", "GARBAGE"],
                 2
             );
-            if (removed > 0) this.log(`Кельма: очищено ${removed}`);
+            if (removed > 0) Logger.log(`Кельма: очищено ${removed}`);
         }
     }
 
@@ -1154,7 +1152,7 @@ export class BlockGame {
 
         if (this.hasArtifact("bulwark") && this.shield === 0) {
             this.shield += 8;
-            this.log("Бастион: +8 щита");
+            Logger.log("Бастион: +8 щита");
         }
 
         const size = this.getHandSize();
@@ -1460,7 +1458,7 @@ export class BlockGame {
                 cellsPlaced * this.hazardMods.hpCostPerCell;
             this.hp -= cost;
             this.damageTakenThisFight += cost;
-            this.log(`Шипы: -${cost} HP`);
+            Logger.log(`Шипы: -${cost} HP`);
             this.spawnFloatingText(
                 cost,
                 this.ui.playerHpBar,
@@ -1510,7 +1508,7 @@ export class BlockGame {
 
         if (this.hasArtifact("gambler") && Math.random() < 0.25) {
             placeDamage *= 2;
-            this.log("Азарт: JACKPOT!");
+            Logger.log("Азарт: JACKPOT!");
             this.spawnFloatingText(
                 "JACKPOT!",
                 this.ui.enemySprite,
@@ -1526,7 +1524,7 @@ export class BlockGame {
             if (this.blocksPlaced % 3 === 0) {
                 this.addStatus("enemy", "shock", 1);
                 this.damageEnemy(10, true);
-                this.log("Грозовой удар: +10");
+                Logger.log("Грозовой удар: +10");
                 this.spawnFloatingText(
                     "ZAP!",
                     this.ui.enemySprite,
@@ -1585,7 +1583,7 @@ export class BlockGame {
 
         if (this.hasArtifact("vampire")) {
             this.healPlayer(count * 2);
-            this.log(`Кровавое касание: +${count * 2} HP`);
+            Logger.log(`Кровавое касание: +${count * 2} HP`);
             this.spawnFloatingText(
                 "HEAL",
                 this.ui.playerHpBar,
@@ -1596,7 +1594,7 @@ export class BlockGame {
         if (this.hasArtifact("goldlines")) {
             const gg = count * 2;
             this.gold += gg;
-            this.log(`Золотые линии: +${gg} золота`);
+            Logger.log(`Золотые линии: +${gg} золота`);
         }
 
         if (this.hasArtifact("frost"))
@@ -1678,7 +1676,7 @@ export class BlockGame {
             } else {
                 if (val === "MINE") {
                     this.damageEnemy(30, true);
-                    this.log("Мина взорвана! +30 урона");
+                    Logger.log("Мина взорвана! +30 урона");
                     this.spawnFloatingText(
                         "BOOM!",
                         this.ui.enemySprite,
@@ -1791,7 +1789,7 @@ export class BlockGame {
             if (this.hasArtifact("phoenix") && !this.revived) {
                 this.hp = Math.floor(this.maxHp / 2);
                 this.revived = true;
-                this.log("Перо феникса!");
+                Logger.log("Перо феникса!");
                 this.spawnFloatingText(
                     "PHOENIX!",
                     this.ui.playerHpBar,
@@ -1968,13 +1966,13 @@ export class BlockGame {
 
         this.discardsThisFight++;
 
-        this.log("Сброс: ход врагу.");
+        Logger.log("Сброс: ход врагу.");
         soundManager.playInvalid();
 
         // Recycle artifact
         if (this.hasArtifact("recycle")) {
             this.removeRandomFilledCells(2);
-            this.log("Переработка: -2 клетки");
+            Logger.log("Переработка: -2 клетки");
         }
 
         this.ui.hand.innerHTML = "";
@@ -1997,7 +1995,7 @@ export class BlockGame {
 
         // Time warp
         if (this.hasArtifact("warp") && Math.random() < 0.15) {
-            this.log("Искажение времени: ход врага пропущен.");
+            Logger.log("Искажение времени: ход врага пропущен.");
             this.spawnFloatingText(
                 "WARP!",
                 this.ui.playerHpBar,
@@ -2023,7 +2021,7 @@ export class BlockGame {
                 this.enemyStatuses.chill >= 3 &&
                 Math.random() < 0.22
             ) {
-                this.log("Враг заморожен: ход пропущен.");
+                Logger.log("Враг заморожен: ход пропущен.");
                 this.spawnFloatingText(
                     "FROZEN!",
                     this.ui.enemySprite,
@@ -2080,7 +2078,7 @@ export class BlockGame {
         if (dmg > 0) {
             this.hp -= dmg;
             this.damageTakenThisFight += dmg;
-            this.log(`Враг атакует: -${dmg} HP`);
+            Logger.log(`Враг атакует: -${dmg} HP`);
             soundManager.playDamage();
             document.body.classList.add("shake");
             setTimeout(
@@ -2090,7 +2088,7 @@ export class BlockGame {
 
             if (this.hasArtifact("thorns")) {
                 this.damageEnemy(5, false);
-                this.log("Шипы: враг получает 5");
+                Logger.log("Шипы: враг получает 5");
             }
 
             if (this.hasArtifact("gold_tooth")) {
@@ -2117,10 +2115,10 @@ export class BlockGame {
             if (el === "storm")
                 this.addStatus("player", "shock", 1);
         } else {
-            this.log("Урон поглощён щитом.");
+            Logger.log("Урон поглощён щитом.");
             if (absorbedFully && this.hasArtifact("mirrorplate")) {
                 this.damageEnemy(6, false);
-                this.log("Зеркальная броня: 6 урона");
+                Logger.log("Зеркальная броня: 6 урона");
                 this.spawnFloatingText(
                     "MIRROR",
                     this.ui.enemySprite,
@@ -2132,7 +2130,7 @@ export class BlockGame {
         // Scavenger
         if (this.hasArtifact("scavenger") && Math.random() < 0.2) {
             this.removeRandomFilledCells(1);
-            this.log("Сборщик: убрал 1 клетку");
+            Logger.log("Сборщик: убрал 1 клетку");
         }
 
         // Hazard: Slippery/Random Discard
@@ -2153,7 +2151,7 @@ export class BlockGame {
                 el.style.opacity = "0";
                 setTimeout(() => el.remove(), 200);
                 this.hand[idx] = null;
-                this.log("Скользкий пол: фигура потеряна");
+                Logger.log("Скользкий пол: фигура потеряна");
                 this.checkHandEmpty();
             }
         }
@@ -2162,7 +2160,7 @@ export class BlockGame {
             if (this.hasArtifact("phoenix") && !this.revived) {
                 this.hp = Math.floor(this.maxHp / 2);
                 this.revived = true;
-                this.log("Перо феникса!");
+                Logger.log("Перо феникса!");
                 this.spawnFloatingText(
                     "PHOENIX!",
                     this.ui.playerHpBar,
@@ -2351,7 +2349,7 @@ export class BlockGame {
         if (item.apply) item.apply();
         soundManager.playPlace();
         this.updateUI();
-        this.log(`Покупка: ${item.name}`);
+        Logger.log(`Покупка: ${item.name}`);
         return true;
     }
 
@@ -2497,7 +2495,7 @@ export class BlockGame {
         if (this.hazardMods.doubleGold) bonus *= 2;
 
         this.gold += bonus;
-        this.log(`Победа! +${bonus} золота`);
+        Logger.log(`Победа! +${bonus} золота`);
 
         // Achievements
         if (isBoss) {
@@ -2523,12 +2521,12 @@ export class BlockGame {
                 }
             });
             if (reduced > 0)
-                this.log("Сыворотка: статусы ослаблены");
+                Logger.log("Сыворотка: статусы ослаблены");
         }
 
         // Decide shop
         if (this.rollShop()) {
-            this.log("Найдена лавка.");
+            Logger.log("Найдена лавка.");
             this.openShopThenRewards();
         } else {
             this.generateRewards();
