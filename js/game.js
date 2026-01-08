@@ -330,36 +330,7 @@ export class BlockGame {
     // ------------------------------
     // Helpers
     // ------------------------------
-    log(msg) {
-        const t = new Date();
-        const stamp = `${String(t.getMinutes()).padStart(
-            2,
-            "0"
-        )}:${String(t.getSeconds()).padStart(2, "0")}`;
-        this.logLines.unshift(`[${stamp}] ${msg}`);
-        this.logLines = this.logLines.slice(0, 72);
-        if (this.ui.log)
-            this.ui.log.textContent = this.logLines.join("\n");
-        if (this.ui.logPeek) this.ui.logPeek.textContent = msg;
-    }
-
-    openLog() {
-        document
-            .getElementById("log-modal")
-            .classList.remove("hidden");
-        if (this.ui.log) this.ui.log.scrollTop = 0;
-    }
-    closeLog() {
-        document
-            .getElementById("log-modal")
-            .classList.add("hidden");
-    }
-    clearLog() {
-        this.logLines = [];
-        if (this.ui.log) this.ui.log.textContent = "";
-        if (this.ui.logPeek) this.ui.logPeek.textContent = "—";
-    }
-
+    
     getCellTotal() {
         const rootStyles = getComputedStyle(
             document.documentElement
