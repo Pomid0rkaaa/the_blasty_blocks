@@ -1,3 +1,5 @@
+import { Logger } from "../logger.js";
+
 export const ENEMIES = [
     // Regular
     {
@@ -13,7 +15,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.25) {
                 g.healEnemy(8);
-                g.log("Слизень регенит +8");
+                Logger.log("Слизень регенит +8");
                 g.spawnFloatingText(
                     "REGEN",
                     g.ui.enemySprite,
@@ -35,7 +37,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (g.shield > 0) {
                 g.shield = Math.floor(g.shield * 0.6);
-                g.log("Огонь плавит щит");
+                Logger.log("Огонь плавит щит");
                 g.spawnFloatingText(
                     "MELT",
                     g.ui.playerHpBar,
@@ -57,7 +59,7 @@ export const ENEMIES = [
         ability: (g) => {
             g.hp -= 2;
             g.damageTakenThisFight += 2;
-            g.log("Пустота: -2 HP");
+            Logger.log("Пустота: -2 HP");
             g.spawnFloatingText(2, g.ui.playerHpBar, "#a78bfa");
         },
     },
@@ -73,7 +75,7 @@ export const ENEMIES = [
         desc: "Наращивает броню.",
         ability: (g) => {
             g.enemyShield += 6;
-            g.log("Голем: +6 ARM");
+            Logger.log("Голем: +6 ARM");
             g.spawnFloatingText(
                 "+6 ARM",
                 g.ui.enemySprite,
@@ -94,7 +96,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.addStatus("player", "shock", 1);
-                g.log("Шок!");
+                Logger.log("Шок!");
                 g.spawnFloatingText(
                     "SHOCK",
                     g.ui.playerHpBar,
@@ -116,7 +118,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.spawnRocks(2);
-                g.log("Песок: +2 камня");
+                Logger.log("Песок: +2 камня");
                 g.spawnFloatingText(
                     "SAND!",
                     g.ui.enemySprite,
@@ -137,7 +139,7 @@ export const ENEMIES = [
         desc: "Генерирует щит.",
         ability: (g) => {
             g.enemyShield += 5;
-            g.log("Дрон: +5 ARM");
+            Logger.log("Дрон: +5 ARM");
         },
     },
     {
@@ -153,7 +155,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.3) {
                 g.addStatus("player", "poison", 2);
-                g.log("Споры: яд");
+                Logger.log("Споры: яд");
                 g.spawnFloatingText(
                     "SPORES",
                     g.ui.playerHpBar,
@@ -178,7 +180,7 @@ export const ENEMIES = [
             if (Math.random() < 0.45) {
                 g.enemyShield += 4;
                 g.spawnRocks(1);
-                g.log("Скарабей: +4 ARM и камень");
+                Logger.log("Скарабей: +4 ARM и камень");
             }
         },
     },
@@ -198,7 +200,7 @@ export const ENEMIES = [
                     2,
                     g.freezeNextHand + 1
                 );
-                g.log("Сирена: заморозка руки");
+                Logger.log("Сирена: заморозка руки");
                 g.spawnFloatingText(
                     "FREEZE",
                     g.ui.enemySprite,
@@ -220,7 +222,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.4) {
                 g.addStatus("player", "burn", 2);
-                g.log("Пиромант: горение");
+                Logger.log("Пиромант: горение");
                 g.spawnFloatingText(
                     "BURN",
                     g.ui.playerHpBar,
@@ -243,7 +245,7 @@ export const ENEMIES = [
             if (Math.random() < 0.28) {
                 g.spawnGarbage(2);
                 g.enemyShield += 3;
-                g.log("Механист: мусор + броня");
+                Logger.log("Механист: мусор + броня");
             }
         },
     },
@@ -260,7 +262,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.45) {
                 g.addStatus("player", "weak", 1);
-                g.log("Светляк: слабость");
+                Logger.log("Светляк: слабость");
                 g.spawnFloatingText(
                     "WEAK",
                     g.ui.playerHpBar,
@@ -268,7 +270,7 @@ export const ENEMIES = [
                 );
             } else if (Math.random() < 0.35) {
                 g.addStatus("player", "shock", 1);
-                g.log("Светляк: шок");
+                Logger.log("Светляк: шок");
                 g.spawnFloatingText(
                     "SHOCK",
                     g.ui.playerHpBar,
@@ -290,7 +292,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.3) {
                 g.spawnGarbage(3);
-                g.log("Бугай: +3 мусора");
+                Logger.log("Бугай: +3 мусора");
                 g.spawnFloatingText(
                     "TRASH",
                     g.ui.enemySprite,
@@ -311,7 +313,7 @@ export const ENEMIES = [
         desc: "С каждым ходом усиливается.",
         ability: (g) => {
             g.enemyAttack = Math.ceil(g.enemyAttack * 1.06);
-            g.log("Культист усиливается");
+            Logger.log("Культист усиливается");
             g.spawnFloatingText(
                 "CHANT",
                 g.ui.enemySprite,
@@ -334,7 +336,7 @@ export const ENEMIES = [
                 const take = Math.min(8, g.shield);
                 g.shield -= take;
                 g.enemyShield += take;
-                g.log(`Страж: украл ${take} щита`);
+                Logger.log(`Страж: украл ${take} щита`);
                 g.spawnFloatingText(
                     "-SHD",
                     g.ui.playerHpBar,
@@ -358,7 +360,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.addStatus("player", "weak", 1);
-                g.log("Убийца: слабость");
+                Logger.log("Убийца: слабость");
             }
         },
     },
@@ -376,7 +378,7 @@ export const ENEMIES = [
             g.addStatus("player", "poison", 1);
             if (Math.random() < 0.25)
                 g.addStatus("player", "poison", 1);
-            g.log("Цветок: яд");
+            Logger.log("Цветок: яд");
         },
     },
     {
@@ -393,7 +395,7 @@ export const ENEMIES = [
             if (Math.random() < 0.5) {
                 g.spawnRocks(2);
                 g.enemyShield += 3;
-                g.log("Мастер: камни + броня");
+                Logger.log("Мастер: камни + броня");
             }
         },
     },
@@ -411,11 +413,11 @@ export const ENEMIES = [
             if (Math.random() < 0.35 && g.shield > 0) {
                 const cut = Math.min(10, g.shield);
                 g.shield -= cut;
-                g.log("Провидец: -щит");
+                Logger.log("Провидец: -щит");
             }
             if (Math.random() < 0.3) {
                 g.addStatus("player", "shock", 1);
-                g.log("Провидец: шок");
+                Logger.log("Провидец: шок");
             }
         },
     },
@@ -433,7 +435,7 @@ export const ENEMIES = [
             if (Math.random() < 0.35) {
                 g.enemyShield += 6;
                 g.healEnemy(6);
-                g.log("Страж света: +ARM и лечение");
+                Logger.log("Страж света: +ARM и лечение");
             }
         },
     },
@@ -453,7 +455,7 @@ export const ENEMIES = [
                     2,
                     g.freezeNextHand + 1
                 );
-                g.log("Ледышка: заморозка руки");
+                Logger.log("Ледышка: заморозка руки");
             }
         },
     },
@@ -472,7 +474,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.spawnRocks(3);
-                g.log("Некромант: проклятье (+3 камня)");
+                Logger.log("Некромант: проклятье (+3 камня)");
                 g.spawnFloatingText(
                     "CURSE",
                     g.ui.enemySprite,
@@ -494,7 +496,7 @@ export const ENEMIES = [
         ability: (g) => {
             g.enemyAttack = Math.floor(g.enemyAttack * 1.05);
             g.addStatus("player", "shock", 1);
-            g.log("Буря усиливается");
+            Logger.log("Буря усиливается");
         },
     },
     {
@@ -509,7 +511,7 @@ export const ENEMIES = [
         desc: "Поджигает героя.",
         ability: (g) => {
             g.addStatus("player", "burn", 2);
-            g.log("Червь: горение");
+            Logger.log("Червь: горение");
             g.spawnFloatingText(
                 "BURN",
                 g.ui.playerHpBar,
@@ -529,7 +531,7 @@ export const ENEMIES = [
         desc: "Замораживает руку сильнее.",
         ability: (g) => {
             g.freezeNextHand = Math.min(2, g.freezeNextHand + 1);
-            g.log("Архон: заморозка руки");
+            Logger.log("Архон: заморозка руки");
             g.spawnFloatingText(
                 "FREEZE",
                 g.ui.enemySprite,
@@ -550,11 +552,11 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.addStatus("player", "poison", 2);
-                g.log("Гидра: яд");
+                Logger.log("Гидра: яд");
             }
             if (Math.random() < 0.35) {
                 g.healEnemy(10);
-                g.log("Гидра: реген +10");
+                Logger.log("Гидра: реген +10");
             }
         },
     },
@@ -571,7 +573,7 @@ export const ENEMIES = [
         ability: (g) => {
             g.enemyShield += 8;
             if (Math.random() < 0.4) g.spawnRocks(2);
-            g.log("Колосс: броня/камни");
+            Logger.log("Колосс: броня/камни");
         },
     },
     {
@@ -588,7 +590,7 @@ export const ENEMIES = [
             g.spawnGarbage(3);
             if (Math.random() < 0.5)
                 g.addStatus("player", "weak", 1);
-            g.log("Лич: проклятие");
+            Logger.log("Лич: проклятие");
         },
     },
     {
@@ -604,14 +606,14 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.spawnRocks(1);
-                g.log("Кракен: провал");
+                Logger.log("Кракен: провал");
             }
             if (Math.random() < 0.35) {
                 g.freezeNextHand = Math.min(
                     2,
                     g.freezeNextHand + 1
                 );
-                g.log("Кракен: заморозка руки");
+                Logger.log("Кракен: заморозка руки");
             }
         },
     },
@@ -628,7 +630,7 @@ export const ENEMIES = [
         ability: (g) => {
             g.addStatus("player", "burn", 2);
             if (Math.random() < 0.45) g.spawnGarbage(2);
-            g.log("Дракон: пламя");
+            Logger.log("Дракон: пламя");
         },
     },
     {
@@ -644,7 +646,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.addStatus("player", "weak", 1);
-                g.log("Зеркало: слабость");
+                Logger.log("Зеркало: слабость");
             }
             g.enemyShield += 6;
         },
@@ -662,7 +664,7 @@ export const ENEMIES = [
         ability: (g) => {
             g.enemyShield += 10;
             if (Math.random() < 0.5) g.spawnGarbage(3);
-            g.log("Страж: укрепление");
+            Logger.log("Страж: укрепление");
         },
     },
 
@@ -681,7 +683,7 @@ export const ENEMIES = [
             if (Math.random() < 0.55) {
                 g.addStatus("player", "weak", 1);
                 g.addStatus("player", "shock", 1);
-                g.log("Оракул: слабость+шок");
+                Logger.log("Оракул: слабость+шок");
             }
         },
     },
@@ -698,7 +700,7 @@ export const ENEMIES = [
         ability: (g) => {
             g.addStatus("player", "poison", 2);
             if (Math.random() < 0.55) g.spawnGarbage(2);
-            g.log("Королева: яд/мусор");
+            Logger.log("Королева: яд/мусор");
         },
     },
     {
@@ -714,7 +716,7 @@ export const ENEMIES = [
         ability: (g) => {
             g.spawnRocks(3);
             g.enemyShield += 6;
-            g.log("Бегемот: камни + ARM");
+            Logger.log("Бегемот: камни + ARM");
         },
     },
     {
@@ -730,7 +732,7 @@ export const ENEMIES = [
         ability: (g) => {
             g.healEnemy(14);
             g.enemyShield += 8;
-            g.log("Жрец: лечение + ARM");
+            Logger.log("Жрец: лечение + ARM");
         },
     },
     {
@@ -745,7 +747,7 @@ export const ENEMIES = [
         desc: "Сильно замораживает руку.",
         ability: (g) => {
             g.freezeNextHand = Math.min(2, g.freezeNextHand + 2);
-            g.log("Змей: сильная заморозка");
+            Logger.log("Змей: сильная заморозка");
         },
     },
 
@@ -761,7 +763,7 @@ export const ENEMIES = [
         atkMod: 1.1,
         desc: "Крадет HP при атаке.",
         ability: (g) => {
-            g.log(
+            Logger.log(
                 "Вампир готовится к укусу"
             ); /* Effect handled in enemyTurn logic check */
         },
@@ -778,7 +780,7 @@ export const ENEMIES = [
         desc: "Каждый ход +4 Брони.",
         ability: (g) => {
             g.enemyShield += 4;
-            g.log("Часовой: +4 ARM");
+            Logger.log("Часовой: +4 ARM");
         },
     },
     {
@@ -795,13 +797,13 @@ export const ENEMIES = [
             const r = Math.random();
             if (r < 0.33) {
                 g.addStatus("player", "burn", 1);
-                g.log("Бес: горение");
+                Logger.log("Бес: горение");
             } else if (r < 0.66) {
                 g.spawnGarbage(1);
-                g.log("Бес: мусор");
+                Logger.log("Бес: мусор");
             } else {
                 g.enemyShield += 3;
-                g.log("Бес: броня");
+                Logger.log("Бес: броня");
             }
         },
     },
@@ -818,7 +820,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.2) {
                 g.gold = Math.max(0, g.gold - 5);
-                g.log("Мимик украл золото!");
+                Logger.log("Мимик украл золото!");
             }
         },
     },
@@ -835,7 +837,7 @@ export const ENEMIES = [
         ability: (g) => {
             if (Math.random() < 0.4) {
                 g.addStatus("player", "weak", 2);
-                g.log("Кит: слабость");
+                Logger.log("Кит: слабость");
             }
         },
     },
@@ -854,7 +856,7 @@ export const ENEMIES = [
         ability: (g) => {
             g.addStatus("player", "burn", 3);
             g.hp -= 3;
-            g.log("Лорд: Адское пламя");
+            Logger.log("Лорд: Адское пламя");
         },
     },
     {
@@ -871,7 +873,7 @@ export const ENEMIES = [
             g.addStatus("player", "shock", 2);
             if (Math.random() < 0.2) {
                 g.discardsThisFight++;
-                g.log("Ядро: сбой реальности (потеря сброса)");
+                Logger.log("Ядро: сбой реальности (потеря сброса)");
             }
         },
     },
@@ -888,7 +890,7 @@ export const ENEMIES = [
         ability: (g) => {
             g.healEnemy(15);
             g.spawnRocks(2);
-            g.log("Древень: корни и рост");
+            Logger.log("Древень: корни и рост");
         },
     },
 ];
