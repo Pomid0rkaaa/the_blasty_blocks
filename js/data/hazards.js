@@ -64,6 +64,15 @@ export const HAZARDS = [
         desc: "В начале боя появляется 10 мусорных блоков.",
         mods: { startGarbage: 10 },
     },
+    {
+        id: "cursed_grid",
+        kind: "hazard",
+        weight: 8,
+        icon: "🔲",
+        name: "Увеличение сетки",
+        desc: "Сетка увеличивается до 12x12 на этот бой.",
+        mods: { gridSize: 12, cellSize: "24px" },
+    },
 
     // Shape hazards (non-square play area via mask; now uses rocks instead of holes)
     {
@@ -229,5 +238,14 @@ export const HAZARDS = [
         name: "Богатство",
         desc: "Двойное золото за этот бой.",
         mods: { doubleGold: true },
+    },
+    {
+        id: "bless_grid",
+        kind: "boon",
+        weight: 8,
+        icon: "🔲",
+        name: "Уменьшение сетки",
+        desc: "Сетка уменьшается до 5x5 на этот бой.",
+        mods: { gridSize: 5 },
     },
 ];

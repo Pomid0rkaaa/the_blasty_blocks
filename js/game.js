@@ -7,7 +7,7 @@ import { SHAPES } from './data/shapes.js';
 import { STATUS_META } from './data/status_meta.js';
 import { soundManager } from './soundManager.js';
 
-const GRID_SIZE = 8;
+let GRID_SIZE = 8;
 
 export class BlockGame {
     constructor() {
@@ -191,6 +191,8 @@ export class BlockGame {
             tempHandPlus: 0,
             startClean: 0,
             startEnemyChill: 0,
+            gridSize: 8,
+            cellSize: "36px",
         };
     }
 
@@ -898,6 +900,12 @@ export class BlockGame {
                 this.hazardMods.startEnemyChill
             );
         }
+        if (this.hazardMods.gridSize && this.hazardMods.gridSize !== GRID_SIZE) {
+            this.resizeGrid(this.hazardMods.gridSize, this.hazardMods.cellSize);
+            this.log(
+                `Благословение: сетка ${this.hazardMods.gridSize}x${this.hazardMods.gridSize}`
+            );
+        }
 
         this.updateUI();
         this.renderEnemyCodex();
@@ -908,6 +916,23 @@ export class BlockGame {
 
         if (isBossFloor) this.log(`БОСС: ${enemyTemplate.name}`);
         else this.log(`Враг: ${enemyTemplate.name}`);
+    }
+
+    resizeGrid(newSize, scale = "36px") {
+        GRID_SIZE = newSize;
+        document.documentElement.style.setProperty(
+            "--grid-size",
+            String(newSize)
+        );
+        document.documentElement.style.setProperty(
+            "--cell-size",
+            scale
+        );
+        
+        this.grid = Array.from({ length: newSize }, () =>
+            Array.from({ length: newSize }, () => null)
+        );
+        this.renderGrid();
     }
 
     applyStartGridEffects() {
