@@ -13,6 +13,8 @@ export class SoundManager {
         this.musicStep = 0;
         this.musicOn = true;
 
+        this.tracks = TRACKS;
+
         this.musicVolume = 0.25;
         const saved = Number(localStorage.getItem("musicVolume"));
         if (!Number.isNaN(saved))
@@ -93,7 +95,7 @@ export class SoundManager {
 
     setTrack(id) {
         if (!id) return;
-        if (!(id in TRACKS)) id = "deep";
+        if (!(id in this.tracks)) id = "deep";
         this.trackId = id;
         localStorage.setItem("musicTrack", String(id));
 
@@ -243,7 +245,7 @@ export class SoundManager {
         if (!this.ctx || this.muted || !this.musicOn) return;
         if (this.musicTimer) return;
 
-        const track = TRACKS[this.trackId] || TRACKS.deep;
+        const track = this.tracks[this.trackId] || this.tracks.deep;
         const tempo = track.tempo;
         const stepMs = 60_000 / tempo / 2; // 8th notes
         this.musicStep = 0;
