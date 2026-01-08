@@ -236,7 +236,7 @@ export const SHAPES = [
 
     // U
     {
-        name: "U",
+        name: "U0",
         color: "bg-amber-500",
         layout: [
             [1, 0, 1],
@@ -244,7 +244,7 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Ub",
+        name: "U1",
         color: "bg-amber-500",
         layout: [
             [1, 1],
@@ -253,7 +253,7 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Uc",
+        name: "U2",
         color: "bg-amber-500",
         layout: [
             [1, 1, 1],
@@ -261,7 +261,7 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Ud",
+        name: "U3",
         color: "bg-amber-500",
         layout: [
             [1, 1],
@@ -307,59 +307,41 @@ export const SHAPES = [
         ],
     },
 
-    // Hook
-    {
-        name: "Hook0",
-        color: "bg-red-500",
-        layout: [
-            [1, 1, 1],
-            [1, 0, 0],
-        ],
-    },
-    {
-        name: "Hook1",
-        color: "bg-red-500",
-        layout: [
-            [1, 1],
-            [0, 1],
-            [0, 1],
-        ],
-    },
-    {
-        name: "Hook2",
-        color: "bg-red-500",
-        layout: [
-            [0, 0, 1],
-            [1, 1, 1],
-        ],
-    },
-    {
-        name: "Hook3",
-        color: "bg-red-500",
-        layout: [
-            [1, 0],
-            [1, 0],
-            [1, 1],
-        ],
-    },
-
     // Diagonals & Stairs
     {
-        name: "Stair",
+        name: "Stair0",
         color: "bg-indigo-500",
         layout: [
             [1, 0, 0],
             [1, 1, 0],
             [0, 1, 1],
+        ],
+    },
+    {
+        name: "Stair1",
+        color: "bg-indigo-500",
+        layout: [
+            [0, 0, 1],
+            [0, 1, 1],
+            [1, 1, 0],
         ],
     },
     {
         name: "Stair2",
-        color: "bg-indigo-500",
+        color: "bg-pink-500",
         layout: [
+            [1, 1, 0],
+            [0, 1, 1],
             [0, 0, 1],
+        ],
+    },
+    {
+        name: "Stair3",
+        color: "bg-pink-500",
+        layout: [
             [0, 1, 1],
             [1, 1, 0],
+            [1, 0, 0],
         ],
     },
     {
@@ -391,13 +373,13 @@ export const SHAPES = [
         ],
     },
     {
-        name: "ZigZag",
-        color: "bg-pink-400",
+        name: "Diag4b",
+        color: "bg-sky-500",
         layout: [
-            [1, 0, 0],
-            [0, 1, 0],
-            [0, 0, 1],
-            [0, 0, 0],
+            [0, 0, 0, 1],
+            [0, 0, 1, 0],
+            [0, 1, 0, 0],
+            [1, 0, 0, 0],
         ],
     },
 
@@ -422,7 +404,7 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Corner",
+        name: "SmallCorner0",
         color: "bg-blue-500",
         layout: [
             [1, 1],
@@ -430,11 +412,47 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Corner2",
+        name: "SmallCorner1",
         color: "bg-blue-500",
         layout: [
             [1, 1],
             [0, 1],
+        ],
+    },
+    {
+        name: "Corner0",
+        color: "bg-blue-300",
+        layout: [
+            [1, 1, 1],
+            [1, 0, 0],
+            [1, 0, 0],
+        ],
+    },
+    {
+        name: "Corner1",
+        color: "bg-blue-300",
+        layout: [
+            [1, 0, 0],
+            [1, 0, 0],
+            [1, 1, 1],
+        ],
+    },
+    {
+        name: "Corner0",
+        color: "bg-blue-300",
+        layout: [
+            [1, 1, 1],
+            [0, 0, 1],
+            [0, 0, 1],
+        ],
+    },
+    {
+        name: "Corner0",
+        color: "bg-blue-300",
+        layout: [
+            [0, 0, 1],
+            [0, 0, 1],
+            [1, 1, 1],
         ],
     },
     {
@@ -446,61 +464,8 @@ export const SHAPES = [
             [0, 1, 0],
         ],
     },
-    {
-        name: "Snake5",
-        color: "bg-pink-500",
-        layout: [
-            [1, 1, 0],
-            [0, 1, 1],
-            [0, 0, 1],
-        ],
-    },
-    {
-        name: "Snake5b",
-        color: "bg-pink-500",
-        layout: [
-            [0, 1, 1],
-            [1, 1, 0],
-            [1, 0, 0],
-        ],
-    },
 
     // New / Fixed Colors
-    {
-        name: "W",
-        color: "bg-orange-400",
-        layout: [
-            [1, 0, 0],
-            [1, 1, 0],
-            [0, 1, 1],
-        ],
-    },
-    {
-        name: "M",
-        color: "bg-orange-400",
-        layout: [
-            [1, 1],
-            [1, 1],
-            [1, 1],
-        ],
-    }, // actually rect, replaced
-    {
-        name: "W2",
-        color: "bg-orange-400",
-        layout: [
-            [1, 0, 1],
-            [1, 1, 1],
-        ],
-    },
-    {
-        name: "F",
-        color: "bg-gray-400",
-        layout: [
-            [1, 1],
-            [1, 0],
-            [1, 0],
-        ],
-    }, // small F
     {
         name: "BigF",
         color: "bg-gray-400",
@@ -559,14 +524,6 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Bridge",
-        color: "bg-yellow-600",
-        layout: [
-            [1, 0, 1],
-            [1, 1, 1],
-        ],
-    },
-    {
         name: "Dot3",
         color: "bg-slate-200",
         layout: [
@@ -575,12 +532,11 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Corner3",
-        color: "bg-blue-300",
+        name: "Dot3b",
+        color: "bg-slate-200",
         layout: [
-            [1, 1, 1],
-            [1, 0, 0],
-            [1, 0, 0],
+            [0, 1, 0],
+            [1, 0, 1],
         ],
     },
     {
@@ -590,15 +546,6 @@ export const SHAPES = [
             [1, 1, 1],
             [1, 0, 0],
             [1, 1, 1],
-        ],
-    },
-    {
-        name: "SmallC",
-        color: "bg-cyan-400",
-        layout: [
-            [1, 1],
-            [1, 0],
-            [1, 1],
         ],
     },
     {
@@ -632,7 +579,7 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Y",
+        name: "Y0",
         color: "bg-yellow-600",
         layout: [
             [1, 0, 1],
@@ -641,8 +588,8 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Spy",
-        color: "bg-red-500",
+        name: "Y1",
+        color: "bg-yellow-500",
         layout: [
             [0, 1, 0],
             [1, 1, 1],
