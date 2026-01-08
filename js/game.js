@@ -861,6 +861,12 @@ export class BlockGame {
 
         // Apply hazard effects on grid
         this.applyStartGridEffects();
+        if (this.hazardMods.gridSize && this.hazardMods.gridSize !== GRID_SIZE) {
+            this.resizeGrid(this.hazardMods.gridSize, this.hazardMods.cellSize);
+            this.log(
+                `Благословение: сетка ${this.hazardMods.gridSize}x${this.hazardMods.gridSize}`
+            );
+        }
 
         // Grid cleanser artifact
         if (this.hasArtifact("cleanser"))
@@ -898,12 +904,6 @@ export class BlockGame {
                 "enemy",
                 "chill",
                 this.hazardMods.startEnemyChill
-            );
-        }
-        if (this.hazardMods.gridSize && this.hazardMods.gridSize !== GRID_SIZE) {
-            this.resizeGrid(this.hazardMods.gridSize, this.hazardMods.cellSize);
-            this.log(
-                `Благословение: сетка ${this.hazardMods.gridSize}x${this.hazardMods.gridSize}`
             );
         }
 
