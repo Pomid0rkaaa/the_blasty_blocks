@@ -67,7 +67,7 @@ export const HAZARDS = [
     {
         id: "cursed_grid",
         kind: "hazard",
-        weight: 8,
+        weight: 3,
         icon: "🔲",
         name: "Увеличение сетки",
         desc: "Сетка увеличивается до 12x12 на этот бой.",
@@ -242,7 +242,7 @@ export const HAZARDS = [
     {
         id: "bless_grid",
         kind: "boon",
-        weight: 8,
+        weight: 2,
         icon: "🔲",
         name: "Уменьшение сетки",
         desc: "Сетка уменьшается до 5x5 на этот бой.",
