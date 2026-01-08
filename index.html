@@ -8,11 +8,10 @@
   <script type="module" src="index.js" defer></script>
 
   <body class="flex items-center justify-between p-2 flex-col h-screen select-none w-screen">
-    <div class="mobile-top-bar"><button class="icon-btn" id="volume-btn"
-        onclick="document.body.classList.toggle('show-volume')" title="Настройки звука">🔊</button>
-      <button class=icon-btn onclick=game.openHelp() title=Справка id=help-btn>❔</button>
-      <button class=icon-btn onclick=game.openLog() title=Журнал id=log-btn>📜</button> <button class=icon-btn
-        onclick=game.openAchievements() title=Ачивки id=ach-btn>🏆</button>
+    <div class="mobile-top-bar"><button class="icon-btn" id="volume-btn" title="Настройки звука">🔊</button>
+      <button class=icon-btn title=Справка id=help-btn>❔</button>
+      <button class=icon-btn title=Журнал id=log-btn>📜</button> <button class=icon-btn title=Ачивки
+        id=ach-btn>🏆</button>
     </div>
     <div class=volume-panel>
       <div class="flex items-center justify-between mb-2">
@@ -24,7 +23,7 @@
       background: var(--ui-surface2);
       border-color: var(--ui-border);
       color: #e2e8f0;
-    " onclick="toggleMuteFromPanel()" id="mute-btn">
+    " id="mute-btn">
           MUTE
         </button>
       </div>
@@ -106,8 +105,8 @@
         <div class="w-full p-4 max-w-md rounded-t-xl shadow-2xl themed-footer z-20">
           <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-2"><span
-                class="text-slate-400 tracking-widest text-xs uppercase">Рука</span></div><button
-              class="border px-2 py-1 rounded text-[11px] transition-colors" onclick=game.discardHand()
+                class="text-slate-400 tracking-widest text-xs uppercase">Рука</span></div>
+            <button id="discard-btn" class="border px-2 py-1 rounded text-[11px] transition-colors"
               style=background:var(--ui-surface2);border-color:var(--ui-border);color:#e2e8f0>Сброс (ход врагу)</button>
           </div>
           <div class="flex items-center w-full justify-around min-h-24" id=hand-container></div>
@@ -121,17 +120,17 @@
       <h1 class="pixel-font text-4xl mb-8 text-blue-400">СЛОЖНОСТЬ</h1>
       <div class="flex flex-col gap-4 w-64"><button
           class="font-bold pixel-font rounded px-6 group overflow-hidden py-4 relative text-left text-white bg-emerald-700 hover:bg-emerald-600"
-          onclick=game.startGame(0)><span class="z-10 relative">ЛЕГКО</span> <span
+          id="startGame-easy"><span class="z-10 relative">ЛЕГКО</span> <span
             class="text-[10px] mt-1 block relative z-10 text-emerald-200">Враги слабее, больше HP.</span>
           <div class="inset-0 absolute group-hover:opacity-10 opacity-0 transition-opacity bg-emerald-500"></div>
         </button> <button
           class="font-bold pixel-font rounded px-6 group overflow-hidden py-4 relative text-left text-white bg-blue-700 hover:bg-blue-600"
-          onclick=game.startGame(1)><span class="z-10 relative">НОРМА</span> <span
+          id="startGame-normal"><span class="z-10 relative">НОРМА</span> <span
             class="text-[10px] mt-1 block relative z-10 text-blue-200">Стандартный баланс.</span>
           <div class="inset-0 absolute group-hover:opacity-10 opacity-0 transition-opacity bg-blue-500"></div>
         </button> <button
           class="font-bold pixel-font rounded px-6 group overflow-hidden py-4 relative text-left text-white bg-red-700 hover:bg-red-600"
-          onclick=game.startGame(2)><span class="z-10 relative">ХАРД</span> <span
+          id="startGame-hard"><span class="z-10 relative">ХАРД</span> <span
             class="text-[10px] mt-1 block relative z-10 text-red-200">Враги сильнее, меньше наград.</span>
           <div class="inset-0 absolute group-hover:opacity-10 opacity-0 transition-opacity bg-red-500"></div>
         </button></div>
@@ -141,7 +140,7 @@
       <p class="mb-3 text-white">Счёт: <span id=final-score>0</span>
       <p class="text-slate-300 mb-8">Глубина: <span id=final-depth>1</span></p><button
         class="font-bold pixel-font rounded bg-white hover:bg-gray-200 text-black py-3 px-6"
-        onclick=game.showDifficultyModal()>ЕЩЁ РАЗ</button>
+        id="new-game-btn">ЕЩЁ РАЗ</button>
     </div>
     <div class="flex items-center justify-center flex-col fixed inset-0 z-50 bg-black/95 hidden" id=victory-modal>
       <h1 class="pixel-font text-yellow-300 mb-2 text-3xl">ТРОФЕИ</h1>
@@ -200,7 +199,7 @@
               <div class="text-[10px] text-slate-400 tracking-widest">СПРАВКА</div>
               <div class="pixel-font text-lg font-black text-slate-100">Эффекты и правила</div>
             </div><button class="font-bold pixel-font rounded bg-white hover:bg-gray-200 text-black px-3 py-2"
-              onclick=game.closeHelp()>OK</button>
+              id="close-help">OK</button>
           </div>
           <div class="gap-3 grid grid-cols-1 md:grid-cols-2">
             <div class="border bg-black/30 border-white/10 p-3 rounded-lg">
@@ -245,9 +244,9 @@
             </div>
             <div class="flex gap-2 btn-holder"><button
                 class="font-bold pixel-font rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 danger-btn"
-                onclick=game.clearLog()>CLEAR</button> <button
+                id="clear-log-btn">CLEAR</button> <button
                 class="font-bold pixel-font rounded bg-white hover:bg-gray-200 text-black px-3 py-2 ok-btn"
-                onclick=game.closeLog()>OK</button></div>
+                id="close-log-btn">OK</button></div>
           </div>
           <div class=log-box id=log-box style=max-height:65vh></div>
         </div>
@@ -264,9 +263,9 @@
             </div>
             <div class="flex gap-2 btn-holder"><button
                 class="font-bold pixel-font rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 danger-btn"
-                onclick=game.resetAchievements() title="Сбросить ачивки">RESET</button> <button
+                id="reset-achievements-btn" title="Сбросить ачивки">RESET</button> <button
                 class="font-bold pixel-font rounded bg-white hover:bg-gray-200 text-black px-3 py-2 ok-btn"
-                onclick=game.closeAchievements()>OK</button></div>
+                id="close-achievements-btn">OK</button></div>
           </div>
           <div class="gap-3 grid grid-cols-1 md:grid-cols-2" id=achievements-container
             style=max-height:65vh;overflow:auto></div>
