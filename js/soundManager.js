@@ -195,50 +195,53 @@ export class SoundManager {
         osc.stop(t + 0.12);
     }
 
-    playPlace() {
-        this.playTone(420, "square", 0.08, 0.05);
-    }
-    playPickup() {
-        this.playTone(520, "triangle", 0.06, 0.045);
-    }
-    playInvalid() {
-        this.playTone(150, "sawtooth", 0.18, 0.1);
-    }
-    playClear() {
-        this.playTone(660, "sine", 0.1, 0.09);
-        setTimeout(
-            () => this.playTone(880, "sine", 0.18, 0.08),
-            70
-        );
-    }
-    playDamage() {
-        this.playTone(95, "sawtooth", 0.12, 0.18);
-    }
-    playHit() {
-        this.playTone(220, "triangle", 0.08, 0.1, -8);
-    }
-    playCrit() {
-        this.playTone(800, "square", 0.06, 0.1);
-        setTimeout(
-            () => this.playTone(1200, "square", 0.08, 0.08),
-            50
-        );
-    }
-    playWin() {
-        [523, 659, 784, 1046].forEach((f, i) =>
-            setTimeout(
-                () => this.playTone(f, "square", 0.18, 0.09),
-                i * 90
-            )
-        );
-    }
-    playLose() {
-        [392, 330, 262, 196].forEach((f, i) =>
-            setTimeout(
-                () => this.playTone(f, "sawtooth", 0.28, 0.1),
-                i * 140
-            )
-        );
+    play(sound) {
+        switch (sound) {
+            case "place":
+                this.playTone(420, "square", 0.08, 0.05);
+                break;
+            case "pickup":
+                this.playTone(520, "triangle", 0.06, 0.045);
+                break;
+            case "invalid":
+                this.playTone(150, "sawtooth", 0.18, 0.1);
+                break;
+            case "clear":
+                this.playTone(660, "sine", 0.1, 0.09);
+                setTimeout(() => this.playTone(880, "sine", 0.18, 0.08), 70);
+                break;
+            case "damage":
+                this.playTone(95, "sawtooth", 0.12, 0.18);
+                break;
+            case "hit":
+                this.playTone(220, "triangle", 0.08, 0.1, -8);
+                break;
+            case "crit":
+                this.playTone(800, "square", 0.06, 0.1);
+                setTimeout(
+                    () => this.playTone(1200, "square", 0.08, 0.08),
+                    50
+                );
+                break;
+            case "win":
+                [523, 659, 784, 1046].forEach((f, i) =>
+                    setTimeout(
+                        () => this.playTone(f, "square", 0.18, 0.09),
+                        i * 90
+                    )
+                );
+                break;
+            case "lose":
+                [392, 330, 262, 196].forEach((f, i) =>
+                    setTimeout(
+                        () => this.playTone(f, "sawtooth", 0.28, 0.1),
+                        i * 140
+                    )
+                );
+                break;
+            default:
+                break;
+        }
     }
 
     startMusic() {

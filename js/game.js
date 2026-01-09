@@ -1310,7 +1310,7 @@ export class BlockGame {
             if (this.paused) return;
             if (this.hp <= 0) return;
 
-            soundManager.playPickup();
+            soundManager.play("pickup");
             this.startDrag(blockObj, e);
         };
 
@@ -1409,7 +1409,7 @@ export class BlockGame {
             this.checkHandEmpty();
         } else {
             this.draggedBlock.element.style.opacity = "1";
-            soundManager.playInvalid();
+            soundManager.play("invalid");
         }
 
         this.clearPreviews();
@@ -1480,7 +1480,7 @@ export class BlockGame {
     }
 
     placeBlock(r, c, block) {
-        soundManager.playPlace();
+        soundManager.play("place");
 
         let cellsPlaced = 0;
         const layout = block.layout;
@@ -1530,7 +1530,7 @@ export class BlockGame {
                 this.ui.playerHpBar,
                 "#ef4444"
             );
-            soundManager.playDamage();
+            soundManager.play("damage");
             if (this.hp <= 0) {
                 this.hp = 0;
                 this.loseGame();
@@ -1636,7 +1636,7 @@ export class BlockGame {
     }
 
     async performClear(rows, cols, count) {
-        soundManager.playClear();
+        soundManager.play("clear");
         this.clearsThisFight += count;
 
         let damage = count * 20 * (count > 1 ? 1.5 : 1);
@@ -1748,7 +1748,7 @@ export class BlockGame {
                         this.ui.enemySprite,
                         "#ef4444"
                     );
-                    soundManager.playCrit();
+                    soundManager.play("crit");
                 }
                 this.grid[r][c] = null;
                 this.ui.grid.children[idx].className = "cell";
@@ -1861,7 +1861,7 @@ export class BlockGame {
                     this.ui.playerHpBar,
                     "#f97316"
                 );
-                soundManager.playWin();
+                soundManager.play("win");
             } else {
                 this.hp = 0;
                 this.loseGame();
@@ -1943,8 +1943,8 @@ export class BlockGame {
 
         if (amount > 0) {
             this.enemyHp -= amount;
-            if (isCrit) soundManager.playCrit();
-            else soundManager.playHit();
+            if (isCrit) soundManager.play("crit");
+            else soundManager.play("hit");
 
             this.spawnFloatingText(
                 amount,
@@ -2033,7 +2033,7 @@ export class BlockGame {
         this.discardsThisFight++;
 
         Logger.log("Сброс: ход врагу.");
-        soundManager.playInvalid();
+        soundManager.play("invalid");
 
         // Recycle artifact
         if (this.hasArtifact("recycle")) {
@@ -2067,7 +2067,7 @@ export class BlockGame {
                 this.ui.playerHpBar,
                 "#a78bfa"
             );
-            soundManager.playClear();
+            soundManager.play("clear");
             this.updateUI();
             return;
         }
@@ -2093,7 +2093,7 @@ export class BlockGame {
                     this.ui.enemySprite,
                     "#67e8f9"
                 );
-                soundManager.playClear();
+                soundManager.play("clear");
                 this.decayStatus("enemy", "chill", 2);
                 this.updateUI();
                 return;
@@ -2145,7 +2145,7 @@ export class BlockGame {
             this.hp -= dmg;
             this.damageTakenThisFight += dmg;
             Logger.log(`Враг атакует: -${dmg} HP`);
-            soundManager.playDamage();
+            soundManager.play("damage");
             document.body.classList.add("shake");
             setTimeout(
                 () => document.body.classList.remove("shake"),
@@ -2232,7 +2232,7 @@ export class BlockGame {
                     this.ui.playerHpBar,
                     "#f97316"
                 );
-                soundManager.playWin();
+                soundManager.play("win");
             } else {
                 this.hp = 0;
                 this.loseGame();
@@ -2310,13 +2310,13 @@ export class BlockGame {
             btn.onclick = () => {
                 if (item.sold) return;
                 if (this.gold < item.price) {
-                    soundManager.playInvalid();
+                    soundManager.play("invalid");
                     refresh();
                     return;
                 }
                 const ok = this.buyShopItem(item);
                 if (!ok) {
-                    soundManager.playInvalid();
+                    soundManager.play("invalid");
                     refresh();
                     return;
                 }
@@ -2413,7 +2413,7 @@ export class BlockGame {
         if (this.gold < item.price) return false;
         this.gold -= item.price;
         if (item.apply) item.apply();
-        soundManager.playPlace();
+        soundManager.play("place");
         this.updateUI();
         Logger.log(`Покупка: ${item.name}`);
         return true;
@@ -2519,7 +2519,7 @@ export class BlockGame {
             this.addArtifact(reward);
         }
 
-        soundManager.playPlace();
+        soundManager.play("place");
         this.nextLevel();
     }
 
@@ -2549,7 +2549,7 @@ export class BlockGame {
     }
 
     winLevel() {
-        soundManager.playWin();
+        soundManager.play("win");
 
         const isBoss = this.level % 5 === 0;
         let bonus = 14 + Math.floor(this.level * 2);
@@ -2605,7 +2605,7 @@ export class BlockGame {
     }
 
     loseGame() {
-        soundManager.playLose();
+        soundManager.play("lose");
         document.getElementById("final-score").innerText =
             this.score;
         document.getElementById("final-depth").innerText =
