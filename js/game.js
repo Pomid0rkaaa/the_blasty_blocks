@@ -1160,57 +1160,93 @@ export class BlockGame {
         const clipMode = !!this.hazardMods.mask;
         let validShapesCache = [];
 
-        const pickShape = () => {
-            // 75% chance to ensure playability
-            if (Math.random() < 0.75) {
-                if (validShapesCache.length === 0) {
-                    validShapesCache = SHAPES.filter((s) =>
-                        this.checkCanFit(s, clipMode)
-                    );
-                    if (validShapesCache.length === 0)
-                        validShapesCache = [...SHAPES]; // Panic fallback
-                }
-                return validShapesCache[
-                    Math.floor(
-                        Math.random() * validShapesCache.length
-                    )
-                ];
-            }
-            return SHAPES[
-                Math.floor(Math.random() * SHAPES.length)
-            ];
+        const COLORS = [
+            "bg-cyan-500", "bg-purple-500",
+            "bg-rose-500", "bg-amber-500",
+            "bg-emerald-500", "bg-fuchsia-500",
+            "bg-yellow-400", "bg-blue-300",
+        ];
+        const trim = (matrix) => {
+            const rows = matrix.length, cols = matrix[0].length;
+            let firstRow = -1, lastRow = -1, firstCol = -1, lastCol = -1;
+            for (let r = 0; r < rows; r++)
+                for (let c = 0; c < cols; c++)
+                    if (matrix[r][c] === 1) {
+                        if (firstRow === -1) firstRow = r;
+                        lastRow = r;
+                        if (firstCol === -1 || c < firstCol) firstCol = c;
+                        if (c > lastCol) lastCol = c;
+                    }
+            if (firstRow === -1) return [[1]];
+            return matrix
+                .slice(firstRow, lastRow + 1)
+                .map(row => row.slice(firstCol, lastCol + 1));
         };
 
-        const pickRandomShape = () => {
-            const trim = (matrix) => {
-                const rows = matrix.length, cols = matrix[0].length;
-                let firstRow = -1, lastRow = -1, firstCol = -1, lastCol = -1;
-                for (let r = 0; r < rows; r++)
-                    for (let c = 0; c < cols; c++)
-                        if (matrix[r][c] === 1) {
-                            if (firstRow === -1) firstRow = r;
-                            lastRow = r;
-                            if (firstCol === -1 || c < firstCol) firstCol = c;
-                            if (c > lastCol) lastCol = c;
-                        }
+        const generateRandomLayout = () => trim(
+            Array.from({ length: 3 }, () =>
+                Array.from({ length: 3 }, () => (Math.random() < 0.5 ? 1 : 0))
+            ));
 
-                if (firstRow === -1) return [[1]];
-                return matrix.slice(firstRow, lastRow + 1).map(row => row.slice(firstCol, lastCol + 1));
+        const pickShape = () => {
+            if (this.hazardMods.randomShape) {
+                if (Math.random() < 0.75) {
+                    if (validShapesCache.length === 0) {
+                        validShapesCache = Array.from({ length: 20 })
+                            .map(() => ({
+                                name: "random",
+                                layout: generateRandomLayout()
+                            }))
+                            .filter(s =>
+                                this.checkCanFit(s, clipMode)
+                            );
+
+                        if (validShapesCache.length === 0) {
+                            validShapesCache = Array.from({ length: 5 })
+                                .map(() => ({
+                                    name: "random",
+                                    layout: generateRandomLayout()
+                                }));
+                        }
+                    }
+
+                    const shape = validShapesCache[
+                        Math.floor(Math.random() * validShapesCache.length)
+                    ];
+
+                    return {
+                        ...shape,
+                        color: COLORS[Math.floor(Math.random() * COLORS.length)]
+                    };
+                }
+
+                return {
+                    name: "random",
+                    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                    layout: generateRandomLayout()
+                };
             }
 
-            let layout = trim(Array(3).fill().map(() => Array(3).fill(0).map(() => (Math.random() < 0.5 ? 1 : 0))));
+            if (Math.random() < 0.75) {
+                if (validShapesCache.length === 0) {
+                    validShapesCache = SHAPES.filter(s =>
+                        this.checkCanFit(s, clipMode)
+                    );
 
-            let colors = ["bg-cyan-500", "bg-purple-500", "bg-rose-500", "bg-amber-500", "bg-emerald-500", "bg-fuchsia-500", "bg-yellow-400"]
+                    if (validShapesCache.length === 0)
+                        validShapesCache = [...SHAPES];
+                }
 
-            return {
-                name: "random",
-                color: colors[Math.floor(Math.random()*colors.length)],
-                layout: layout
-            };
-        }
+                return validShapesCache[
+                    Math.floor(Math.random() * validShapesCache.length)
+                ];
+            }
+
+            return SHAPES[Math.floor(Math.random() * SHAPES.length)];
+        };
 
         for (let i = 0; i < size; i++) {
-            const shapeData = this.hazardMods.randomShape ? pickRandomShape() : pickShape();
+            const shapeData = pickShape();
             this.createHandBlock({ ...shapeData }, i);
         }
 

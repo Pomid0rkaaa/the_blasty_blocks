@@ -76,8 +76,8 @@ export const HAZARDS = [
     {
         id: "random_shape",
         kind: "hazard",
-        weight: 3,
-        icon: "🔲",
+        weight: 5,
+        icon: "🎲",
         name: "Случайная фигура",
         desc: "В руке появляются фигуры сделанные случайным образом.",
         mods: { randomShape: true },
