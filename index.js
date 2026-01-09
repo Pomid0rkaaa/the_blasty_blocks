@@ -11,9 +11,6 @@ function toggleMuteFromPanel() {
     btn.textContent = soundManager.muted ? "UNMUTE" : "MUTE";
 }
 
-window.game = game;
-window.toggleMuteFromPanel = toggleMuteFromPanel;
-
 document.addEventListener("click", (event) => {
     const btn = event.target.closest("button");
     if (!btn) return;
@@ -66,3 +63,27 @@ document.addEventListener("click", (event) => {
             break;
     }
 });
+
+// Game manipulation from DevTools
+import { ACHIEVEMENTS } from './js/data/achievements.js';
+import { ARTIFACTS } from './js/data/artifacts.js';
+import { ELEMENTS } from './js/data/elements.js';
+import { ENEMIES } from './js/data/enemies.js';
+import { HAZARDS } from './js/data/hazards.js';
+import { SHAPES } from './js/data/shapes.js';
+import { STATUS_META } from './js/data/status_meta.js';
+import { Logger } from './js/logger.js'
+
+window.game = game;
+window.soundManager = soundManager;
+window.Logger = Logger;
+
+window.data = {
+    ACHIEVEMENTS,
+    ARTIFACTS,
+    ELEMENTS,
+    ENEMIES,
+    HAZARDS,
+    SHAPES,
+    STATUS_META,
+}
