@@ -213,13 +213,41 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Cross7",
+        name: "Cross0",
         color: "bg-green-500",
         layout: [
             [0, 1, 0],
             [1, 1, 1],
             [0, 1, 0],
             [0, 1, 0],
+        ],
+    },
+    {
+        name: "Cross1",
+        color: "bg-green-500",
+        layout: [
+            [0, 1, 0],
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 1, 0],
+        ],
+    },
+    {
+        name: "Cross2",
+        color: "bg-green-500",
+        layout: [
+            [0, 1, 0, 0],
+            [1, 1, 1, 1],
+            [0, 1, 0, 0],
+        ],
+    },
+    {
+        name: "Cross3",
+        color: "bg-green-500",
+        layout: [
+            [0, 0, 1, 0],
+            [1, 1, 1, 1],
+            [0, 0, 1, 0],
         ],
     },
     {
@@ -301,9 +329,44 @@ export const SHAPES = [
         name: "P3",
         color: "bg-yellow-400",
         layout: [
+            [1, 1, 0],
+            [1, 1, 1],
+        ],
+    },
+
+    // b
+    {
+        name: "b0",
+        color: "bg-yellow-400",
+        layout: [
             [1, 1],
             [1, 1],
             [0, 1],
+        ],
+    },
+    {
+        name: "b1",
+        color: "bg-yellow-400",
+        layout: [
+            [0, 1, 1],
+            [1, 1, 1],
+        ],
+    },
+    {
+        name: "b2",
+        color: "bg-yellow-400",
+        layout: [
+            [1, 0],
+            [1, 1],
+            [1, 1],
+        ],
+    },
+    {
+        name: "b3",
+        color: "bg-yellow-400",
+        layout: [
+            [1, 1, 1],
+            [1, 1, 0],
         ],
     },
 
@@ -456,12 +519,39 @@ export const SHAPES = [
         ],
     },
     {
-        name: "BigT",
+        name: "BigT0",
         color: "bg-violet-500",
         layout: [
             [1, 1, 1],
             [0, 1, 0],
             [0, 1, 0],
+        ],
+    },
+    {
+        name: "BigT1",
+        color: "bg-violet-500",
+        layout: [
+            [0, 1, 0],
+            [0, 1, 0],
+            [1, 1, 1],
+        ],
+    },
+    {
+        name: "BigT2",
+        color: "bg-violet-500",
+        layout: [
+            [1, 0, 0],
+            [1, 1, 1],
+            [1, 0, 0],
+        ],
+    },
+    {
+        name: "BigT3",
+        color: "bg-violet-500",
+        layout: [
+            [0, 0, 1],
+            [1, 1, 1],
+            [0, 0, 1],
         ],
     },
 
@@ -477,7 +567,7 @@ export const SHAPES = [
         ],
     },
     {
-        name: "LongL",
+        name: "LongL0",
         color: "bg-stone-300",
         layout: [
             [1, 0],
@@ -487,13 +577,33 @@ export const SHAPES = [
         ],
     },
     {
-        name: "LongJ",
+        name: "LongL1",
+        color: "bg-stone-300",
+        layout: [
+            [1, 1],
+            [1, 0],
+            [1, 0],
+            [1, 0],
+        ],
+    },
+    {
+        name: "LongJ0",
         color: "bg-stone-300",
         layout: [
             [0, 1],
             [0, 1],
             [0, 1],
             [1, 1],
+        ],
+    },
+    {
+        name: "LongJ1",
+        color: "bg-stone-300",
+        layout: [
+            [1, 1],
+            [0, 1],
+            [0, 1],
+            [0, 1],
         ],
     },
     {
@@ -607,7 +717,7 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Ship",
+        name: "Ship0",
         color: "bg-sky-500",
         layout: [
             [0, 0, 1],
@@ -616,12 +726,48 @@ export const SHAPES = [
         ],
     },
     {
-        name: "Castle",
+        name: "Ship1",
+        color: "bg-sky-500",
+        layout: [
+            [1, 1, 1],
+            [0, 1, 1],
+            [0, 0, 1],
+        ],
+    },
+    {
+        name: "Ship2",
+        color: "bg-sky-500",
+        layout: [
+            [1, 0, 0],
+            [1, 1, 0],
+            [1, 1, 1],
+        ],
+    },
+    {
+        name: "Ship3",
+        color: "bg-sky-500",
+        layout: [
+            [1, 1, 1],
+            [1, 1, 0],
+            [1, 0, 0],
+        ],
+    },
+    {
+        name: "Castle0",
         color: "bg-stone-300",
         layout: [
             [1, 0, 1],
             [1, 1, 1],
             [1, 1, 1],
+        ],
+    },
+    {
+        name: "Castle1",
+        color: "bg-stone-300",
+        layout: [
+            [1, 1, 1],
+            [1, 1, 1],
+            [1, 0, 1],
         ],
     },
 ];
