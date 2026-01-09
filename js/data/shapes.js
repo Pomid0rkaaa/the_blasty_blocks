@@ -408,6 +408,22 @@ export const SHAPES = [
         ],
     },
     {
+        name: "Diag2",
+        color: "bg-sky-500",
+        layout: [
+            [1, 0],
+            [0, 1],
+        ],
+    },
+    {
+        name: "Diag2b",
+        color: "bg-sky-500",
+        layout: [
+            [0, 1],
+            [1, 0],
+        ],
+    },
+    {
         name: "Diag3",
         color: "bg-sky-500",
         layout: [
@@ -768,6 +784,78 @@ export const SHAPES = [
             [1, 1, 1],
             [1, 1, 1],
             [1, 0, 1],
+        ],
+    },
+    {
+        name: "BigS0",
+        color: "bg-lime-400",
+        layout: [
+            [0, 0, 1, 1],
+            [1, 1, 1, 0],
+        ],
+    },
+    {
+        name: "BigS1",
+        color: "bg-lime-400",
+        layout: [
+            [0, 1, 1, 1],
+            [1, 1, 0, 0],
+        ],
+    },
+    {
+        name: "BigS2",
+        color: "bg-lime-400",
+        layout: [
+            [1, 0],
+            [1, 1],
+            [0, 1],
+            [0, 1],
+        ],
+    },
+    {
+        name: "BigS3",
+        color: "bg-lime-400",
+        layout: [
+            [1, 0],
+            [1, 0],
+            [1, 1],
+            [0, 1],
+        ],
+    },
+    {
+        name: "BigN0",
+        color: "bg-slate-200",
+        layout: [
+            [1, 1, 0, 0],
+            [0, 1, 1, 1],
+        ],
+    },
+    {
+        name: "BigN1",
+        color: "bg-slate-200",
+        layout: [
+            [1, 1, 1, 0],
+            [0, 0, 1, 1],
+        ],
+    },
+    {
+        name: "BigN2",
+        color: "bg-slate-200",
+        layout: [
+            [0, 1],
+            [0, 1],
+            [1, 1],
+            [1, 0],
+        ],
+    },
+    {
+        name: "BigN3",
+        color: "bg-slate-200",
+        layout: [
+            [0, 1],
+            [1, 1],
+            [1, 0],
+            [1, 0],
         ],
     },
 ];
