@@ -715,7 +715,7 @@ export const SHAPES = [
     },
     {
         name: "Y1",
-        color: "bg-yellow-500",
+        color: "bg-yellow-600",
         layout: [
             [0, 1, 0],
             [1, 1, 1],
