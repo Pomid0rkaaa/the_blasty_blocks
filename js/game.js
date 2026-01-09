@@ -152,6 +152,7 @@ export class BlockGame {
             startHoles: 0,
             startGarbage: 0,
             hpCostPerCell: 0,
+            randomShape: false,
             mask: null,
 
             // boons
@@ -1180,8 +1181,36 @@ export class BlockGame {
             ];
         };
 
+        const pickRandomShape = () => {
+            const trim = (matrix) => {
+                const rows = matrix.length, cols = matrix[0].length;
+                let firstRow = -1, lastRow = -1, firstCol = -1, lastCol = -1;
+                for (let r = 0; r < rows; r++)
+                    for (let c = 0; c < cols; c++)
+                        if (matrix[r][c] === 1) {
+                            if (firstRow === -1) firstRow = r;
+                            lastRow = r;
+                            if (firstCol === -1 || c < firstCol) firstCol = c;
+                            if (c > lastCol) lastCol = c;
+                        }
+
+                if (firstRow === -1) return [[1]];
+                return matrix.slice(firstRow, lastRow + 1).map(row => row.slice(firstCol, lastCol + 1));
+            }
+
+            let layout = trim(Array(3).fill().map(() => Array(3).fill(0).map(() => (Math.random() < 0.5 ? 1 : 0))));
+
+            let colors = ["bg-cyan-500", "bg-purple-500", "bg-rose-500", "bg-amber-500", "bg-emerald-500", "bg-fuchsia-500", "bg-yellow-400"]
+
+            return {
+                name: "random",
+                color: colors[Math.floor(Math.random()*colors.length)],
+                layout: layout
+            };
+        }
+
         for (let i = 0; i < size; i++) {
-            const shapeData = pickShape();
+            const shapeData = this.hazardMods.randomShape ? pickRandomShape() : pickShape();
             this.createHandBlock({ ...shapeData }, i);
         }
 
@@ -1219,6 +1248,7 @@ export class BlockGame {
         const miniGrid = document.createElement("div");
         miniGrid.className = "mini-grid";
         miniGrid.style.gridTemplateColumns = `repeat(${shapeData.layout[0].length}, 20px)`;
+        miniGrid.style.gridTemplateRows = `repeat(${shapeData.layout.length}, 20px)`;
 
         shapeData.layout.forEach((row) => {
             row.forEach((cell) => {

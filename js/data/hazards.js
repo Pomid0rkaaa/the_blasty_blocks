@@ -73,6 +73,15 @@ export const HAZARDS = [
         desc: "Сетка увеличивается до 12x12 на этот бой.",
         mods: { gridSize: 12, cellSize: "24px" },
     },
+    {
+        id: "random_shape",
+        kind: "hazard",
+        weight: 3,
+        icon: "🔲",
+        name: "Случайная фигура",
+        desc: "В руке появляются фигуры сделанные случайным образом.",
+        mods: { randomShape: true },
+    },
 
     // Shape hazards (non-square play area via mask; now uses rocks instead of holes)
     {
