@@ -1,4 +1,5 @@
 import { Logger } from "../logger.js";
+import { UIElements } from "../ui.js";
 
 export const ENEMIES = [
     // Regular
@@ -18,7 +19,7 @@ export const ENEMIES = [
                 Logger.log("Слизень регенит +8");
                 g.spawnFloatingText(
                     "REGEN",
-                    g.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#22c55e"
                 );
             }
@@ -40,7 +41,7 @@ export const ENEMIES = [
                 Logger.log("Огонь плавит щит");
                 g.spawnFloatingText(
                     "MELT",
-                    g.ui.playerHpBar,
+                    UIElements.player.hp_bar,
                     "#fb7185"
                 );
             }
@@ -60,7 +61,7 @@ export const ENEMIES = [
             g.hp -= 2;
             g.damageTakenThisFight += 2;
             Logger.log("Пустота: -2 HP");
-            g.spawnFloatingText(2, g.ui.playerHpBar, "#a78bfa");
+            g.spawnFloatingText(2, UIElements.player.hp_bar, "#a78bfa");
         },
     },
     {
@@ -78,7 +79,7 @@ export const ENEMIES = [
             Logger.log("Голем: +6 ARM");
             g.spawnFloatingText(
                 "+6 ARM",
-                g.ui.enemySprite,
+                UIElements.enemy.sprite,
                 "#67e8f9"
             );
         },
@@ -99,7 +100,7 @@ export const ENEMIES = [
                 Logger.log("Шок!");
                 g.spawnFloatingText(
                     "SHOCK",
-                    g.ui.playerHpBar,
+                    UIElements.player.hp_bar,
                     "#facc15"
                 );
             }
@@ -121,7 +122,7 @@ export const ENEMIES = [
                 Logger.log("Песок: +2 камня");
                 g.spawnFloatingText(
                     "SAND!",
-                    g.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#fbbf24"
                 );
             }
@@ -158,7 +159,7 @@ export const ENEMIES = [
                 Logger.log("Споры: яд");
                 g.spawnFloatingText(
                     "SPORES",
-                    g.ui.playerHpBar,
+                    UIElements.player.hp_bar,
                     "#22c55e"
                 );
             }
@@ -203,7 +204,7 @@ export const ENEMIES = [
                 Logger.log("Сирена: заморозка руки");
                 g.spawnFloatingText(
                     "FREEZE",
-                    g.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#67e8f9"
                 );
             }
@@ -225,7 +226,7 @@ export const ENEMIES = [
                 Logger.log("Пиромант: горение");
                 g.spawnFloatingText(
                     "BURN",
-                    g.ui.playerHpBar,
+                    UIElements.player.hp_bar,
                     "#fb7185"
                 );
             }
@@ -265,7 +266,7 @@ export const ENEMIES = [
                 Logger.log("Светляк: слабость");
                 g.spawnFloatingText(
                     "WEAK",
-                    g.ui.playerHpBar,
+                    UIElements.player.hp_bar,
                     "#60a5fa"
                 );
             } else if (Math.random() < 0.35) {
@@ -273,7 +274,7 @@ export const ENEMIES = [
                 Logger.log("Светляк: шок");
                 g.spawnFloatingText(
                     "SHOCK",
-                    g.ui.playerHpBar,
+                    UIElements.player.hp_bar,
                     "#facc15"
                 );
             }
@@ -295,7 +296,7 @@ export const ENEMIES = [
                 Logger.log("Бугай: +3 мусора");
                 g.spawnFloatingText(
                     "TRASH",
-                    g.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#cbd5e1"
                 );
             }
@@ -316,7 +317,7 @@ export const ENEMIES = [
             Logger.log("Культист усиливается");
             g.spawnFloatingText(
                 "CHANT",
-                g.ui.enemySprite,
+                UIElements.enemy.sprite,
                 "#a78bfa"
             );
         },
@@ -339,7 +340,7 @@ export const ENEMIES = [
                 Logger.log(`Страж: украл ${take} щита`);
                 g.spawnFloatingText(
                     "-SHD",
-                    g.ui.playerHpBar,
+                    UIElements.player.hp_bar,
                     "#60a5fa"
                 );
             }
@@ -477,7 +478,7 @@ export const ENEMIES = [
                 Logger.log("Некромант: проклятье (+3 камня)");
                 g.spawnFloatingText(
                     "CURSE",
-                    g.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#a78bfa"
                 );
             }
@@ -514,7 +515,7 @@ export const ENEMIES = [
             Logger.log("Червь: горение");
             g.spawnFloatingText(
                 "BURN",
-                g.ui.playerHpBar,
+                UIElements.player.hp_bar,
                 "#fb7185"
             );
         },
@@ -534,7 +535,7 @@ export const ENEMIES = [
             Logger.log("Архон: заморозка руки");
             g.spawnFloatingText(
                 "FREEZE",
-                g.ui.enemySprite,
+                UIElements.enemy.sprite,
                 "#67e8f9"
             );
         },
