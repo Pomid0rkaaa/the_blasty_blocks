@@ -8,7 +8,9 @@ import { HAZARDS } from './js/data/hazards.js';
 import { SHAPES } from './js/data/shapes.js';
 import { STATUS_META } from './js/data/status_meta.js';
 import { Logger } from './js/logger.js'
+import i18n from './js/i18n.js';
 
+await i18n.load(i18n.lang);
 const game = new BlockGame();
 function toggleMuteFromPanel() {
     soundManager.toggle();

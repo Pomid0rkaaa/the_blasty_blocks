@@ -5,7 +5,7 @@ export class I18n {
     }
 
     async load(lang) {
-        const res = await fetch(`./i18n/${lang}.json`);
+        const res = await fetch(new URL(`js/i18n/${lang}.json`, window.location.href))
         this.dict = await res.json();
         this.lang = lang;
         this.updateDOM();
@@ -15,7 +15,7 @@ export class I18n {
         let text = this.dict[key];
         if (!text) return key;
         for (const name in vars) {
-            text = text.replaceAll(`{${name}}`, vars[name]);
+            text = text.replaceAll("${"+name+"}", vars[name]);
         }
         return text;
     }
