@@ -10,6 +10,7 @@ import { UI, UIElements } from './ui.js';
 import { Logger } from './logger.js'
 import { Shop } from './shop.js';
 import { Rewards } from './rewards.js';
+import { Context } from './context.js';
 import i18n from './i18n.js';
 
 let GRID_SIZE = 8;
@@ -17,8 +18,9 @@ let GRID_SIZE = 8;
 export class BlockGame {
     constructor() {
         this.resetRun();
-        this.shop = new Shop(this);
-        this.rewards = new Rewards(this);
+        this.ui = UI.elements;
+        this.rewards = new Rewards(new Context(this));
+        this.shop = new Shop(new Context(this));
         this.init();
     }
 
@@ -59,7 +61,6 @@ export class BlockGame {
         this.blocksPlaced = 0;
 
         this.paused = false;
-        this.shopOpen = false;
 
         // God Mode
         this.godMode = this.godMode || false;
@@ -2266,7 +2267,7 @@ export class BlockGame {
         this.updateUI();
     }
 
-    winLevel() {
+    async winLevel() {
         soundManager.play("win");
 
         const isBoss = this.level % 5 === 0;
@@ -2311,13 +2312,11 @@ export class BlockGame {
         // Decide shop
         if (this.shop.rollShop()) {
             Logger.log(i18n.t("shop.roll"))
-            this.shop.openShopThenRewards();
-        } else {
-            this.rewards.generateRewards();
-            document
-                .getElementById("victory-modal")
-                .classList.remove("hidden");
+            await this.shop.openShop();
         }
+        UIElements.victory_modal.classList.remove("hidden");
+        await this.rewards.generateRewards();
+        this.nextLevel();
 
         this.updateUI();
     }
@@ -2330,8 +2329,6 @@ export class BlockGame {
             .getElementById("game-over-modal")
             .classList.remove("hidden");
     }
-
-
 
     updateUI() {
         UI.updateUI.call(this);
