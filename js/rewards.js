@@ -1,8 +1,7 @@
 import { ARTIFACTS } from './data/artifacts.js';
 import { soundManager } from './soundManager.js';
-import { Logger } from './logger.js';
+import { REWARDS } from './data/rewards.js';
 import i18n from './i18n.js';
-
 
 export class Rewards {
     constructor(ctx) {
@@ -15,44 +14,9 @@ export class Rewards {
 
             container.innerHTML = "";
             const choices = [];
+            choices.push(REWARDS.find(obj => obj.id === "heal"));
+            const r = REWARDS[Math.floor(Math.random()*REWARDS.length)];
 
-            // Всегда: одно исцеление
-            choices.push({
-                type: "stat",
-                id: "heal",
-                name: "Зелье",
-                desc: "+30 HP",
-                icon: "❤️",
-            });
-
-            // Одно улучшение
-            const r = Math.random();
-            if (r < 0.3)
-                choices.push({
-                    type: "stat",
-                    id: "maxhp",
-                    name: "Выносливость",
-                    desc: "+10 Max HP",
-                    icon: "💪",
-                });
-            else if (r < 0.6)
-                choices.push({
-                    type: "stat",
-                    id: "shield",
-                    name: "Броня",
-                    desc: "+20 щита",
-                    icon: "🛡️",
-                });
-            else
-                choices.push({
-                    type: "stat",
-                    id: "gold",
-                    name: "Кошель",
-                    desc: "+40 золота",
-                    icon: "🪙",
-                });
-
-            // Один артефакт
             const available = ARTIFACTS.filter(
                 (a) => !this.ctx.hasArtifact(a.id)
             );
@@ -65,15 +29,7 @@ export class Rewards {
                 });
                 const art = bag[Math.floor(Math.random() * bag.length)];
                 choices.push({ type: "artifact", ...art });
-            } else {
-                choices.push({
-                    type: "stat",
-                    id: "full",
-                    name: "Полный отдых",
-                    desc: "Полное лечение",
-                    icon: "💖",
-                });
-            }
+            } else choices.push(REWARDS.find(obj => obj.id === "full"));
 
             choices.forEach((choice) => {
                 const card = document.createElement("div");
@@ -99,18 +55,15 @@ export class Rewards {
     }
 
     selectReward(reward) {
-        if (reward.type === "stat") {
-            if (reward.id === "heal") this.ctx.healPlayer(30);
-            if (reward.id === "maxhp") {
-                this.ctx.maxHp += 10;
-                this.ctx.healPlayer(10);
+        if (reward.type === "stat")
+            switch(reward.id) {
+                case "heal": this.ctx.healPlayer(30); break
+                case "maxhp": this.ctx.maxHp += 10; this.ctx.healPlayer(10); break
+                case "full": this.ctx.healPlayer(1000); break
+                case "shield": this.ctx.shield += 20; break
+                case "gold": this.ctx.gold += 40;
             }
-            if (reward.id === "full") this.ctx.healPlayer(1000);
-            if (reward.id === "shield") this.ctx.shield += 20;
-            if (reward.id === "gold") this.ctx.gold += 40;
-        } else if (reward.type === "artifact") {
-            this.ctx.addArtifact(reward);
-        }
+        else if (reward.type === "artifact") this.ctx.addArtifact(reward);
 
         soundManager.play("place");
     }
