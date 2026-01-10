@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@500;700&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@500;700&display=swap);
 
 .block-container,
 body {
@@ -25,7 +25,8 @@ body {
 }
 
 body {
-	font-family: Rajdhani, sans-serif;
+    font-size: 18px;
+	font-family: Roboto, sans-serif;
 	background-color: var(--bg-color);
 	color: #e0e7ef;
 	overflow-x: hidden;

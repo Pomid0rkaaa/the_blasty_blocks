@@ -6,7 +6,7 @@
 			content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
 			name="viewport"
 		/>
-		<title>Block Blast Rogue</title>
+		<title>The Blasty Blocks</title>
 		<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 		<link href="style.css" rel="stylesheet" />
 		<script type="module" src="index.js" defer></script>
@@ -16,30 +16,51 @@
 		class="flex items-center justify-between p-2 flex-col h-screen select-none w-screen"
 	>
 		<div class="mobile-top-bar">
-			<button class="icon-btn" id="volume-btn" title="Настройки звука">
+			<button
+				class="icon-btn"
+				id="volume-btn"
+				data-i18n-title="button.volume.hover"
+			>
 				🔊
 			</button>
-			<button class="icon-btn" title="Справка" id="help-btn">❔</button>
-			<button class="icon-btn" title="Журнал" id="log-btn">📜</button>
-			<button class="icon-btn" title="Ачивки" id="ach-btn">🏆</button>
+			<button
+				class="icon-btn"
+				data-i18n-title="button.help.hover"
+				id="help-btn"
+			>
+				❔
+			</button>
+			<button
+				class="icon-btn"
+				data-i18n-title="button.log.hover"
+				id="log-btn"
+			>
+				📜
+			</button>
+			<button
+				class="icon-btn"
+				data-i18n-title="button.achievements.hover"
+				id="ach-btn"
+			>
+				🏆
+			</button>
 			<select class="icon-btn" title="Language" id="i18n-btn">
-        <optgroup label="Language">
-          <option value="ru">🇷🇺</option>
-          <option value="en">🇺🇸</option>
-          <option value="ua">🇺🇦</option>
-        </optgroup>
-      </select>
+				<optgroup label="Language">
+					<option value="ru">🇷🇺</option>
+					<option value="en">🇺🇸</option>
+					<option value="ua">🇺🇦</option>
+				</optgroup>
+			</select>
 		</div>
 		<div class="volume-panel">
 			<div class="flex items-center justify-between mb-2">
 				<span
-					class="text-[10px] tracking-widest text-slate-300 uppercase"
-				>
-					Звук
-				</span>
+					class="text-xs tracking-widest text-slate-300 uppercase"
+					data-i18n="volume_panel.volume"
+				></span>
 
 				<button
-					class="border px-2 py-1 rounded text-[10px] font-bold"
+					class="border px-2 py-1 rounded text-xs font-bold"
 					style="
 						background: var(--ui-surface2);
 						border-color: var(--ui-border);
@@ -53,16 +74,13 @@
 
 			<div class="flex items-center justify-between mb-1">
 				<div
-					class="text-[10px] tracking-widest text-slate-300 uppercase"
-				>
-					Музыка
-				</div>
+					class="text-xs tracking-widest text-slate-300 uppercase"
+					data-i18n="volume_panel.music"
+				></div>
 				<div
-					class="font-bold text-[10px] text-slate-200"
+					class="font-bold text-xs text-slate-200"
 					id="music-vol-label"
-				>
-					25%
-				</div>
+				></div>
 			</div>
 			<input
 				class="w-full"
@@ -72,9 +90,10 @@
 				type="range"
 				value="0"
 			/>
-			<div class="text-[10px] text-slate-400 mt-1">
-				Звук запускается после первого клика.
-			</div>
+			<div
+				class="text-xs text-slate-400 mt-1"
+				data-i18n="volume_panel.desc"
+			></div>
 		</div>
 		<main>
 			<div class="flex flex-col gap-2 max-w-md w-full z-10">
@@ -82,18 +101,19 @@
 					class="flex items-center justify-between p-2 backdrop-blur-sm rounded-lg shadow-lg themed-panel"
 				>
 					<div class="flex flex-col">
-						<span class="text-[10px] text-slate-400 tracking-widest"
-							>ГЛУБИНА</span
-						>
+						<span
+							class="text-xs text-slate-400 tracking-widest"
+							data-i18n="label.depth"
+						></span>
 						<span
 							class="font-bold pixel-font text-lg text-yellow-300"
 							id="level-display"
 							>DEPTH 1</span
 						>
 						<span
-							class="text-[10px] text-slate-400 tracking-widest mt-1"
-							>ЗОЛОТО</span
-						>
+							class="text-xs text-slate-400 tracking-widest mt-1"
+							data-i18n="label.gold"
+						></span>
 						<span
 							class="font-bold pixel-font text-amber-200 text-sm"
 							id="gold-display"
@@ -102,11 +122,11 @@
 					</div>
 					<div class="flex items-center flex-col gap-1">
 						<div
-							class="text-[10px] bg-black/30 border border-white/15 cursor-pointer hidden px-2 py-1 rounded-full"
+							class="text-xs bg-black/30 border border-white/15 cursor-pointer hidden px-2 py-1 rounded-full"
 							id="hazard-badge"
-							title="Нажми, чтобы открыть описание"
+							data-i18n-title="hazard_badge.hover"
 						>
-							<span id="hazard-badge-text">⚠️ Условие</span>
+							<span id="hazard-badge-text"></span>
 						</div>
 						<div
 							class="flex gap-1 opacity-95"
@@ -114,9 +134,10 @@
 						></div>
 					</div>
 					<div class="flex flex-col items-end">
-						<span class="text-[10px] text-slate-400 tracking-widest"
-							>СЧЁТ</span
-						>
+						<span
+							class="text-xs text-slate-400 tracking-widest"
+							data-i18n="label.score"
+						></span>
 						<span
 							class="font-bold pixel-font text-white text-lg"
 							id="score-display"
@@ -127,18 +148,20 @@
 				<div
 					class="flex gap-2 backdrop-blur-sm items-start justify-between p-2 rounded-lg shadow-lg themed-panel2"
 				>
-					<div class="text-[11px] text-slate-300 whitespace-nowrap">
-						Артефакты
-					</div>
+					<div
+						class="text-xs text-slate-300 whitespace-nowrap"
+						data-i18n="run_info.artifacts"
+					></div>
 					<div
 						class="flex gap-1 flex-wrap justify-end"
 						id="artifacts-container"
 					></div>
 				</div>
-				<div class="rounded-lg themed-panel2 px-3 py-2 text-[12px]">
-					<div class="text-[10px] text-slate-400 tracking-widest">
-						ПОСЛЕДНЕЕ
-					</div>
+				<div class="rounded-lg themed-panel2 px-3 py-2 text-xs">
+					<div
+						class="text-xs text-slate-400 tracking-widest"
+						data-i18n="run_info.log_peek"
+					></div>
 					<div class="truncate text-slate-200" id="log-peek">—</div>
 				</div>
 			</div>
@@ -150,9 +173,10 @@
 						class="flex items-center justify-between px-4 relative w-full"
 					>
 						<div class="flex flex-col w-28">
-							<span class="font-bold text-xs mb-1 text-blue-300"
-								>ГЕРОЙ</span
-							>
+							<span
+								class="font-bold text-xs mb-1 text-blue-300"
+								data-i18n="label.hero"
+							></span>
 							<div class="w-full bar-container mb-1">
 								<div
 									class="hp-fill"
@@ -210,8 +234,8 @@
 							<span
 								class="font-bold text-xs mb-1 text-red-300"
 								id="enemy-label"
-								>ВРАГ</span
-							>
+								data-i18n="label.enemy"
+							></span>
 							<div class="w-full bar-container mb-1">
 								<div
 									class="hp-fill bg-purple-600"
@@ -248,32 +272,30 @@
 						<div class="flex items-center gap-2">
 							<span
 								class="text-slate-400 tracking-widest text-xs uppercase"
-								>Рука</span
-							>
+								data-i18n="label.hand"
+							></span>
 						</div>
 						<button
 							id="discard-btn"
-							class="border px-2 py-1 rounded text-[11px] transition-colors"
+							class="border px-2 py-1 rounded text-xs transition-colors"
+							data-i18n="button.next_turn"
 							style="
 								background: var(--ui-surface2);
 								border-color: var(--ui-border);
 								color: #e2e8f0;
 							"
-						>
-							Сброс (ход врагу)
-						</button>
+						></button>
 					</div>
 					<div
 						class="flex items-center w-full justify-around min-h-24"
 						id="hand-container"
 					></div>
 					<div
-						class="text-[11px] mt-1 pb-1 text-center text-slate-500"
+						class="text-xs mt-1 pb-1 text-center text-slate-500"
+						data-i18n="hand.tip"
 					>
 						Перетаскивай фигуры на сетку. Линии = крит/щит. Справка:
-						<span class="font-bold text-slate-300">?</span>. Журнал:
-						<span class="font-bold text-slate-300">📜</span>.
-						Ачивки: <span class="font-bold text-slate-300">🏆</span>
+						?. Журнал:📜 Ачивки:🏆
 					</div>
 				</div>
 			</div>
@@ -282,17 +304,23 @@
 			class="flex items-center justify-center flex-col fixed inset-0 z-50 bg-black/95"
 			id="difficulty-modal"
 		>
-			<h1 class="pixel-font text-4xl mb-8 text-blue-400">СЛОЖНОСТЬ</h1>
+			<h1
+				class="pixel-font text-4xl mb-8 text-blue-400"
+				data-i18n="label.difficulty"
+			></h1>
 			<div class="flex flex-col gap-4 w-64">
 				<button
 					class="font-bold pixel-font rounded px-6 group overflow-hidden py-4 relative text-left text-white bg-emerald-700 hover:bg-emerald-600"
 					id="startGame-easy"
 				>
-					<span class="z-10 relative">ЛЕГКО</span>
+					<span
+						class="z-10 relative"
+						data-i18n="button.start_game.easy"
+					></span>
 					<span
 						class="text-[10px] mt-1 block relative z-10 text-emerald-200"
-						>Враги слабее, больше HP.</span
-					>
+						data-i18n="button.start_game.easy.desc"
+					></span>
 					<div
 						class="inset-0 absolute group-hover:opacity-10 opacity-0 transition-opacity bg-emerald-500"
 					></div>
@@ -301,11 +329,14 @@
 					class="font-bold pixel-font rounded px-6 group overflow-hidden py-4 relative text-left text-white bg-blue-700 hover:bg-blue-600"
 					id="startGame-normal"
 				>
-					<span class="z-10 relative">НОРМА</span>
+					<span
+						class="z-10 relative"
+						data-i18n="button.start_game.normal"
+					></span>
 					<span
 						class="text-[10px] mt-1 block relative z-10 text-blue-200"
-						>Стандартный баланс.</span
-					>
+						data-i18n="button.start_game.normal.desc"
+					></span>
 					<div
 						class="inset-0 absolute group-hover:opacity-10 opacity-0 transition-opacity bg-blue-500"
 					></div>
@@ -314,11 +345,14 @@
 					class="font-bold pixel-font rounded px-6 group overflow-hidden py-4 relative text-left text-white bg-red-700 hover:bg-red-600"
 					id="startGame-hard"
 				>
-					<span class="z-10 relative">ХАРД</span>
+					<span
+						class="z-10 relative"
+						data-i18n="button.start_game.hard"
+					></span>
 					<span
 						class="text-[10px] mt-1 block relative z-10 text-red-200"
-						>Враги сильнее, меньше наград.</span
-					>
+						data-i18n="button.start_game.hard.desc"
+					></span>
 					<div
 						class="inset-0 absolute group-hover:opacity-10 opacity-0 transition-opacity bg-red-500"
 					></div>
@@ -329,24 +363,30 @@
 			class="flex items-center justify-center flex-col fixed inset-0 z-50 hidden bg-black/90"
 			id="game-over-modal"
 		>
-			<h1 class="pixel-font text-4xl mb-4 text-red-400">ТЫ ПАЛ</h1>
-			<p class="mb-3 text-white">Счёт: <span id="final-score">0</span></p>
-			<p class="text-slate-300 mb-8">
-				Глубина: <span id="final-depth">1</span>
-			</p>
+			<h1
+				class="pixel-font text-4xl mb-4 text-red-400"
+				data-i18n="game_over"
+			></h1>
+			<p class="mb-3 text-white" id="final-score"></p>
+			<p class="text-slate-300 mb-8" id="final-depth"></p>
 			<button
 				class="font-bold pixel-font rounded bg-white hover:bg-gray-200 text-black py-3 px-6"
 				id="new-game-btn"
-			>
-				ЕЩЁ РАЗ
-			</button>
+				data-i18n="button.new_game"
+			></button>
 		</div>
 		<div
 			class="flex items-center justify-center flex-col fixed inset-0 z-50 bg-black/95 hidden"
 			id="victory-modal"
 		>
-			<h1 class="pixel-font text-yellow-300 mb-2 text-3xl">ТРОФЕИ</h1>
-			<p class="text-slate-400 mb-6 text-sm">Выбери награду</p>
+			<h1
+				class="pixel-font text-yellow-300 mb-2 text-3xl"
+				data-i18n="victory_modal.trophies"
+			></h1>
+			<p
+				class="text-slate-400 mb-6 text-sm"
+				data-i18n="victory_modal.choose_reward"
+			></p>
 			<div
 				class="flex flex-col justify-center gap-4 w-full items-stretch max-w-2xl md:flex-row px-4"
 				id="reward-container"
@@ -360,22 +400,18 @@
 					<div class="flex items-center justify-between">
 						<div>
 							<div
-								class="text-[10px] text-slate-400 tracking-widest"
-							>
-								МАГАЗИН
-							</div>
+								class="text-xs text-slate-400 tracking-widest"
+								data-i18n="label.shop"
+							></div>
 							<div
 								class="pixel-font text-lg font-black text-amber-200"
-							>
-								Лавка глубины
-							</div>
+								data-i18n="shop.title"
+							></div>
 						</div>
 						<div class="text-right">
 							<div
-								class="text-[10px] text-slate-400 tracking-widest"
-							>
-								ЗОЛОТО
-							</div>
+								class="text-xs text-slate-400 tracking-widest"
+							></div>
 							<div
 								class="pixel-font text-lg font-black text-amber-200"
 								id="shop-gold"
@@ -386,10 +422,8 @@
 					</div>
 					<div
 						class="border bg-black/30 border-white/10 p-3 rounded-lg mt-3 text-slate-200 text-sm"
-					>
-						Здесь можно купить артефакты и улучшения. Магазин
-						появляется не всегда.
-					</div>
+						data-i18n="shop.desc"
+					></div>
 					<div
 						class="gap-3 grid grid-cols-1 md:grid-cols-3 mt-4"
 						id="shop-container"
@@ -398,14 +432,13 @@
 						<button
 							class="font-bold pixel-font rounded bg-white hover:bg-gray-200 text-black py-3 flex-1 px-4"
 							id="shop-skip"
-						>
-							ДАЛЬШЕ
-						</button>
+							data-i18n="button.next"
+						></button>
 					</div>
-					<div class="text-slate-400 text-[11px] mt-3">
-						Подсказка: цены и подсказки обновляются после покупки —
-						в минус уйти нельзя.
-					</div>
+					<div
+						class="text-slate-400 text-xs mt-3"
+						data-i18n="shop.tip"
+					></div>
 				</div>
 			</div>
 		</div>
@@ -418,9 +451,8 @@
 						<h2
 							class="pixel-font text-lg font-black text-red-200"
 							id="hazard-header"
-						>
-							ОПАСНОСТЬ
-						</h2>
+							data-i18n="label.hazard"
+						></h2>
 						<div class="text-2xl" id="hazard-icon">⚠️</div>
 					</div>
 					<div
@@ -429,27 +461,20 @@
 						<div
 							class="font-bold text-yellow-200"
 							id="hazard-title"
-						>
-							Условие
-						</div>
+							data-i18n="hazard.title"
+						></div>
 						<div
 							class="text-sm mt-1 text-slate-300"
 							id="hazard-desc"
-						>
-							Описание
-						</div>
+							data-i18n="hazard.desc"
+						></div>
 					</div>
 					<div class="flex gap-2 mt-4">
 						<button
 							class="font-bold pixel-font rounded bg-white hover:bg-gray-200 text-black py-3 flex-1 px-4"
 							id="hazard-continue"
-						>
-							В БОЙ
-						</button>
-					</div>
-					<div class="text-slate-400 text-[11px] mt-3">
-						Обычно условий нет. Иногда — опасность. Редко —
-						благословение.
+							data-i18n="button.fight"
+						></button>
 					</div>
 				</div>
 			</div>
@@ -462,63 +487,42 @@
 					<div class="flex items-center justify-between mb-3">
 						<div>
 							<div
-								class="text-[10px] text-slate-400 tracking-widest"
-							>
-								СПРАВКА
-							</div>
+								class="text-xs text-slate-400 tracking-widest"
+								data-i18n="label.help"
+							></div>
 							<div
 								class="pixel-font text-lg font-black text-slate-100"
-							>
-								Эффекты и правила
-							</div>
+								data-i18n="help_modal.title"
+							></div>
 						</div>
 						<button
 							class="font-bold pixel-font rounded bg-white hover:bg-gray-200 text-black px-3 py-2"
 							id="close-help-btn"
-						>
-							OK
-						</button>
+							data-i18n="button.ok"
+						></button>
 					</div>
 					<div class="gap-3 grid grid-cols-1 md:grid-cols-2">
 						<div
 							class="border bg-black/30 border-white/10 p-3 rounded-lg"
 						>
-							<div class="font-bold text-yellow-200">
+							<div
+								class="font-bold text-yellow-200"
+								data-i18n="help_modal.how_to_play"
+							>
 								Как играть
 							</div>
-							<ul class="text-sm text-slate-200 mt-2 space-y-1">
-								<li>• Перетаскивай фигуры на сетку 8×8.</li>
-								<li>• Установка клеток наносит урон врагу.</li>
-								<li>
-									• Полная линия/колонка очищается →
-									<b>крит</b>, урон и щит.
-								</li>
-								<li>
-									• <b>Сброс</b> меняет руку, но
-									<b>даёт ход врагу</b>.
-								</li>
-								<li>
-									• Поворота фигур <b>нет</b> — выбирай форму
-									внимательно.
-								</li>
-								<li>• На глубине <b>каждые 5</b> — босс.</li>
-								<li>
-									• Иногда после победы появляется
-									<b>магазин</b> (за золото).
-								</li>
-								<li>
-									• В начале боя может быть
-									<b>условие</b> (опасность или
-									благословение).
-								</li>
-							</ul>
+							<ul
+								class="text-sm text-slate-200 mt-2 space-y-1"
+								data-i18n-html="help_modal.how_to_play.list"
+							></ul>
 						</div>
 						<div
 							class="border bg-black/30 border-white/10 p-3 rounded-lg"
 						>
-							<div class="font-bold text-yellow-200">
-								Статусы (стихии)
-							</div>
+							<div
+								class="font-bold text-yellow-200"
+								data-i18n="help_modal.status"
+							></div>
 							<div
 								class="text-sm text-slate-200 mt-2 space-y-2"
 								id="codex-status"
@@ -527,9 +531,10 @@
 						<div
 							class="border bg-black/30 border-white/10 p-3 rounded-lg md:col-span-2"
 						>
-							<div class="font-bold text-yellow-200">
-								Условия боя (опасности и благословения)
-							</div>
+							<div
+								class="font-bold text-yellow-200"
+								data-i18n="help_modal.fight_conditions"
+							></div>
 							<div
 								class="text-sm text-slate-200 mt-2 space-y-2 codex-scroll"
 								id="codex-hazards"
@@ -539,19 +544,20 @@
 						<div
 							class="border bg-black/30 border-white/10 p-3 rounded-lg md:col-span-2"
 						>
-							<div class="font-bold text-yellow-200">
-								Текущий враг
-							</div>
+							<div
+								class="font-bold text-yellow-200"
+								data-i18n="help_modal.current_enemy"
+							></div>
 							<div
 								class="text-sm text-slate-200 mt-2"
 								id="codex-enemy"
 							></div>
 						</div>
 					</div>
-					<div class="text-slate-400 text-[11px] mt-4">
-						Подсказка: наведи на артефакт/статус — будет подсказка.
-						Журнал и ачивки открываются кнопками сверху.
-					</div>
+					<div
+						class="text-slate-400 text-xs mt-4"
+						data-i18n="help_modal.tip"
+					></div>
 				</div>
 			</div>
 		</div>
@@ -563,29 +569,25 @@
 					<div class="flex items-center justify-between mb-3">
 						<div>
 							<div
-								class="text-[10px] text-slate-400 tracking-widest"
-							>
-								ЖУРНАЛ
-							</div>
+								class="text-xs text-slate-400 tracking-widest"
+								data-i18n="label.log"
+							></div>
 							<div
 								class="pixel-font text-lg font-black text-slate-100"
-							>
-								События
-							</div>
+								data-i18n="log_modal.events"
+							></div>
 						</div>
 						<div class="flex gap-2 btn-holder">
 							<button
 								class="font-bold pixel-font rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 danger-btn"
 								id="clear-log-btn"
-							>
-								CLEAR
-							</button>
+								data-i18n="button.clear"
+							></button>
 							<button
 								class="font-bold pixel-font rounded bg-white hover:bg-gray-200 text-black px-3 py-2 ok-btn"
 								id="close-log-btn"
-							>
-								OK
-							</button>
+								data-i18n="button.ok"
+							></button>
 						</div>
 					</div>
 					<div
@@ -607,17 +609,15 @@
 					<div class="flex items-center justify-between mb-3">
 						<div>
 							<div
-								class="text-[10px] text-slate-400 tracking-widest"
-							>
-								АЧИВКИ
-							</div>
+								class="text-xs text-slate-400 tracking-widest"
+								data-i18n="label.achievements"
+							></div>
 							<div
 								class="pixel-font text-lg font-black text-slate-100"
-							>
-								Коллекция
-							</div>
+								data-i18n="achievements_modal.collection"
+							></div>
 							<div
-								class="text-slate-400 text-[11px] mt-1"
+								class="text-slate-400 text-xs mt-1"
 								id="ach-summary"
 							>
 								0/0
@@ -628,15 +628,13 @@
 								class="font-bold pixel-font rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 danger-btn"
 								id="reset-achievements-btn"
 								title="Сбросить ачивки"
-							>
-								RESET
-							</button>
+								data-i18n="button.reset"
+							></button>
 							<button
 								class="font-bold pixel-font rounded bg-white hover:bg-gray-200 text-black px-3 py-2 ok-btn"
 								id="close-achievements-btn"
-							>
-								OK
-							</button>
+								data-i18n="button.ok"
+							></button>
 						</div>
 					</div>
 					<div
@@ -644,9 +642,10 @@
 						id="achievements-container"
 						style="max-height: 65vh; overflow: auto"
 					></div>
-					<div class="text-slate-400 text-[11px] mt-3">
-						Ачивки сохраняются в браузере.
-					</div>
+					<div
+						class="text-slate-400 text-xs mt-3"
+						data-i18n="achievements_modal.tip"
+					></div>
 				</div>
 			</div>
 		</div>

@@ -1,24 +1,28 @@
 {
-  
-  "logger.game_started": "Начало забега.",
-  "logger.new_run": "Начало забега.",
+  "logger.game_started": "Начало забега",
+  "logger.new_run": "Новый забег",
   "logger.enemy": "Враг: ${name}",
   "logger.boss": "БОСС: ${name}",
-  "logger.enemy.frozen": "Враг заморожен: ход пропущен.",
-  "logger.absorb": "Урон поглощён щитом.",
+  "logger.enemy.frozen": "Враг заморожен: ход пропущен",
+  "logger.absorb": "Урон поглощен щитом",
   "logger.win": "Победа! +${bonus} золота",
 
   "hazard.random_discard.action": "Скользкий пол: фигура потеряна",
 
+  "shop.title": "Лавка глубины",
+  "shop.desc": "Здесь можно купить артефакты и улучшения. Магазин появляется не всегда",
+  "shop.tip": "Подсказка: цены и подсказки обновляются после покупки - в минус уйти нельзя",
   "shop.buy": "Покупка: ${item}",
-  "shop.roll": "Найдена лавка.",
+  "shop.roll": "Найдена лавка",
 
   "damage.mine": "Мина взорвана! +30 урона",
   "damage.spikes": "Шипы: -${cost} HP",
   "damage.enemy": "Враг атакует: -${dmg} HP",
 
   "achievement.unlock": "Ачивка: ${name}",
-  "achievement.reset": "Ачивки сброшены.",
+  "achievement.reset": "Ачивки сброшены",
+  "achievements_modal.collection": "Колекция",
+  "achievements_modal.tip": "Ачивки сохраняются в браузере",
 
   "artifact.halo.use": "Ореол: очищение статуса",
   "artifact.antidote.use": "Сыворотка: статусы ослаблены",
@@ -26,7 +30,7 @@
   "artifact.scavenger.use": "Сборщик: убрал 1 клетку",
   "artifact.thorns.use": "Шипы: враг получает 5",
   "artifact.recycle.use": "Переработка: -2 клетки",
-  "artifact.warp.use": "Искажение времени: ход врага пропущен.",
+  "artifact.warp.use": "Искажение времени: ход врага пропущен",
   "artifact.trowel.use": "Кельма: очищено ${removed}",
   "artifact.bulwark.use": "Бастион: +8 щита",
   "artifact.gambler.use": "Азарт: JACKPOT!",
@@ -38,19 +42,80 @@
   "artifact.glass_cannon.pickup": "Стеклянная пушка: HP снижено",
   "artifact.blood_pact.pickup": "Пакт: +100 золота, -25 HP",
   "artifact.spike_armor.pickup": "Шипастый доспех: броня + шипы",
-
+  
   "boon.grid_size": "Благословение: сетка ${size}x${size}",
   "boon.start_shield": "Благословение: +${shield} щита",
   "boon.start_heal": "Благословение: +${heal} HP",
   "boon.start_gold": "Благословение: +${gold} золота",
   "boon.start_clean": "Благословение: очищение (${clean})",
 
-
   "button.next_turn": "Сброс (ход врагу)",
+  "button.new_game": "ЕЩЕ РАЗ",
   "button.start_game.easy": "ЛЕГКО",
-  "button.start_game.easy.desc": "Враги слабее, больше HP.",
+  "button.start_game.easy.desc": "Враги слабее, больше HP",
   "button.start_game.normal": "НОРМА",
-  "button.start_game.normal.desc": "Стандартный баланс.",
+  "button.start_game.normal.desc": "Стандартный баланс",
   "button.start_game.hard": "ХАРД",
-  "button.start_game.hard.desc": "Враги сильнее, меньше наград."
+  "button.start_game.hard.desc": "Враги сильнее, меньше наград",
+  "button.volume.hover": "Настройки звука",
+  "button.log.hover": "Журнал",
+  "button.achievements.hover": "Ачивки",
+  "button.help.hover": "Справка",
+  "button.next": "ДАЛЬШЕ",
+  "button.fight": "В БОЙ",
+  "button.ok": "ОК",
+  "button.clear": "CLEAR",
+  "button.reset": "RESET",
+
+  "volume_panel.volume": "ЗВУК",
+  "volume_panel.desc": "Звук запускается после первого клика",
+  "volume_panel.music": "Музыка",
+
+  "label.depth": "ГЛУБИНА",
+  "label.gold": "ЗОЛОТО",
+  "label.score": "СЧЕТ",
+  "label.shop": "МАГАЗИН",
+  "label.hero": "ГЕРОЙ",
+  "label.enemy": "ВРАГ",
+  "label.difficulty": "СЛОЖНОСТЬ",
+  "label.hand": "РУКА",
+  "label.hazard": "ОПАСНОСТЬ",
+  "label.help": "СПРАВКА",
+  "label.log": "ЖУРНАЛ",
+  "label.achievements": "АЧИВКИ",
+
+  "run_info.artifacts": "Артефакты",
+  "run_info.log_peek": "ПОСЛЕДНЕЕ",
+
+  "hazard.title": "Условие",
+  "hazard.desc": "Описание",
+  "hazard_badge.hover": "Нажми, чтобы открыть описание",
+
+  "hand.tip": "Перетаскивай фигуры на сетку. Линии = крит/щит. Справка:?. Журнал:📜 Ачивки:🏆",
+
+  "game_over.title": "ТЫ ПАЛ",
+  "game_over.score": "Счет: ${score}",
+  "game_over.level": "Глубина: ${level}",
+
+  "victory_modal.trophies": "ТРОФЕИ",
+  "victory_modal.choose_reward": "Выбери награду",
+  
+  "help_modal.title": "Эффекты и правила",
+  "help_modal.how_to_play": "Как играть",
+  "help_modal.how_to_play.list": [
+    "<li>• Перетаскивай фигуры на сетку 8×8.</li>",
+    "<li>• Установка клеток наносит урон врагу.</li>",
+    "<li>• Полная линия/колонка очищается → <b>крит</b>, урон и щит.</li>",
+    "<li>• <b>Сброс</b> меняет руку, но <b>даёт ход врагу</b>.</li>",
+    "<li>• Поворота фигур <b>нет</b> — выбирай форму внимательно.</li>",
+    "<li>• На глубине <b>каждые 5</b> — босс.</li>",
+    "<li>• Иногда после победы появляется <b>магазин</b> (за золото).</li>",
+    "<li>• В начале боя может быть <b>условие</b> (опасность или благословение).</li>"
+  ],
+  "help_modal.status": "Статусы (стихии)",
+  "help_modal.fight_conditions": "Условия боя (опасности и благословения)",
+  "help_modal.current_enemy": "Текущий враг",
+  "help_modal.tip": "Подсказка: наведи на артефакт/статус — будет подсказка. Журнал и ачивки открываются кнопками сверху",
+  
+  "log_modal.events": "События"
 }
