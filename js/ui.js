@@ -50,7 +50,6 @@ export const UIElements = {
         gold: id('shop-gold'),
         skip_button: id('shop-skip'),
     },
-    //volume_button, volume_panel
     volume: {
         button: id("volume-btn"),
         panel: document.querySelector(".volume-panel"),

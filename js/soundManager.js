@@ -108,7 +108,7 @@ export class SoundManager {
 
     toggle() {
         this.muted = !this.muted;
-        const btn = UIElements.volume_button;
+        const btn = UIElements.volume.button;
         btn.innerText = this.muted ? "🔇" : "🔊";
 
         if (!this.initialized && !this.muted) {
