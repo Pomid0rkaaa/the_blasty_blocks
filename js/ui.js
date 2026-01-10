@@ -91,59 +91,59 @@ export class UI {
     }
 
     static updateUI() {
-        this.ui.level.innerText = `DEPTH ${this.level}`;
-        this.ui.score.innerText = this.score;
-        this.ui.gold.innerText = this.gold;
+        UIElements.level.innerText = `DEPTH ${this.level}`;
+        UIElements.score.innerText = this.score;
+        UIElements.gold.innerText = this.gold;
 
         const hpPct = (this.hp / this.maxHp) * 100;
-        this.ui.playerHpBar.style.width = `${Math.max(0, hpPct)}%`;
-        this.ui.playerHpText.innerText = `${this.hp}/${this.maxHp}`;
-        this.ui.playerShield.innerText = this.shield;
+        UIElements.player.hp_bar.style.width = `${Math.max(0, hpPct)}%`;
+        UIElements.player.hp.innerText = `${this.hp}/${this.maxHp}`;
+        UIElements.player.shield.innerText = this.shield;
 
         if (this.shield >= 60)
             this.unlockAchievement("shield_wall");
 
         const eHpPct = (this.enemyHp / this.enemyMaxHp) * 100;
-        this.ui.enemyHpBar.style.width = `${Math.max(0, eHpPct)}%`;
-        this.ui.enemyHpText.innerText = `${this.enemyHp}/${this.enemyMaxHp}`;
+        UIElements.enemy.hp_bar.style.width = `${Math.max(0, eHpPct)}%`;
+        UIElements.enemy.hp.innerText = `${this.enemyHp}/${this.enemyMaxHp}`;
 
         const enemyName = this.currentEnemy
             ? this.currentEnemy.name
             : "ВРАГ";
         const shieldTxt =
             this.enemyShield > 0 ? ` +${this.enemyShield} ARM` : "";
-        this.ui.enemyIntent.innerText = `${enemyName} [ATK ${this.enemyAttack}${shieldTxt}]`;
+        UIElements.enemy.intent.innerText = `${enemyName} [ATK ${this.enemyAttack}${shieldTxt}]`;
 
         const el = ELEMENTS[this.currentEnemy?.element] || {
             icon: "⚔️",
             color: "#e2e8f0",
             name: "Физ.",
         };
-        this.ui.enemyElement.textContent = el.icon;
-        this.ui.enemyElement.title = `${el.name} (элемент врага)`;
+        UIElements.enemy.element.textContent = el.icon;
+        UIElements.enemy.element.title = `${el.name} (элемент врага)`;
 
         // Hazard badge
         if (this.hazard && this.hazard.id !== "none") {
-            this.ui.hazardBadge.classList.remove("hidden");
-            this.ui.hazardBadgeText.textContent = `${this.hazard.icon} ${this.hazard.name}`;
+            UIElements.hazard_badge.classList.remove("hidden");
+            UIElements.hazard_badge_text.textContent = `${this.hazard.icon} ${this.hazard.name}`;
             if (this.hazard.kind === "boon") {
-                this.ui.hazardBadge.className =
+                UIElements.hazard_badge.className =
                     "text-[10px] px-2 py-1 rounded-full border border-emerald-300/35 bg-emerald-950/30 cursor-pointer";
             } else {
-                this.ui.hazardBadge.className =
+                UIElements.hazard_badge.className =
                     "text-[10px] px-2 py-1 rounded-full border border-red-300/25 bg-black/30 cursor-pointer";
             }
         } else {
-            this.ui.hazardBadge.classList.add("hidden");
+            UIElements.hazard_badge.classList.add("hidden");
         }
 
         // Status chips
         UI.renderStatusChips(
-            this.ui.enemyStatus,
+            UIElements.enemy.status,
             this.enemyStatuses
         );
         UI.renderStatusChips(
-            this.ui.playerStatus,
+            UIElements.player.status,
             this.playerStatuses
         );
 
