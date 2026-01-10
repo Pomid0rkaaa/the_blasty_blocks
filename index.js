@@ -10,7 +10,21 @@ import { STATUS_META } from './js/data/status_meta.js';
 import { Logger } from './js/logger.js'
 import i18n from './js/i18n.js';
 
-await i18n.load(i18n.lang);
+const savedLang = localStorage.getItem("lang") || i18n.lang;
+await i18n.load(savedLang);
+document.getElementById("i18n-btn").value = savedLang;
+
+document.getElementById("i18n-btn").addEventListener("change", async (e) => {
+    const newLang = e.target.value;
+    const success = await i18n.load(newLang);
+    if (success) {
+        localStorage.setItem("lang", newLang);
+    } else {
+        alert(`Language "${newLang}" not available`);
+        e.target.value = i18n.lang;
+    }
+});
+
 const game = new BlockGame();
 function toggleMuteFromPanel() {
     soundManager.toggle();

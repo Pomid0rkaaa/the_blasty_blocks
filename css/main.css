@@ -271,13 +271,27 @@ main {
 	border: 1px solid rgba(255, 255, 255, 0.22);
 	color: #fff;
 	padding: 8px;
-	border-radius: 10vw;
+	border-radius: 50%;
 	cursor: pointer;
 	width: 40px;
 	height: 40px;
 	font-size: 14px;
-	display: grid;
-	place-items: center;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    text-align: center;
+    &:focus {
+        outline: none;
+        border-color: #fff;
+    }
+}
+
+select.icon-btn::-moz-focus-inner {
+    border: 0;
+    padding: 0;
 }
 
 #difficulty-modal {
