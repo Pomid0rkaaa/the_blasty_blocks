@@ -31,7 +31,7 @@ document.addEventListener("click", (event) => {
             game.openHelp();
             break;
         case "log-btn":
-            game.openLog();
+            Logger.open();
             break;
         case "ach-btn":
             game.openAchievements();
@@ -58,10 +58,10 @@ document.addEventListener("click", (event) => {
             game.closeHelp();
             break;
         case "clear-log-btn":
-            game.clearLog();
+            Logger.clear();
             break;
         case "close-log-btn":
-            game.closeLog();
+            Logger.close();
             break;
         case "reset-achievements-btn":
             game.resetAchievements();
