@@ -2602,10 +2602,8 @@ export class BlockGame {
 
     loseGame() {
         soundManager.play("lose");
-        document.getElementById("final-score").innerText =
-            this.score;
-        document.getElementById("final-depth").innerText =
-            this.level;
+        document.getElementById("final-score").innerText = i18n.t("game_over.score", {score: this.score});
+        document.getElementById("final-depth").innerText = i18n.t("game_over.level", {level: this.level});
         document
             .getElementById("game-over-modal")
             .classList.remove("hidden");
