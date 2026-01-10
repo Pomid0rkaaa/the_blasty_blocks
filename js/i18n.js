@@ -5,13 +5,29 @@ export class I18n {
     }
 
     async load(lang) {
-        const res = await fetch(new URL(`js/i18n/${lang}.json`, window.location.href))
-        this.dict = await res.json();
-        this.lang = lang;
-        this.updateDOM();
+        try {
+            const url = new URL(`js/i18n/${lang}.json`, window.location.href);
+            const res = await fetch(url);
+
+            if (!res.ok) {
+                console.warn(`[i18n] File not found: ${url}`);
+                this.dict = undefined;
+                return false;
+            }
+
+            this.dict = await res.json();
+            this.lang = lang;
+            this.updateDOM();
+            return true;
+        } catch (err) {
+            console.error(`[i18n] Failed to load ${lang}:`, err);
+            this.dict = undefined;
+            return false;
+        }
     }
 
     t(key, vars = {}) {
+        if (!this.dict) return key;
         let text = this.dict[key];
         if (!text) return key;
         for (const name in vars) {
