@@ -28,12 +28,13 @@ export class I18n {
 
     t(key, vars = {}) {
         if (!this.dict) return key;
-        let text = this.dict[key];
-        if (!text) return key;
+        let value = this.dict[key];
+        if (!value) return key;
+        if (Array.isArray(value)) {value = value.join("\n")}
         for (const name in vars) {
-            text = text.replaceAll("${"+name+"}", vars[name]);
+            value = value.replaceAll("${"+name+"}", vars[name]);
         }
-        return text;
+        return value;
     }
 
     updateDOM() {
