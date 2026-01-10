@@ -2271,7 +2271,7 @@ export class BlockGame {
             Logger.log(i18n.t("shop.roll"))
             await this.shop.openShop();
         }
-        UIElements.victory_modal.classList.remove("hidden");
+        UIElements.modal.victory.classList.remove("hidden");
         await this.rewards.generateRewards();
         this.nextLevel();
 
