@@ -43,6 +43,9 @@ export class I18n {
         document.querySelectorAll("[data-i18n-html]").forEach(el => {
             el.innerHTML = this.t(el.dataset.i18nHtml);
         });
+        document.querySelectorAll("[data-i18n-title]").forEach(el => {
+            el.title = this.t(el.dataset.i18nTitle);
+        });
     }
 }
 
