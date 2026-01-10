@@ -6,7 +6,7 @@ import { HAZARDS } from './data/hazards.js';
 import { SHAPES } from './data/shapes.js';
 import { STATUS_META } from './data/status_meta.js';
 import { soundManager } from './soundManager.js';
-import { UI } from './ui.js';
+import { UI, UIElements } from './ui.js';
 import { Logger } from './logger.js'
 import { Shop } from './shop.js';
 import { Rewards } from './rewards.js';
@@ -17,7 +17,6 @@ let GRID_SIZE = 8;
 export class BlockGame {
     constructor() {
         this.resetRun();
-        this.ui = UI.elements;
         this.shop = new Shop(this);
         this.rewards = new Rewards(this);
         this.init();
@@ -124,7 +123,7 @@ export class BlockGame {
             this.updateUI();
             this.spawnFloatingText(
                 "GOD MODE",
-                this.ui.playerHpBar,
+                UIElements.player.hp_bar,
                 "#fbbf24"
             );
         } else {
@@ -240,13 +239,13 @@ export class BlockGame {
         });
 
         // Hazard badge click opens info
-        this.ui.hazardBadge.addEventListener("click", () => {
+        UIElements.hazard_badge.addEventListener("click", () => {
             if (this.hazard && this.hazard.id !== "none")
                 this.openHazardInfo();
         });
 
         // Enemy click
-        this.ui.enemySprite.addEventListener("click", () => {
+        UIElements.enemy.sprite.addEventListener("click", () => {
             this.openHelp(true);
         });
 
@@ -273,7 +272,7 @@ export class BlockGame {
             Logger.log(i18n.t("achievement.unlock", { name: meta.name }));
             this.spawnFloatingText(
                 `🏆 ${meta.name}`,
-                this.ui.enemySprite,
+                UIElements.enemy.sprite,
                 "#fde047"
             );
         }
@@ -350,8 +349,8 @@ export class BlockGame {
     }
 
     getGridPosFromPoint(clientX, clientY, layout) {
-        const gridRect = this.ui.grid.getBoundingClientRect();
-        const st = getComputedStyle(this.ui.grid);
+        const gridRect = UIElements.grid.getBoundingClientRect();
+        const st = getComputedStyle(UIElements.grid);
         const pad = parseFloat(st.paddingLeft) || 8;
         const cellTotal = this.getCellTotal();
 
@@ -404,7 +403,7 @@ export class BlockGame {
             ? `<div class="mt-1 text-slate-300">Редкость: ${artifact.rarity}</div>`
             : "";
         icon.innerHTML = `${artifact.icon}<div class="artifact-tooltip"><div class="font-bold" style="color:${artifact.color}">${artifact.name}</div><div class="text-slate-200 mt-1">${artifact.desc}</div>${priceInfo}</div>`;
-        this.ui.artifacts.appendChild(icon);
+        UIElements.artifacts.appendChild(icon);
 
         // Passive immediate effects
         if (artifact.id === "flame") this.affinities.add("fire");
@@ -622,8 +621,8 @@ export class BlockGame {
             .getElementById("achievements-modal")
             .classList.add("hidden");
 
-        this.ui.artifacts.innerHTML = "";
-        this.ui.affinity.innerHTML = "";
+        UIElements.artifacts.innerHTML = "";
+        UIElements.affinity.innerHTML = "";
         this.renderGrid();
         this.spawnEnemy();
         this.fillHand();
@@ -707,7 +706,7 @@ export class BlockGame {
         this.currentEnemy = enemyTemplate;
 
         const isBossFloor = this.level % 5 === 0;
-        this.ui.enemyLabel.textContent = isBossFloor
+        UIElements.enemy.label.textContent = isBossFloor
             ? "БОСС"
             : "ВРАГ";
 
@@ -800,8 +799,8 @@ export class BlockGame {
         }
 
         // Visual
-        this.ui.enemySprite.className = `enemy-sprite hover-anim rounded-xl flex justify-center items-center mb-2 ${enemyTemplate.style}`;
-        this.ui.enemySprite.classList.remove("shake");
+        UIElements.enemy.sprite.className = `enemy-sprite hover-anim rounded-xl flex justify-center items-center mb-2 ${enemyTemplate.style}`;
+        UIElements.enemy.sprite.classList.remove("shake");
 
         // Hazard/boon
         const hazard = this.rollHazard();
@@ -1102,18 +1101,18 @@ export class BlockGame {
     // Grid render
     // ------------------------------
     renderGrid() {
-        this.ui.grid.innerHTML = "";
+        UIElements.grid.innerHTML = "";
         for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
             const cell = document.createElement("div");
             cell.className = "cell";
             cell.dataset.index = i;
-            this.ui.grid.appendChild(cell);
+            UIElements.grid.appendChild(cell);
         }
     }
 
     setCellClass(r, c, cls) {
         const idx = r * GRID_SIZE + c;
-        const el = this.ui.grid.children[idx];
+        const el = UIElements.grid.children[idx];
         if (!el) return;
         el.className = cls;
     }
@@ -1145,7 +1144,7 @@ export class BlockGame {
     }
 
     fillHand() {
-        this.ui.hand.innerHTML = "";
+        UIElements.hand.innerHTML = "";
         this.hand = [];
         this.lockedSlots = new Set();
         this.medicThisTurn = 0;
@@ -1295,7 +1294,7 @@ export class BlockGame {
         });
 
         container.appendChild(miniGrid);
-        this.ui.hand.appendChild(container);
+        UIElements.hand.appendChild(container);
 
         const blockObj = {
             ...shapeData,
@@ -1448,7 +1447,7 @@ export class BlockGame {
     }
 
     clearPreviews() {
-        Array.from(this.ui.grid.children).forEach((c) =>
+        Array.from(UIElements.grid.children).forEach((c) =>
             c.classList.remove("preview", "invalid")
         );
     }
@@ -1471,7 +1470,7 @@ export class BlockGame {
                 if (clip && this.grid[rr][cc] === "MASK") continue;
 
                 const idx = rr * GRID_SIZE + cc;
-                const el = this.ui.grid.children[idx];
+                const el = UIElements.grid.children[idx];
                 if (!el) continue;
                 el.classList.add(invalid ? "invalid" : "preview");
             }
@@ -1504,7 +1503,7 @@ export class BlockGame {
 
                 this.grid[rr][cc] = block.color;
                 const idx = rr * GRID_SIZE + cc;
-                const cellEl = this.ui.grid.children[idx];
+                const cellEl = UIElements.grid.children[idx];
                 cellEl.className = `cell filled ${block.color}`;
                 cellEl.animate(
                     [
@@ -1526,7 +1525,7 @@ export class BlockGame {
             Logger.log(i18n.t("damage.spikes", {cost}))
             this.spawnFloatingText(
                 cost,
-                this.ui.playerHpBar,
+                UIElements.player.hp_bar,
                 "#ef4444"
             );
             soundManager.play("damage");
@@ -1576,7 +1575,7 @@ export class BlockGame {
             Logger.log(i18n.t("artifact.gambler.use"))
             this.spawnFloatingText(
                 "JACKPOT!",
-                this.ui.enemySprite,
+                UIElements.enemy.sprite,
                 "#fbbf24"
             );
         }
@@ -1593,7 +1592,7 @@ export class BlockGame {
 
                 this.spawnFloatingText(
                     "ZAP!",
-                    this.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#facc15"
                 );
             }
@@ -1652,7 +1651,7 @@ export class BlockGame {
             Logger.log(i18n.t("artifact.vampire.use", {count: count * 2}))
             this.spawnFloatingText(
                 "HEAL",
-                this.ui.playerHpBar,
+                UIElements.player.hp_bar,
                 "#22c55e"
             );
         }
@@ -1678,7 +1677,7 @@ export class BlockGame {
                 this.addStatus("enemy", "burn", 3);
                 this.spawnFloatingText(
                     "🔥",
-                    this.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#fb7185"
                 );
             }
@@ -1686,7 +1685,7 @@ export class BlockGame {
                 this.addStatus("enemy", "chill", 2);
                 this.spawnFloatingText(
                     "❄️",
-                    this.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#67e8f9"
                 );
             }
@@ -1694,7 +1693,7 @@ export class BlockGame {
                 this.addStatus("enemy", "shock", 2);
                 this.spawnFloatingText(
                     "⚡",
-                    this.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#facc15"
                 );
             }
@@ -1702,7 +1701,7 @@ export class BlockGame {
                 this.addStatus("enemy", "poison", 3);
                 this.spawnFloatingText(
                     "☠️",
-                    this.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#22c55e"
                 );
             }
@@ -1719,7 +1718,7 @@ export class BlockGame {
         });
 
         cellsToClear.forEach((idx) =>
-            this.ui.grid.children[idx].classList.add("line-clear")
+            UIElements.grid.children[idx].classList.add("line-clear")
         );
         await new Promise((r) => setTimeout(r, 280));
 
@@ -1729,10 +1728,10 @@ export class BlockGame {
             const val = this.grid[r][c];
             // Keep MASK/ROCK, but allow lines to clear
             if (val === "ROCK" || val === "MASK") {
-                this.ui.grid.children[idx].classList.remove(
+                UIElements.grid.children[idx].classList.remove(
                     "line-clear"
                 );
-                this.ui.grid.children[idx].animate(
+                UIElements.grid.children[idx].animate(
                     [
                         { filter: "brightness(1.5)" },
                         { filter: "brightness(1)" },
@@ -1745,13 +1744,13 @@ export class BlockGame {
                     Logger.log(i18n.t("damage.mine"))
                     this.spawnFloatingText(
                         "BOOM!",
-                        this.ui.enemySprite,
+                        UIElements.enemy.sprite,
                         "#ef4444"
                     );
                     soundManager.play("crit");
                 }
                 this.grid[r][c] = null;
-                this.ui.grid.children[idx].className = "cell";
+                UIElements.grid.children[idx].className = "cell";
             }
         });
 
@@ -1798,14 +1797,14 @@ export class BlockGame {
             this.damageEnemy(dotDmg, false, true);
             this.spawnFloatingText(
                 dotDmg,
-                this.ui.enemySprite,
+                UIElements.enemy.sprite,
                 "#22c55e"
             );
             if (corrosionArmor > 0) {
                 this.enemyShield -= corrosionArmor;
                 this.spawnFloatingText(
                     "-ARM",
-                    this.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#22c55e"
                 );
             }
@@ -1819,7 +1818,7 @@ export class BlockGame {
             this.damageEnemy(3, false, true);
             this.spawnFloatingText(
                 3,
-                this.ui.enemySprite,
+                UIElements.enemy.sprite,
                 "#fb7185"
             );
         }
@@ -1831,7 +1830,7 @@ export class BlockGame {
             this.damageTakenThisFight += burn;
             this.spawnFloatingText(
                 burn,
-                this.ui.playerHpBar,
+                UIElements.player.hp_bar,
                 "#fb7185"
             );
             this.decayStatus("player", "burn", 1);
@@ -1845,7 +1844,7 @@ export class BlockGame {
             this.damageTakenThisFight += p;
             this.spawnFloatingText(
                 p,
-                this.ui.playerHpBar,
+                UIElements.player.hp_bar,
                 "#22c55e"
             );
             this.decayStatus("player", "poison", 1);
@@ -1858,7 +1857,7 @@ export class BlockGame {
                 Logger.log(i18n.t("artifact.phoenix.use"))
                 this.spawnFloatingText(
                     "PHOENIX!",
-                    this.ui.playerHpBar,
+                    UIElements.player.hp_bar,
                     "#f97316"
                 );
                 soundManager.play("win");
@@ -1930,7 +1929,7 @@ export class BlockGame {
                 amount = 0;
                 this.spawnFloatingText(
                     "BLOCK",
-                    this.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#60a5fa"
                 );
             } else {
@@ -1948,20 +1947,20 @@ export class BlockGame {
 
             this.spawnFloatingText(
                 amount,
-                this.ui.enemySprite,
+                UIElements.enemy.sprite,
                 isCrit ? "#fde047" : "#ffffff"
             );
-            this.ui.enemySprite.classList.add("shake");
+            UIElements.enemy.sprite.classList.add("shake");
             setTimeout(
-                () => this.ui.enemySprite.classList.remove("shake"),
+                () => UIElements.enemy.sprite.classList.remove("shake"),
                 450
             );
 
             if (isCrit) {
-                this.ui.feedback.classList.remove("hidden");
-                this.ui.feedback.classList.add("animate-bounce");
+                UIElements.feedback.classList.remove("hidden");
+                UIElements.feedback.classList.add("animate-bounce");
                 setTimeout(
-                    () => this.ui.feedback.classList.add("hidden"),
+                    () => UIElements.feedback.classList.add("hidden"),
                     900
                 );
 
@@ -2041,7 +2040,7 @@ export class BlockGame {
             Logger.log(i18n.t("artifact.recycle.use"))
         }
 
-        this.ui.hand.innerHTML = "";
+        UIElements.hand.innerHTML = "";
         this.hand = this.hand.map(() => null);
 
         setTimeout(() => {
@@ -2064,7 +2063,7 @@ export class BlockGame {
             Logger.log(i18n.t("artifact.warp.use"))
             this.spawnFloatingText(
                 "WARP!",
-                this.ui.playerHpBar,
+                UIElements.player.hp_bar,
                 "#a78bfa"
             );
             soundManager.play("clear");
@@ -2090,7 +2089,7 @@ export class BlockGame {
                 Logger.log(i18n.t("logger.enemy_frozen"))
                 this.spawnFloatingText(
                     "FROZEN!",
-                    this.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#67e8f9"
                 );
                 soundManager.play("clear");
@@ -2113,7 +2112,7 @@ export class BlockGame {
             this.damageEnemy(Math.min(this.shield, 30), false);
             this.spawnFloatingText(
                 "REFLECT",
-                this.ui.enemySprite,
+                UIElements.enemy.sprite,
                 "#fb923c"
             );
         }
@@ -2161,14 +2160,14 @@ export class BlockGame {
                 this.gold += 1;
                 this.spawnFloatingText(
                     "+1G",
-                    this.ui.playerHpBar,
+                    UIElements.player.hp_bar,
                     "#fbbf24"
                 );
             }
 
             this.spawnFloatingText(
                 dmg,
-                this.ui.playerHpBar,
+                UIElements.player.hp_bar,
                 "#ef4444"
             );
 
@@ -2187,7 +2186,7 @@ export class BlockGame {
                 Logger.log(i18n.t("artifact.mirrorplate.use"))
                 this.spawnFloatingText(
                     "MIRROR",
-                    this.ui.enemySprite,
+                    UIElements.enemy.sprite,
                     "#a5b4fc"
                 );
             }
@@ -2229,7 +2228,7 @@ export class BlockGame {
                 Logger.log(i18n.t("artifact.phoenix.use"))
                 this.spawnFloatingText(
                     "PHOENIX!",
-                    this.ui.playerHpBar,
+                    UIElements.player.hp_bar,
                     "#f97316"
                 );
                 soundManager.play("win");

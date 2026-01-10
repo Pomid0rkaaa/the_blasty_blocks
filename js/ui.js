@@ -6,20 +6,24 @@ export const UIElements = {
     score: document.getElementById("score-display"),
     gold: document.getElementById("gold-display"),
     log: document.getElementById("log-box"),
-    logPeek: document.getElementById("log-peek"),
+    log_peek: document.getElementById("log-peek"),
 
-    playerHpBar: document.getElementById("player-hp-bar"),
-    playerHpText: document.getElementById("player-hp-text"),
-    playerShield: document.getElementById("player-shield"),
-    playerStatus: document.getElementById("player-status"),
+    player: {
+        hp_bar: document.getElementById("player-hp-bar"),
+        hp: document.getElementById("player-hp-text"),
+        shield: document.getElementById("player-shield"),
+        status: document.getElementById("player-status"),
+    },
 
-    enemyHpBar: document.getElementById("enemy-hp-bar"),
-    enemyHpText: document.getElementById("enemy-hp-text"),
-    enemyIntent: document.getElementById("enemy-intent"),
-    enemyElement: document.getElementById("enemy-element"),
-    enemyLabel: document.getElementById("enemy-label"),
-    enemySprite: document.getElementById("enemy"),
-    enemyStatus: document.getElementById("enemy-status"),
+    enemy: {
+        hp: document.getElementById("enemy-hp-text"),
+        hp_bar: document.getElementById("enemy-hp-bar"),
+        intent: document.getElementById("enemy-intent"),
+        element: document.getElementById("enemy-element"),
+        label: document.getElementById("enemy-label"),
+        sprite: document.getElementById("enemy"),
+        status: document.getElementById("enemy-status"),
+    },
 
     feedback: document.getElementById("feedback-overlay"),
     grid: document.getElementById("grid-container"),
@@ -28,13 +32,20 @@ export const UIElements = {
         "artifacts-container"
     ),
     affinity: document.getElementById("affinity-container"),
-    hazardBadge: document.getElementById("hazard-badge"),
-    hazardBadgeText:
+    hazard_badge: document.getElementById("hazard-badge"),
+    hazard_badge_text:
         document.getElementById("hazard-badge-text"),
+    shop: {
+        modal: document.getElementById('shop-modal'),
+        container: document.getElementById('shop-container'),
+        gold: document.getElementById('shop-gold'),
+        skip_button: document.getElementById('shop-skip'),
+    },
+    victory_modal: document.getElementById('victory-modal'),
+    volume_button: document.getElementById("volume-btn"),
 }
 
 export class UI {
-    static elements = UIElements;
     static renderStatusChips(container, statuses) {
         container.innerHTML = "";
         const entries = Object.entries(statuses).filter(

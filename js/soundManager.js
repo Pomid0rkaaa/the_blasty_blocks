@@ -1,4 +1,5 @@
 import { TRACKS } from "./data/tracks.js";
+import { UIElements } from "./ui.js";
 
 export class SoundManager {
     constructor() {
@@ -107,7 +108,7 @@ export class SoundManager {
 
     toggle() {
         this.muted = !this.muted;
-        const btn = document.getElementById("volume-btn");
+        const btn = UIElements.volume_button;
         btn.innerText = this.muted ? "🔇" : "🔊";
 
         if (!this.initialized && !this.muted) {
