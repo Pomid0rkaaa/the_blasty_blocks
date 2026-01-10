@@ -15,7 +15,8 @@ export class Rewards {
             container.innerHTML = "";
             const choices = [];
             choices.push(REWARDS.find(obj => obj.id === "heal"));
-            const r = REWARDS[Math.floor(Math.random()*REWARDS.length)];
+            const r = REWARDS.filter(e=>e.id!=="heal" && e.id!=="full")
+            choices.push(r[Math.floor(Math.random()*r.length)]);
 
             const available = ARTIFACTS.filter(
                 (a) => !this.ctx.hasArtifact(a.id)
