@@ -1,48 +1,78 @@
 import { STATUS_META } from './data/status_meta.js';
 import { ELEMENTS } from './data/elements.js';
 
+const id = (value) => document.getElementById(value)  
+
 export const UIElements = {
-    level: document.getElementById("level-display"),
-    score: document.getElementById("score-display"),
-    gold: document.getElementById("gold-display"),
-    log: document.getElementById("log-box"),
-    log_peek: document.getElementById("log-peek"),
+    level: id("level-display"),
+    score: id("score-display"),
+    gold: id("gold-display"),
+    log: id("log-box"),
+    log_peek: id("log-peek"),
 
     player: {
-        hp_bar: document.getElementById("player-hp-bar"),
-        hp: document.getElementById("player-hp-text"),
-        shield: document.getElementById("player-shield"),
-        status: document.getElementById("player-status"),
+        hp_bar: id("player-hp-bar"),
+        hp: id("player-hp-text"),
+        shield: id("player-shield"),
+        status: id("player-status"),
     },
 
     enemy: {
-        hp: document.getElementById("enemy-hp-text"),
-        hp_bar: document.getElementById("enemy-hp-bar"),
-        intent: document.getElementById("enemy-intent"),
-        element: document.getElementById("enemy-element"),
-        label: document.getElementById("enemy-label"),
-        sprite: document.getElementById("enemy"),
-        status: document.getElementById("enemy-status"),
+        hp: id("enemy-hp-text"),
+        hp_bar: id("enemy-hp-bar"),
+        intent: id("enemy-intent"),
+        element: id("enemy-element"),
+        label: id("enemy-label"),
+        sprite: id("enemy"),
+        status: id("enemy-status"),
     },
 
-    feedback: document.getElementById("feedback-overlay"),
-    grid: document.getElementById("grid-container"),
-    hand: document.getElementById("hand-container"),
-    artifacts: document.getElementById(
-        "artifacts-container"
-    ),
-    affinity: document.getElementById("affinity-container"),
-    hazard_badge: document.getElementById("hazard-badge"),
-    hazard_badge_text:
-        document.getElementById("hazard-badge-text"),
-    shop: {
-        modal: document.getElementById('shop-modal'),
-        container: document.getElementById('shop-container'),
-        gold: document.getElementById('shop-gold'),
-        skip_button: document.getElementById('shop-skip'),
+    feedback: id("feedback-overlay"),
+    grid: id("grid-container"),
+    hand: id("hand-container"),
+    artifacts: id("artifacts-container"),
+    achievements: id("achievements-container"),
+    affinity: id("affinity-container"),
+    hazard_badge: id("hazard-badge"),
+    hazard_badge_text: id("hazard-badge-text"),
+    final_score: id("final-score"),
+    final_depth: id("final-depth"),
+
+    codex: {
+        status: id("codex-status"),
+        hazards: id("codex-hazards"),
+        enemy: id("codex-enemy"),
     },
-    victory_modal: document.getElementById('victory-modal'),
-    volume_button: document.getElementById("volume-btn"),
+
+    shop: {
+        modal: id('shop-modal'),
+        container: id('shop-container'),
+        gold: id('shop-gold'),
+        skip_button: id('shop-skip'),
+    },
+    //volume_button, volume_panel
+    volume: {
+        button: id("volume-btn"),
+        panel: document.querySelector(".volume-panel"),
+        music: id("music-volume"),
+        label: id("music-vol-label"),
+    },
+    difficulty: id("difficulty-modal"),
+    modal: {
+        victory: id('victory-modal'),
+        game_over: id("game-over-modal"),
+        help: id("help-modal"),
+        log: id("log-modal"),
+        achievements: id("achievements-modal"),
+    },
+    hazard: {
+        modal: id("hazard-modal"),
+        icon: id("hazard-icon"),
+        title: id("hazard-title"),
+        desc: id("hazard-desc"),
+        continue: id("hazard-continue"),
+        header: id("hazard-header"),
+    }
 }
 
 export class UI {

@@ -133,20 +133,13 @@ export class BlockGame {
     }
 
     showDifficultyModal() {
-        document
-            .getElementById("game-over-modal")
-            .classList.add("hidden");
-        document
-            .getElementById("difficulty-modal")
-            .classList.remove("hidden");
+        UIElements.modal.game_over.classList.add("hidden");
+        UIElements.difficulty.classList.remove("hidden");
     }
 
     startGame(diff) {
         this.difficulty = diff;
-        document
-            .getElementById("difficulty-modal")
-            .classList.add("hidden");
-        this.restart();
+        UIElements.difficulty.classList.add("hidden");
     }
 
     defaultHazardMods() {
@@ -189,7 +182,7 @@ export class BlockGame {
         document.addEventListener("mousemove", dragMove);
         document.addEventListener("mouseup", dragEnd);
 
-        document.querySelector(".volume-panel")?.addEventListener(
+        UIElements.volume.panel.addEventListener(
             "touchstart",
             e => e.stopPropagation()
         );
@@ -225,8 +218,8 @@ export class BlockGame {
         );
 
         // Volume UI
-        const vol = document.getElementById("music-volume");
-        const label = document.getElementById("music-vol-label");
+        const vol = UIElements.volume.music;
+        const label = UIElements.volume.label;
         const vInit = Math.round(soundManager.musicVolume * 100);
         vol.value = String(vInit);
         label.textContent = `${vInit}%`;
@@ -280,9 +273,7 @@ export class BlockGame {
     }
 
     renderAchievements() {
-        const cont = document.getElementById(
-            "achievements-container"
-        );
+        const cont = UIElements.achievements;
         const sum = document.getElementById("ach-summary");
         if (!cont || !sum) return;
         cont.innerHTML = "";
@@ -315,15 +306,11 @@ export class BlockGame {
     }
 
     openAchievements() {
-        document
-            .getElementById("achievements-modal")
-            .classList.remove("hidden");
+        UIElements.achievements.classList.remove("hidden");
         this.renderAchievements();
     }
     closeAchievements() {
-        document
-            .getElementById("achievements-modal")
-            .classList.add("hidden");
+        UIElements.achievements.classList.add("hidden");
     }
     resetAchievements() {
         this.achUnlocked = new Set();
@@ -484,8 +471,8 @@ export class BlockGame {
     // Help / Codex
     // ------------------------------
     renderCodex() {
-        const s = document.getElementById("codex-status");
-        const h = document.getElementById("codex-hazards");
+        const s = UIElements.codex.status;
+        const h = UIElements.codex.hazards;
         if (!s || !h) return;
 
         s.innerHTML = "";
@@ -512,7 +499,7 @@ export class BlockGame {
     }
 
     renderEnemyCodex() {
-        const el = document.getElementById("codex-enemy");
+        const el = UIElements.codex.enemy;
         if (!el) return;
         const e = this.currentEnemy;
         if (!e) {
@@ -543,13 +530,12 @@ export class BlockGame {
     }
 
     openHelp(focusEnemy = false) {
-        const modal = document.getElementById("help-modal");
+        const modal = UIElements.modal.help;
         modal.classList.remove("hidden");
         this.renderCodex();
         if (focusEnemy) {
             setTimeout(() => {
-                const block =
-                    document.getElementById("codex-enemy");
+                const block = UIElements.codex.enemy;
                 block?.scrollIntoView({
                     behavior: "smooth",
                     block: "center",
@@ -559,38 +545,29 @@ export class BlockGame {
     }
 
     closeHelp() {
-        document
-            .getElementById("help-modal")
-            .classList.add("hidden");
+        UIElements.modal.help.classList.add("hidden");
     }
 
     openHazardInfo() {
         if (!this.hazard) return;
-        const modal = document.getElementById("hazard-modal");
-        const icon = document.getElementById("hazard-icon");
-        const title = document.getElementById("hazard-title");
-        const desc = document.getElementById("hazard-desc");
-        const btn = document.getElementById("hazard-continue");
-        const header = document.getElementById("hazard-header");
-
-        icon.textContent = this.hazard.icon || "⚠️";
-        title.textContent = this.hazard.name;
-        desc.textContent = this.hazard.desc;
+        UIElements.hazard.icon.textContent = this.hazard.icon || "⚠️";
+        UIElements.hazard.title.textContent = this.hazard.name;
+        UIElements.hazard.desc.textContent = this.hazard.desc;
 
         if (this.hazard.kind === "boon") {
-            header.textContent = "БЛАГОСЛОВЕНИЕ";
-            header.className =
+            UIElements.hazard.header.textContent = "БЛАГОСЛОВЕНИЕ";
+            UIElements.hazard.header.className =
                 "text-lg font-black text-emerald-200 pixel-font";
         } else {
-            header.textContent = "ОПАСНОСТЬ";
-            header.className =
+            UIElements.hazard.header.textContent = "ОПАСНОСТЬ";
+            UIElements.hazard.header.className =
                 "text-lg font-black text-red-200 pixel-font";
         }
 
         this.paused = true;
-        modal.classList.remove("hidden");
-        btn.onclick = () => {
-            modal.classList.add("hidden");
+        UIElements.hazard.modal.classList.remove("hidden");
+        UIElements.hazard.continue.onclick = () => {
+            UIElements.hazard.modal.classList.add("hidden");
             this.paused = false;
         };
     }
@@ -600,27 +577,9 @@ export class BlockGame {
     // ------------------------------
     restart() {
         this.resetRun();
-        document
-            .getElementById("game-over-modal")
-            .classList.add("hidden");
-        document
-            .getElementById("victory-modal")
-            .classList.add("hidden");
-        document
-            .getElementById("hazard-modal")
-            .classList.add("hidden");
-        document
-            .getElementById("shop-modal")
-            .classList.add("hidden");
-        document
-            .getElementById("help-modal")
-            .classList.add("hidden");
-        document
-            .getElementById("log-modal")
-            .classList.add("hidden");
-        document
-            .getElementById("achievements-modal")
-            .classList.add("hidden");
+        UIElements.modal.forEach(e => e.classList.add("hidden"));
+        UIElements.shop.modal.classList.add("hidden");
+        UIElements.hazard.modal.classList.add("hidden");
 
         UIElements.artifacts.innerHTML = "";
         UIElements.affinity.innerHTML = "";
@@ -1348,7 +1307,7 @@ export class BlockGame {
             ? e.touches[0].clientY+this.offsetY
             : e.clientY+this.offsetY;
 
-        const ghost = document.getElementById("drag-ghost");
+        const ghost = document.querySelector("#drag-ghost");
         if (ghost) {
             ghost.style.left = `${clientX}px`;
             ghost.style.top = `${clientY}px`;
@@ -1382,7 +1341,7 @@ export class BlockGame {
 
     handleDragEnd(e) {
         if (!this.draggedBlock) return;
-        const ghost = document.getElementById("drag-ghost");
+        const ghost = document.querySelector("#drag-ghost");
         if (ghost) ghost.remove();
 
         const clientX = e.changedTouches
@@ -2244,9 +2203,7 @@ export class BlockGame {
 
     nextLevel() {
         this.level++;
-        document
-            .getElementById("victory-modal")
-            .classList.add("hidden");
+        UIElements.modal.victory.classList.add("hidden");
 
         // Cleanup if too full
         for (let r = 0; r < GRID_SIZE; r++) {
@@ -2323,11 +2280,9 @@ export class BlockGame {
 
     loseGame() {
         soundManager.play("lose");
-        document.getElementById("final-score").innerText = i18n.t("game_over.score", {score: this.score});
-        document.getElementById("final-depth").innerText = i18n.t("game_over.level", {level: this.level});
-        document
-            .getElementById("game-over-modal")
-            .classList.remove("hidden");
+        UIElements.final_score.innerText = i18n.t("game_over.score", {score: this.score});
+        UIElements.final_depth.innerText = i18n.t("game_over.level", {level: this.level});
+        UIElements.modal.game_over.classList.remove("hidden");
     }
 
     updateUI() {
