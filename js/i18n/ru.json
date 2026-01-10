@@ -1,0 +1,56 @@
+{
+  
+  "logger.game_started": "Начало забега.",
+  "logger.new_run": "Начало забега.",
+  "logger.enemy": "Враг: ${name}",
+  "logger.boss": "БОСС: ${name}",
+  "logger.enemy.frozen": "Враг заморожен: ход пропущен.",
+  "logger.absorb": "Урон поглощён щитом.",
+  "logger.win": "Победа! +${bonus} золота",
+
+  "hazard.random_discard.action": "Скользкий пол: фигура потеряна",
+
+  "shop.buy": "Покупка: ${item}",
+  "shop.roll": "Найдена лавка.",
+
+  "damage.mine": "Мина взорвана! +30 урона",
+  "damage.spikes": "Шипы: -${cost} HP",
+  "damage.enemy": "Враг атакует: -${dmg} HP",
+
+  "achievement.unlock": "Ачивка: ${name}",
+  "achievement.reset": "Ачивки сброшены.",
+
+  "artifact.halo.use": "Ореол: очищение статуса",
+  "artifact.antidote.use": "Сыворотка: статусы ослаблены",
+  "artifact.mirrorplate.use": "Зеркальная броня: 6 урона",
+  "artifact.scavenger.use": "Сборщик: убрал 1 клетку",
+  "artifact.thorns.use": "Шипы: враг получает 5",
+  "artifact.recycle.use": "Переработка: -2 клетки",
+  "artifact.warp.use": "Искажение времени: ход врага пропущен.",
+  "artifact.trowel.use": "Кельма: очищено ${removed}",
+  "artifact.bulwark.use": "Бастион: +8 щита",
+  "artifact.gambler.use": "Азарт: JACKPOT!",
+  "artifact.thunder.use": "Грозовой удар: +10",
+  "artifact.vampire.use": "Кровавое касание: +${count} HP",
+  "artifact.phoenix.use": "Перо феникса!",
+  "artifact.goldlines.use": "Золотые линии: +${gold} золота",
+  "artifact.strurdy.pickup": "Амулет: +15 Max HP",
+  "artifact.glass_cannon.pickup": "Стеклянная пушка: HP снижено",
+  "artifact.blood_pact.pickup": "Пакт: +100 золота, -25 HP",
+  "artifact.spike_armor.pickup": "Шипастый доспех: броня + шипы",
+
+  "boon.grid_size": "Благословение: сетка ${size}x${size}",
+  "boon.start_shield": "Благословение: +${shield} щита",
+  "boon.start_heal": "Благословение: +${heal} HP",
+  "boon.start_gold": "Благословение: +${gold} золота",
+  "boon.start_clean": "Благословение: очищение (${clean})",
+
+
+  "button.next_turn": "Сброс (ход врагу)",
+  "button.start_game.easy": "ЛЕГКО",
+  "button.start_game.easy.desc": "Враги слабее, больше HP.",
+  "button.start_game.normal": "НОРМА",
+  "button.start_game.normal.desc": "Стандартный баланс.",
+  "button.start_game.hard": "ХАРД",
+  "button.start_game.hard.desc": "Враги сильнее, меньше наград."
+}

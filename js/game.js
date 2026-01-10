@@ -8,6 +8,7 @@ import { STATUS_META } from './data/status_meta.js';
 import { soundManager } from './soundManager.js';
 import { UI } from './ui.js';
 import { Logger } from './logger.js'
+import i18n from './i18n.js';
 
 let GRID_SIZE = 8;
 
@@ -172,7 +173,7 @@ export class BlockGame {
         this.spawnEnemy();
         this.fillHand();
         this.updateUI();
-        Logger.log("Начало забега.");
+        Logger.log(i18n.t("logger.game_started"));
 
         const dragMove = (e) => this.handleDragMove(e);
         const dragEnd = (e) => this.handleDragEnd(e);
@@ -265,7 +266,7 @@ export class BlockGame {
         this.saveAchievements();
         const meta = ACHIEVEMENTS.find((a) => a.id === id);
         if (meta) {
-            Logger.log(`Ачивка: ${meta.name}`);
+            Logger.log(i18n.t("achievement.unlock", { name: meta.name }));
             this.spawnFloatingText(
                 `🏆 ${meta.name}`,
                 this.ui.enemySprite,
@@ -324,7 +325,7 @@ export class BlockGame {
         this.achUnlocked = new Set();
         this.saveAchievements();
         this.renderAchievements();
-        Logger.log("Ачивки сброшены.");
+        Logger.log(i18n.t("achievement.reset"));
     }
 
     // ------------------------------
@@ -413,18 +414,18 @@ export class BlockGame {
         if (artifact.id === "sturdy") {
             this.maxHp += 15;
             this.healPlayer(15);
-            Logger.log("Амулет: +15 Max HP");
+            Logger.log(i18n.t("artifact.strurdy.pickup"));
         }
         if (artifact.id === "glass_cannon") {
             this.maxHp = Math.floor(this.maxHp * 0.7);
             this.hp = Math.min(this.hp, this.maxHp);
-            Logger.log("Стеклянная пушка: HP снижено");
+            Logger.log(i18n.t("artifact.glass_cannon.pickup"));
         }
         if (artifact.id === "blood_pact") {
             this.gold += 100;
             this.hp -= 25;
             if (this.hp <= 0) this.hp = 1;
-            Logger.log("Пакт: +100 золота, -25 HP");
+            Logger.log(i18n.t("artifact.blood_pact.pickup"));
         }
         if (artifact.id === "spike_armor") {
             this.shield += 15;
@@ -436,7 +437,7 @@ export class BlockGame {
                 color: "#16a34a",
                 rarity: 0,
             }); // reuse existing logic
-            Logger.log("Шипастый доспех: броня + шипы");
+            Logger.log(i18n.t("artifact.spike_armor.pickup"));
         }
         if (artifact.id === "inferno_ring") {
             this.addStatus("enemy", "burn", 5);
@@ -624,7 +625,8 @@ export class BlockGame {
         this.fillHand();
         this.updateUI();
         Logger.clear();
-        Logger.log("Новый забег.");
+        Logger.log(i18n.t("logger.new_run"));
+
         this.renderCodex();
     }
 
@@ -788,7 +790,8 @@ export class BlockGame {
                     0,
                     (this.playerStatuses[pick] || 0) - 1
                 );
-                Logger.log("Ореол: очищение статуса");
+                Logger.log(i18n.t("artifact.halo.use"));
+
             }
         }
 
@@ -804,9 +807,7 @@ export class BlockGame {
         this.applyStartGridEffects();
         if (this.hazardMods.gridSize && this.hazardMods.gridSize !== GRID_SIZE) {
             this.resizeGrid(this.hazardMods.gridSize, this.hazardMods.cellSize);
-            Logger.log(
-                `Благословение: сетка ${this.hazardMods.gridSize}x${this.hazardMods.gridSize}`
-            );
+            Logger.log(i18n.t("boon.grid_size", { size: this.hazardMods.gridSize }));
         }
 
         // Grid cleanser artifact
@@ -816,29 +817,21 @@ export class BlockGame {
         // Boon starts
         if (this.hazardMods.startShield) {
             this.shield += this.hazardMods.startShield;
-            Logger.log(
-                `Благословение: +${this.hazardMods.startShield} щита`
-            );
+            Logger.log(i18n.t("boon.start_shield", { shield: this.hazardMods.startShield }));
         }
         if (this.hazardMods.startHeal) {
             this.healPlayer(this.hazardMods.startHeal);
-            Logger.log(
-                `Благословение: +${this.hazardMods.startHeal} HP`
-            );
+            Logger.log(i18n.t("boon.start_heal", { heal: this.hazardMods.startHeal }));
         }
         if (this.hazardMods.startGold) {
             this.gold += this.hazardMods.startGold;
-            Logger.log(
-                `Благословение: +${this.hazardMods.startGold} золота`
-            );
+            Logger.log(i18n.t("boon.start_heal", { gold: this.hazardMods.startGold }));
         }
         if (this.hazardMods.startClean) {
             this.removeRandomFilledCells(
                 this.hazardMods.startClean
             );
-            Logger.log(
-                `Благословение: очищение (${this.hazardMods.startClean})`
-            );
+            Logger.log(i18n.t("boon.start_clean", { clean: this.hazardMods.startClean }));
         }
         if (this.hazardMods.startEnemyChill) {
             this.addStatus(
@@ -855,8 +848,10 @@ export class BlockGame {
         if (this.level >= 10) this.unlockAchievement("depth10");
         if (this.level >= 20) this.unlockAchievement("depth20");
 
-        if (isBossFloor) Logger.log(`БОСС: ${enemyTemplate.name}`);
-        else Logger.log(`Враг: ${enemyTemplate.name}`);
+        Logger.log(i18n.t(
+            `logger.${isBossFloor ? "boss" : "enemy"}`,
+            { name: enemyTemplate.name })
+        );
     }
 
     resizeGrid(newSize, scale = "36px") {
@@ -869,7 +864,7 @@ export class BlockGame {
             "--cell-size",
             scale
         );
-        
+
         this.grid = Array.from({ length: newSize }, () =>
             Array.from({ length: newSize }, () => null)
         );
@@ -908,7 +903,7 @@ export class BlockGame {
                 ["ROCK", "GARBAGE"],
                 2
             );
-            if (removed > 0) Logger.log(`Кельма: очищено ${removed}`);
+            if (removed > 0) Logger.log(i18n.t("artifact.trowel.use", {removed}));
         }
     }
 
@@ -1153,7 +1148,7 @@ export class BlockGame {
 
         if (this.hasArtifact("bulwark") && this.shield === 0) {
             this.shield += 8;
-            Logger.log("Бастион: +8 щита");
+            Logger.log(i18n.t("artifact.bulwark.use"));
         }
 
         const size = this.getHandSize();
@@ -1524,7 +1519,7 @@ export class BlockGame {
                 cellsPlaced * this.hazardMods.hpCostPerCell;
             this.hp -= cost;
             this.damageTakenThisFight += cost;
-            Logger.log(`Шипы: -${cost} HP`);
+            Logger.log(i18n.t("damage.spikes", {cost}))
             this.spawnFloatingText(
                 cost,
                 this.ui.playerHpBar,
@@ -1574,7 +1569,7 @@ export class BlockGame {
 
         if (this.hasArtifact("gambler") && Math.random() < 0.25) {
             placeDamage *= 2;
-            Logger.log("Азарт: JACKPOT!");
+            Logger.log(i18n.t("artifact.gambler.use"))
             this.spawnFloatingText(
                 "JACKPOT!",
                 this.ui.enemySprite,
@@ -1590,7 +1585,8 @@ export class BlockGame {
             if (this.blocksPlaced % 3 === 0) {
                 this.addStatus("enemy", "shock", 1);
                 this.damageEnemy(10, true);
-                Logger.log("Грозовой удар: +10");
+                Logger.log(i18n.t("artifact.thunder.use"))
+
                 this.spawnFloatingText(
                     "ZAP!",
                     this.ui.enemySprite,
@@ -1649,7 +1645,7 @@ export class BlockGame {
 
         if (this.hasArtifact("vampire")) {
             this.healPlayer(count * 2);
-            Logger.log(`Кровавое касание: +${count * 2} HP`);
+            Logger.log(i18n.t("artifact.vampire.use", {count: count * 2}))
             this.spawnFloatingText(
                 "HEAL",
                 this.ui.playerHpBar,
@@ -1660,7 +1656,7 @@ export class BlockGame {
         if (this.hasArtifact("goldlines")) {
             const gg = count * 2;
             this.gold += gg;
-            Logger.log(`Золотые линии: +${gg} золота`);
+            Logger.log(i18n.t("artifact.vampire.use", {gold: gg}))
         }
 
         if (this.hasArtifact("frost"))
@@ -1741,8 +1737,8 @@ export class BlockGame {
                 );
             } else {
                 if (val === "MINE") {
-                    this.damageEnemy(30, true);
-                    Logger.log("Мина взорвана! +30 урона");
+                    this.damageEnemy(30, true); //!!
+                    Logger.log(i18n.t("damage.mine"))
                     this.spawnFloatingText(
                         "BOOM!",
                         this.ui.enemySprite,
@@ -1855,7 +1851,7 @@ export class BlockGame {
             if (this.hasArtifact("phoenix") && !this.revived) {
                 this.hp = Math.floor(this.maxHp / 2);
                 this.revived = true;
-                Logger.log("Перо феникса!");
+                Logger.log(i18n.t("artifact.phoenix.use"))
                 this.spawnFloatingText(
                     "PHOENIX!",
                     this.ui.playerHpBar,
@@ -2032,13 +2028,13 @@ export class BlockGame {
 
         this.discardsThisFight++;
 
-        Logger.log("Сброс: ход врагу.");
+        Logger.log(i18n.t("button.next_turn"))
         soundManager.play("invalid");
 
         // Recycle artifact
         if (this.hasArtifact("recycle")) {
             this.removeRandomFilledCells(2);
-            Logger.log("Переработка: -2 клетки");
+            Logger.log(i18n.t("artifact.recycle.use"))
         }
 
         this.ui.hand.innerHTML = "";
@@ -2061,7 +2057,7 @@ export class BlockGame {
 
         // Time warp
         if (this.hasArtifact("warp") && Math.random() < 0.15) {
-            Logger.log("Искажение времени: ход врага пропущен.");
+            Logger.log(i18n.t("artifact.warp.use"))
             this.spawnFloatingText(
                 "WARP!",
                 this.ui.playerHpBar,
@@ -2087,7 +2083,7 @@ export class BlockGame {
                 this.enemyStatuses.chill >= 3 &&
                 Math.random() < 0.22
             ) {
-                Logger.log("Враг заморожен: ход пропущен.");
+                Logger.log(i18n.t("logger.enemy_frozen"))
                 this.spawnFloatingText(
                     "FROZEN!",
                     this.ui.enemySprite,
@@ -2144,7 +2140,7 @@ export class BlockGame {
         if (dmg > 0) {
             this.hp -= dmg;
             this.damageTakenThisFight += dmg;
-            Logger.log(`Враг атакует: -${dmg} HP`);
+            Logger.log(i18n.t("damage.enemy", {dmg}))
             soundManager.play("damage");
             document.body.classList.add("shake");
             setTimeout(
@@ -2154,7 +2150,7 @@ export class BlockGame {
 
             if (this.hasArtifact("thorns")) {
                 this.damageEnemy(5, false);
-                Logger.log("Шипы: враг получает 5");
+                Logger.log(i18n.t("artifact.thorns.use"))
             }
 
             if (this.hasArtifact("gold_tooth")) {
@@ -2181,10 +2177,10 @@ export class BlockGame {
             if (el === "storm")
                 this.addStatus("player", "shock", 1);
         } else {
-            Logger.log("Урон поглощён щитом.");
+            Logger.log(i18n.t("logger.absorb"))
             if (absorbedFully && this.hasArtifact("mirrorplate")) {
                 this.damageEnemy(6, false);
-                Logger.log("Зеркальная броня: 6 урона");
+                Logger.log(i18n.t("artifact.mirrorplate.use"))
                 this.spawnFloatingText(
                     "MIRROR",
                     this.ui.enemySprite,
@@ -2196,7 +2192,7 @@ export class BlockGame {
         // Scavenger
         if (this.hasArtifact("scavenger") && Math.random() < 0.2) {
             this.removeRandomFilledCells(1);
-            Logger.log("Сборщик: убрал 1 клетку");
+            Logger.log(i18n.t("artifact.scavenger.use"))
         }
 
         // Hazard: Slippery/Random Discard
@@ -2217,7 +2213,7 @@ export class BlockGame {
                 el.style.opacity = "0";
                 setTimeout(() => el.remove(), 200);
                 this.hand[idx] = null;
-                Logger.log("Скользкий пол: фигура потеряна");
+                Logger.log(i18n.t("hazard.random_discard.action"))
                 this.checkHandEmpty();
             }
         }
@@ -2226,7 +2222,7 @@ export class BlockGame {
             if (this.hasArtifact("phoenix") && !this.revived) {
                 this.hp = Math.floor(this.maxHp / 2);
                 this.revived = true;
-                Logger.log("Перо феникса!");
+                Logger.log(i18n.t("artifact.phoenix.use"))
                 this.spawnFloatingText(
                     "PHOENIX!",
                     this.ui.playerHpBar,
@@ -2415,7 +2411,7 @@ export class BlockGame {
         if (item.apply) item.apply();
         soundManager.play("place");
         this.updateUI();
-        Logger.log(`Покупка: ${item.name}`);
+        Logger.log(i18n.t("shop.buy", {item: item.name}))
         return true;
     }
 
@@ -2561,7 +2557,7 @@ export class BlockGame {
         if (this.hazardMods.doubleGold) bonus *= 2;
 
         this.gold += bonus;
-        Logger.log(`Победа! +${bonus} золота`);
+        Logger.log(i18n.t("logger.win", {bonus}))
 
         // Achievements
         if (isBoss) {
@@ -2587,12 +2583,12 @@ export class BlockGame {
                 }
             });
             if (reduced > 0)
-                Logger.log("Сыворотка: статусы ослаблены");
+                Logger.log(i18n.t("artifact.antidote.use"))
         }
 
         // Decide shop
         if (this.rollShop()) {
-            Logger.log("Найдена лавка.");
+            Logger.log(i18n.t("shop.roll"))
             this.openShopThenRewards();
         } else {
             this.generateRewards();
