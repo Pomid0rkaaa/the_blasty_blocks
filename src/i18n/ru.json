@@ -6,24 +6,36 @@
   "logger.enemy.frozen": "Враг заморожен: ход пропущен",
   "logger.absorb": "Урон поглощен щитом",
   "logger.win": "Победа! +${bonus} золота",
-
-  "hazard.random_discard.action": "Скользкий пол: фигура потеряна",
-
+  
   "shop.title": "Лавка глубины",
   "shop.desc": "Здесь можно купить артефакты и улучшения. Магазин появляется не всегда",
   "shop.tip": "Подсказка: цены и подсказки обновляются после покупки - в минус уйти нельзя",
   "shop.buy": "Покупка: ${item}",
   "shop.roll": "Найдена лавка",
+  "shop.button.buy": "КУПИТЬ",
+  "shop.button.purchased": "КУПЛЕНО",
+  "shop.button.not_enough": "НЕ ХВАТАЕТ",
+  
+  "shop_item.heal": "Аптечка",
+  "shop_item.heal.desc": "+25 здоровья",
+  "shop_item.shield": "Пластина",
+  "shop_item.shield.desc": "+25 щита",
+  "shop_item.clean": "Сапер",
+  "shop_item.clean.desc": "Убрать 5 случайных клеток",
+  "shop_item.gold": "Сундучок",
+  "shop_item.gold.desc": "+60 золота",
 
   "damage.mine": "Мина взорвана! +30 урона",
   "damage.spikes": "Шипы: -${cost} HP",
   "damage.enemy": "Враг атакует: -${dmg} HP",
-
+  
   "achievement.unlock": "Ачивка: ${name}",
   "achievement.reset": "Ачивки сброшены",
   "achievements_modal.collection": "Колекция",
   "achievements_modal.tip": "Ачивки сохраняются в браузере",
-
+  "achievements_modal.got": "(получено)",
+  "achievements_modal.locked": "(закрыто)",
+  
   "artifact.halo.use": "Ореол: очищение статуса",
   "artifact.antidote.use": "Сыворотка: статусы ослаблены",
   "artifact.mirrorplate.use": "Зеркальная броня: 6 урона",
@@ -41,14 +53,15 @@
   "artifact.strurdy.pickup": "Амулет: +15 Max HP",
   "artifact.glass_cannon.pickup": "Стеклянная пушка: HP снижено",
   "artifact.blood_pact.pickup": "Пакт: +100 золота, -25 HP",
-  "artifact.spike_armor.pickup": "Шипастый доспех: броня + шипы",
+  "artifact.thorns.pickup": "Шипастый доспех: броня + шипы",
+  "artifact.rarity": "Редкость: ${rarity}",
   
   "boon.grid_size": "Благословение: сетка ${size}x${size}",
   "boon.start_shield": "Благословение: +${shield} щита",
   "boon.start_heal": "Благословение: +${heal} HP",
   "boon.start_gold": "Благословение: +${gold} золота",
   "boon.start_clean": "Благословение: очищение (${clean})",
-
+  
   "button.next_turn": "Сброс (ход врагу)",
   "button.new_game": "ЕЩЕ РАЗ",
   "button.start_game.easy": "ЛЕГКО",
@@ -66,37 +79,47 @@
   "button.ok": "ОК",
   "button.clear": "CLEAR",
   "button.reset": "RESET",
-
+  "button.reset.hover": "Сбросить ачивки",
+  
   "volume_panel.volume": "ЗВУК",
   "volume_panel.desc": "Звук запускается после первого клика",
   "volume_panel.music": "Музыка",
-
+  
   "label.depth": "ГЛУБИНА",
   "label.gold": "ЗОЛОТО",
+  "label.prive": "ЦЕНА",
   "label.score": "СЧЕТ",
   "label.shop": "МАГАЗИН",
   "label.hero": "ГЕРОЙ",
   "label.enemy": "ВРАГ",
+  "label.boss": "БОСС",
   "label.difficulty": "СЛОЖНОСТЬ",
   "label.hand": "РУКА",
   "label.hazard": "ОПАСНОСТЬ",
+  "label.boon": "БЛАГОСЛОВЕНИЕ",
   "label.help": "СПРАВКА",
   "label.log": "ЖУРНАЛ",
   "label.achievements": "АЧИВКИ",
-
+  "label.frozen": "ЗАМОРОЖЕНО",
+  
   "run_info.artifacts": "Артефакты",
   "run_info.log_peek": "ПОСЛЕДНЕЕ",
-
+  
+  "hazard.random_discard.action": "Скользкий пол: фигура потеряна",
   "hazard.title": "Условие",
   "hazard.desc": "Описание",
   "hazard_badge.hover": "Нажми, чтобы открыть описание",
+  
+  "shield.hover" : "Щит поглощает урон",
+  "enemy.hover" : "Нажми: инфо о враге",
+  "enemy.element": "${element} (элемент врага)",
 
   "hand.tip": "Перетаскивай фигуры на сетку. Линии = крит/щит. Справка:?. Журнал:📜 Ачивки:🏆",
-
+  
   "game_over.title": "ТЫ ПАЛ",
   "game_over.score": "Счет: ${score}",
   "game_over.level": "Глубина: ${level}",
-
+  
   "victory_modal.trophies": "ТРОФЕИ",
   "victory_modal.choose_reward": "Выбери награду",
   
@@ -106,7 +129,7 @@
     "<li>• Перетаскивай фигуры на сетку 8×8.</li>",
     "<li>• Установка клеток наносит урон врагу.</li>",
     "<li>• Полная линия/колонка очищается → <b>крит</b>, урон и щит.</li>",
-    "<li>• <b>Сброс</b> меняет руку, но <b>даёт ход врагу</b>.</li>",
+    "<li>• <b>Сброс</b> меняет руку, но <b>дает ход врагу</b>.</li>",
     "<li>• Поворота фигур <b>нет</b> — выбирай форму внимательно.</li>",
     "<li>• На глубине <b>каждые 5</b> — босс.</li>",
     "<li>• Иногда после победы появляется <b>магазин</b> (за золото).</li>",
@@ -117,5 +140,44 @@
   "help_modal.current_enemy": "Текущий враг",
   "help_modal.tip": "Подсказка: наведи на артефакт/статус — будет подсказка. Журнал и ачивки открываются кнопками сверху",
   
-  "log_modal.events": "События"
+  "reward_modal.rarity": "(редк. ${rarity})",
+  
+  "log_modal.events": "События",
+  
+  "codex.boon": "(благословение)",
+  "codex.hazard": "(опасность)",
+  
+  "status.burn": "Горение",
+  "status.burn.desc": "Наносит урон каждый ход и постепенно уменьшается",
+  "status.poison": "Яд",
+  "status.poison.desc": "Наносит урон каждый ход (сильнее при больших стаках) и уменьшается",
+  "status.shock": "Шок",
+  "status.shock.desc": "Усиливает следующий удар (или входящий урон по герою), затем сбрасывается",
+  "status.chill": "Озноб",
+  "status.chill.desc": "Снижает атаку врага; при больших стаках иногда замораживает ход",
+  "status.weak": "Слабость",
+  "status.weak.desc": "Снижает твой урон (включая урон от установки и линий)",
+  
+  "reward.heal": "Зелье",
+  "reward.heal.desc": "+30 здоровья",
+  "reward.maxhp": "Выносливость",
+  "reward.maxhp.desc": "+10 макс. здоровья",
+  "reward.shield": "Броня",
+  "reward.shield.desc": "+20 щита",
+  "reward.gold": "Кошель",
+  "reward.gold.desc": "+40 золота",
+  "reward.full": "Полный отдых",
+  "reward.full.desc": "Полное восстановление",
+
+  "element.fire": "Огонь",
+  "element.ice": "Лед",
+  "element.earth": "Земля",
+  "element.storm": "Гроза",
+  "element.poison": "Яд",
+  "element.void": "Пустота",
+  "element.light": "Свет",
+  "element.physical": "Физ.",
+  "element.desc": "Стихийная синергия активна",
+
+  "":""
 }

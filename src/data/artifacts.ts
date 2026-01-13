@@ -199,14 +199,6 @@ export const ARTIFACTS: Artifact[] = [
         rarity: 1,
     },
     {
-        id: "lantern",
-        name: "Фонарь",
-        desc: "Игнорирует опасность «Туман» (предпросмотр всегда включён)",
-        icon: "🏮",
-        color: "#fbbf24",
-        rarity: 2,
-    },
-    {
         id: "trowel",
         name: "Кельма",
         desc: "В начале боя: убрать 2 мусор/камень (если есть)",
@@ -450,14 +442,6 @@ export const ARTIFACTS: Artifact[] = [
         desc: "Каждые 5 сбросов дают +1 Макс. Энергии (фигуру)? Нет, просто лечат 10 HP.",
         icon: "🔋",
         color: "#a78bfa",
-        rarity: 2,
-    },
-    {
-        id: "spike_armor",
-        name: "Шипастый доспех",
-        desc: "Старт боя: +15 Брони и эффект Шипы",
-        icon: "🧥",
-        color: "#166534",
         rarity: 2,
     },
 ];

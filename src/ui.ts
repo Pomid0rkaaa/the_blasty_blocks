@@ -1,5 +1,6 @@
-import { STATUS_META } from './data/status_meta';
+import { STATUS } from './data/status';
 import { ELEMENTS } from './data/elements';
+import i18n from './i18n';
 
 const id = (value: string) => document.getElementById(value);
 
@@ -82,7 +83,7 @@ export class UI {
         );
 
         entries.forEach(([k, v]) => {
-            const meta = (STATUS_META as any)[k] || {
+            const meta = (STATUS as any)[k] || {
                 icon: "•",
                 color: "#e2e8f0",
                 name: k,
@@ -114,7 +115,7 @@ export class UI {
             const chip = document.createElement("div");
             chip.className = "artifact-icon";
             chip.style.borderColor = el.color;
-            chip.innerHTML = `${el.icon}<div class="artifact-tooltip"><div class="font-bold" style="color:${el.color}">${el.name}</div><div class="text-slate-200 mt-1">Стихийная синергия активна</div></div>`;
+            chip.innerHTML = `${el.icon}<div class="artifact-tooltip"><div class="font-bold" style="color:${el.color}">${el.name}</div><div class="text-slate-200 mt-1">${i18n.t("element.desc")}</div></div>`;
             UIElements.affinity.appendChild(chip);
         });
     }
@@ -138,7 +139,7 @@ export class UI {
 
         const enemyName = state.currentEnemy
             ? state.currentEnemy.name
-            : "ВРАГ";
+            : i18n.t("label.enemy");
         const shieldTxt =
             state.enemyShield > 0 ? ` +${state.enemyShield} ARM` : "";
         UIElements.enemy.intent.innerText = `${enemyName} [ATK ${state.enemyAttack}${shieldTxt}]`;
@@ -146,10 +147,10 @@ export class UI {
         const el = (ELEMENTS as any)[state.currentEnemy?.element] || {
             icon: "⚔️",
             color: "#e2e8f0",
-            name: "Физ.",
+            name: i18n.t("element.physical"),
         };
         UIElements.enemy.element.textContent = el.icon;
-        UIElements.enemy.element.title = `${el.name} (элемент врага)`;
+        UIElements.enemy.element.title = i18n.t("enemy.element", {element: el.name})
 
         // Hazard badge
         if (state.hazard && state.hazard.id !== "none") {

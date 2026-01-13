@@ -82,9 +82,9 @@ export const ENEMIES: Enemy[] = [
         trackId: "ice",
         ability: (g) => {
             g.enemyShield += 6;
-            Logger.log("Голем: +6 ARM");
+            Logger.log("Голем: +6 DEF");
             g.spawnFloatingText(
-                "+6 ARM",
+                "+6 DEF",
                 UIElements.enemy.sprite,
                 "#67e8f9"
             );
@@ -147,7 +147,7 @@ export const ENEMIES: Enemy[] = [
         desc: "Генерирует щит.",
         ability: (g) => {
             g.enemyShield += 5;
-            Logger.log("Дрон: +5 ARM");
+            Logger.log("Дрон: +5 DEF");
         },
     },
     {
@@ -188,7 +188,7 @@ export const ENEMIES: Enemy[] = [
             if (Math.random() < 0.45) {
                 g.enemyShield += 4;
                 g.spawnRocks(1);
-                Logger.log("Скарабей: +4 ARM и камень");
+                Logger.log("Скарабей: +4 DEF и камень");
             }
         },
     },
@@ -443,7 +443,7 @@ export const ENEMIES: Enemy[] = [
             if (Math.random() < 0.35) {
                 g.enemyShield += 6;
                 g.healEnemy(6);
-                Logger.log("Страж света: +ARM и лечение");
+                Logger.log("Страж света: +DEF и лечение");
             }
         },
     },
@@ -731,7 +731,7 @@ export const ENEMIES: Enemy[] = [
         ability: (g) => {
             g.spawnRocks(3);
             g.enemyShield += 6;
-            Logger.log("Бегемот: камни + ARM");
+            Logger.log("Бегемот: камни + DEF");
         },
     },
     {
@@ -748,7 +748,7 @@ export const ENEMIES: Enemy[] = [
         ability: (g) => {
             g.healEnemy(14);
             g.enemyShield += 8;
-            Logger.log("Жрец: лечение + ARM");
+            Logger.log("Жрец: лечение + DEF");
         },
     },
     {
@@ -797,7 +797,7 @@ export const ENEMIES: Enemy[] = [
         desc: "Каждый ход +4 Брони.",
         ability: (g) => {
             g.enemyShield += 4;
-            Logger.log("Часовой: +4 ARM");
+            Logger.log("Часовой: +4 DEF");
         },
     },
     {

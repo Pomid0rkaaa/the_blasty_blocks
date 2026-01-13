@@ -41,7 +41,6 @@
   "artifact.strurdy.pickup": "Амулет: +15 до макс. HP",
   "artifact.glass_cannon.pickup": "Скляна гармата: макс. HP знижено",
   "artifact.blood_pact.pickup": "Кривавий пакт: +100 золота, -25 HP",
-  "artifact.spike_armor.pickup": "Шипаста броня: броня + шипи",
 
   "boon.grid_size": "Благословення: сітка ${size}x${size}",
   "boon.start_shield": "Благословення: +${shield} щита",

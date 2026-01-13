@@ -81,8 +81,8 @@ main {
 }
 
 .mini-cell {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 4px;
 }
 
@@ -254,8 +254,8 @@ main {
 	position: fixed;
 	pointer-events: none;
 	z-index: 90;
-	opacity: 0.92;
-	transform: translate(-50%, -50%) scale(1.55);
+	opacity: 0.7;
+	transform: translate(-50%, -50%) scale(1.5);
 	filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.5));
 }
 

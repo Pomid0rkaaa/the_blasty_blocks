@@ -41,7 +41,6 @@
   "artifact.strurdy.pickup": "Amulet: +15 Max HP",
   "artifact.glass_cannon.pickup": "Glass Cannon: Max HP reduced",
   "artifact.blood_pact.pickup": "Blood Pact: +100 gold, -25 HP",
-  "artifact.spike_armor.pickup": "Spiked Armor: armor + thorns",
 
   "boon.grid_size": "Blessing: ${size}x${size} grid",
   "boon.start_shield": "Blessing: +${shield} shield",

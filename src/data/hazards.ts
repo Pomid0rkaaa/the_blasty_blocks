@@ -13,15 +13,6 @@ export const HAZARDS: Hazard[] = [
 
     // Hazards
     {
-        id: "fog",
-        kind: "hazard",
-        weight: 6,
-        icon: "🌫️",
-        name: "Туман",
-        desc: "Предпросмотр установки отключён.",
-        mods: { noPreview: true },
-    },
-    {
         id: "weak",
         kind: "hazard",
         weight: 6,

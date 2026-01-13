@@ -6,7 +6,7 @@ import { ELEMENTS } from "./data/elements";
 import { ENEMIES } from "./data/enemies";
 import { HAZARDS } from "./data/hazards";
 import { SHAPES } from "./data/shapes";
-import { STATUS_META } from "./data/status_meta";
+import { STATUS } from "./data/status";
 import { Logger } from "./logger";
 import i18n from "./i18n";
 
@@ -17,10 +17,35 @@ declare global {
 		Logger: typeof Logger;
 		data: any;
 	}
+	interface Array<T> {
+		choose<K extends keyof T>(
+			criteria: Partial<Record<K, T[K]>>
+		): T | undefined;
+		chooseAll<K extends keyof T>(criteria: Partial<Record<K, T[K]>>): T[];
+	}
 }
 
+Array.prototype.chooseAll = function <T, K extends keyof T>(
+	criteria: Partial<Record<K, T[K]>>
+): T[] {
+	return this.filter((item) =>
+		Object.entries(criteria).every(
+			([key, value]) => item[key as K] === value
+		)
+	);
+};
+
+Array.prototype.choose = function <T, K extends keyof T>(
+	criteria: Partial<Record<K, T[K]>>
+): T | undefined {
+	const matches = (this as T[]).chooseAll(criteria); // cast `this` so TS knows it has chooseAll
+	if (matches.length === 0) return undefined;
+	const randomIndex = Math.floor(Math.random() * matches.length);
+	return matches[randomIndex];
+};
+
 const game = new BlockGame();
-i18n.updateDOM()
+i18n.updateDOM();
 
 const savedLang = localStorage.getItem("lang") || i18n.lang;
 if (savedLang && savedLang !== i18n.lang) i18n.load(savedLang);
@@ -78,13 +103,13 @@ document.addEventListener("click", (event: Event) => {
 			game.discardHand();
 			break;
 		case "startGame-easy":
-			game.startGame(0);
+			game.startGame("EASY");
 			break;
 		case "startGame-normal":
-			game.startGame(1);
+			game.startGame("NORMAL");
 			break;
 		case "startGame-hard":
-			game.startGame(2);
+			game.startGame("HARD");
 			break;
 		case "new-game-btn":
 			game.showDifficultyModal();
@@ -126,5 +151,5 @@ window.data = {
 	ENEMIES,
 	HAZARDS,
 	SHAPES,
-	STATUS_META,
+	STATUS,
 };

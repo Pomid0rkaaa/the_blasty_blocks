@@ -1,39 +1,40 @@
 import type { Reward } from "../types";
+import i18n from "../i18n";
 
 export const REWARDS: Reward[] = [
     {
         type: "stat",
         id: "heal",
-        name: "Зелье",
-        desc: "+30 HP",
+        name: i18n.t("reward.heal"),
+        desc: i18n.t("reward.heal.desc"),
         icon: "❤️",
     },
     {
         type: "stat",
         id: "maxhp",
-        name: "Выносливость",
-        desc: "+10 Max HP",
+        name: i18n.t("reward.maxhp"),
+        desc: i18n.t("reward.maxhp.desc"),
         icon: "💪",
     },
     {
         type: "stat",
         id: "shield",
-        name: "Броня",
-        desc: "+20 щита",
+        name: i18n.t("reward.shield"),
+        desc: i18n.t("reward.shield.desc"),
         icon: "🛡️",
     },
     {
         type: "stat",
         id: "gold",
-        name: "Кошель",
-        desc: "+40 золота",
+        name: i18n.t("reward.gold"),
+        desc: i18n.t("reward.gold.desc"),
         icon: "🪙",
     },
     {
         type: "stat",
         id: "full",
-        name: "Полный отдых",
-        desc: "Полное лечение",
+        name: i18n.t("reward.full"),
+        desc: i18n.t("reward.full.desc"),
         icon: "💖",
     },
 ]
