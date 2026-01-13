@@ -1,4 +1,6 @@
-export const STATUS_META = {
+import type { StatusDef } from "../types";
+
+export const STATUS_META: Record<string, StatusDef> = {
     burn: {
         icon: "🔥",
         color: "#fb7185",

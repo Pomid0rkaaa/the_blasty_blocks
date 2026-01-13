@@ -1,20 +1,24 @@
-import { ARTIFACTS } from './data/artifacts.js';
-import { soundManager } from './soundManager.js';
-import { REWARDS } from './data/rewards.js';
-import i18n from './i18n.js';
+import type { Artifact, Reward } from './types';
+import { ARTIFACTS } from './data/artifacts';
+import { soundManager } from './soundManager';
+import { REWARDS } from './data/rewards';
+
 
 export class Rewards {
-    constructor(ctx) {
+    ctx: any;
+    constructor(ctx: any) {
         this.ctx = ctx;
     }
 
     generateRewards() {
         return new Promise((resolve) => {
             const container = document.getElementById("reward-container");
+            if (!container) return;
 
             container.innerHTML = "";
-            const choices = [];
-            choices.push(REWARDS.find(obj => obj.id === "heal"));
+            const choices: (Reward | ({ type: "artifact" } & Artifact))[] = [];
+            const heal = REWARDS.find(obj => obj.id === "heal");
+            if (heal) choices.push(heal);
             const r = REWARDS.filter(e=>e.id!=="heal" && e.id!=="full")
             choices.push(r[Math.floor(Math.random()*r.length)]);
 
@@ -22,7 +26,7 @@ export class Rewards {
                 (a) => !this.ctx.hasArtifact(a.id)
             );
             if (available.length > 0) {
-                const bag = [];
+                const bag: Artifact[] = [];
                 available.forEach((a) => {
                     const rr = a.rarity || 2;
                     const w = rr === 1 ? 5 : rr === 2 ? 3 : 1;
@@ -30,7 +34,10 @@ export class Rewards {
                 });
                 const art = bag[Math.floor(Math.random() * bag.length)];
                 choices.push({ type: "artifact", ...art });
-            } else choices.push(REWARDS.find(obj => obj.id === "full"));
+            } else {
+                const full = REWARDS.find(obj => obj.id === "full");
+                if (full) choices.push(full);
+            }
 
             choices.forEach((choice) => {
                 const card = document.createElement("div");
@@ -48,14 +55,14 @@ export class Rewards {
                 `;
                 card.onclick = () => { 
                     this.selectReward(choice);
-                    resolve()
+                    resolve(null)
                 }
                 container.appendChild(card);
             });
         })
     }
 
-    selectReward(reward) {
+    selectReward(reward: any) {
         if (reward.type === "stat")
             switch(reward.id) {
                 case "heal": this.ctx.healPlayer(30); break

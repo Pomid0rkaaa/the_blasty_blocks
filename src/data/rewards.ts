@@ -1,4 +1,6 @@
-export const REWARDS = [
+import type { Reward } from "../types";
+
+export const REWARDS: Reward[] = [
     {
         type: "stat",
         id: "heal",

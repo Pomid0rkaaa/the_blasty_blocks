@@ -1,4 +1,6 @@
-export const ACHIEVEMENTS = [
+import type { Achievement } from "../types";
+
+export const ACHIEVEMENTS: Achievement[] = [
     {
         id: "first_clear",
         icon: "🧼",

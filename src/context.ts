@@ -1,5 +1,6 @@
 export class Context {
-    constructor(game) {
+    game: any;
+    constructor(game: any) {
         this.game = game;
     }
 
@@ -12,27 +13,27 @@ export class Context {
     get shield() { return this.game.shield }
     set shield(v) { this.game.shield = v; }
 
-    hasArtifact(id) {
+    hasArtifact(id: string) {
         return this.game.hasArtifact(id);
     }
 
-    artifactPrice(a) {
+    artifactPrice(a: any) {
         return this.game.artifactPrice(a);
     }
 
-    addArtifact(a) {
+    addArtifact(a: any) {
         this.game.addArtifact(a);
     }
 
-    healPlayer(n) {
+    healPlayer(n: number) {
         this.game.healPlayer(n);
     }
 
-    removeRandomFilledCells(n) {
+    removeRandomFilledCells(n: number) {
         this.game.removeRandomFilledCells(n);
     }
 
-    unlockAchievement(id) {
+    unlockAchievement(id: string) {
         this.game.unlockAchievement(id);
     }
 

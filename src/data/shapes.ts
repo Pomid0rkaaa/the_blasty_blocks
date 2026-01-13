@@ -1,4 +1,6 @@
-export const SHAPES = [
+import type { Shape } from "../types";
+
+export const SHAPES: Shape[] = [
     // Basics
     { name: "1", color: "bg-rose-500", layout: [[1]] },
     { name: "2h", color: "bg-cyan-500", layout: [[1, 1]] },

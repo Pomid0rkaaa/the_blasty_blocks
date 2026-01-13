@@ -1,11 +1,12 @@
-import { ARTIFACTS } from './data/artifacts.js';
-import { soundManager } from './soundManager.js';
-import { Logger } from './logger.js';
-import { UIElements } from './ui.js';
-import i18n from './i18n.js';
+import { ARTIFACTS } from './data/artifacts';
+import { soundManager } from './soundManager';
+import { Logger } from './logger';
+import { UIElements } from './ui';
+import i18n from './i18n';
 
 export class Shop {
-    constructor(ctx) {
+    ctx: any;
+    constructor(ctx: any) {
         this.ctx = ctx;
     }
 
@@ -17,7 +18,7 @@ export class Shop {
                 ...it,
                 sold: false,
             }));
-            const uiCards = [];
+            const uiCards: { item: (typeof stock)[0]; btn: HTMLButtonElement }[] = [];
 
             const refresh = () => {
                 UIElements.shop.gold.textContent = this.ctx.gold;
@@ -58,9 +59,9 @@ export class Shop {
                 `;
 
                 const btn = card.querySelector('button');
-                uiCards.push({ item, btn });
+                if (btn) uiCards.push({ item, btn });
 
-                btn.onclick = () => {
+                if (btn) btn.onclick = () => {
                     if (item.sold) return;
                     if (this.ctx.gold < item.price) {
                         soundManager.play('invalid');
@@ -83,7 +84,7 @@ export class Shop {
 
             UIElements.shop.skip_button.onclick = () => {
                 UIElements.shop.modal.classList.add('hidden');
-                resolve();
+                resolve(null);
             }
 
             refresh();
@@ -92,7 +93,7 @@ export class Shop {
     }
 
     generateShopStock() {
-        const stock = [];
+        const stock: any[] = [];
 
         stock.push({
             type: 'stat',
@@ -128,7 +129,7 @@ export class Shop {
             (a) => !this.ctx.hasArtifact(a.id)
         );
         if (available.length > 0) {
-            const bag = [];
+            const bag: any[] = [];
             available.forEach((a) => {
                 const r = a.rarity ?? 2;
                 const w = r === 1 ? 5 : r === 2 ? 3 : 1;
@@ -159,7 +160,7 @@ export class Shop {
         return stock.sort(() => Math.random() - 0.5).slice(0, 3);
     }
 
-    buyShopItem(item) {
+    buyShopItem(item: any) {
         if (this.ctx.gold < item.price) return false;
         this.ctx.gold -= item.price;
         if (item.apply) item.apply();

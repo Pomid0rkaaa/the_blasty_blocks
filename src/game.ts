@@ -1,24 +1,67 @@
-import { ACHIEVEMENTS } from './data/achievements.js';
-import { ARTIFACTS } from './data/artifacts.js';
-import { ELEMENTS } from './data/elements.js';
-import { ENEMIES } from './data/enemies.js';
-import { HAZARDS } from './data/hazards.js';
-import { SHAPES } from './data/shapes.js';
-import { STATUS_META } from './data/status_meta.js';
-import { soundManager } from './soundManager.js';
-import { UI, UIElements } from './ui.js';
-import { Logger } from './logger.js'
-import { Shop } from './shop.js';
-import { Rewards } from './rewards.js';
-import { Context } from './context.js';
-import i18n from './i18n.js';
+import { ACHIEVEMENTS } from './data/achievements';
+import { ELEMENTS } from './data/elements';
+import { ENEMIES } from './data/enemies';
+import { HAZARDS } from './data/hazards';
+import { SHAPES } from './data/shapes';
+import { STATUS_META } from './data/status_meta';
+import { soundManager } from './soundManager';
+import { UI, UIElements } from './ui';
+import { Logger } from './logger'
+import { Shop } from './shop';
+import { Rewards } from './rewards';
+import { Context } from './context';
+import i18n from './i18n';
+import type { Artifact, Enemy, Hazard, GridCell, HandShape } from './types';
 
 let GRID_SIZE = 8;
 
 export class BlockGame {
+    ui: any;
+    rewards: Rewards;
+    shop: Shop;
+    isMobile: boolean = false;
+    offsetY: number = 0;
+    grid: (GridCell | string | null)[][] = [];
+    score: number = 0;
+    gold: number = 0;
+    level: number = 1;
+    difficulty: number = 1;
+    maxHp: number = 100;
+    hp: number = 100;
+    shield: number = 0;
+    artifacts: Artifact[] = [];
+    revived: boolean = false;
+    currentEnemy: Enemy | null = null;
+    enemyMaxHp: number = 100;
+    enemyHp: number = 100;
+    enemyShield: number = 0;
+    enemyAttack: number = 10;
+    hand: (HandShape | null)[] = [];
+    draggedBlock: HandShape | null = null;
+    blocksPlaced: number = 0;
+    paused: boolean = false;
+    godMode: boolean = false;
+    affinities: Set<string> = new Set();
+    enemyStatuses: Record<string, number> = {};
+    playerStatuses: Record<string, number> = {};
+    prismCounter: number = 0;
+    clearsThisFight: number = 0;
+    placeBonusThisFight: number = 0;
+    medicThisTurn: number = 0;
+    overchargeThisFight: number = 0;
+    hazard: Hazard | null = null;
+    hazardMods: any = {};
+    tempHandPlus: number = 0;
+    freezeNextHand: number = 0; // from ice enemies
+    lockedSlots: Set<number> = new Set();
+    discardsThisFight: number = 0;
+    lastHitWasCrit: boolean = false;
+    damageTakenThisFight: number = 0;
+    achUnlocked: Set<string> = new Set();
+
     constructor() {
         this.resetRun();
-        this.ui = UI.elements;
+        this.ui = UIElements;
         this.rewards = new Rewards(new Context(this));
         this.shop = new Shop(new Context(this));
         this.init();
@@ -29,7 +72,7 @@ export class BlockGame {
         this.offsetY = this.isMobile ? -100 : 0
 
         this.grid = Array(GRID_SIZE)
-            .fill()
+            .fill(null)
             .map(() => Array(GRID_SIZE).fill(null));
         this.score = 0;
         this.gold = 0;
@@ -137,9 +180,10 @@ export class BlockGame {
         UIElements.difficulty.classList.remove("hidden");
     }
 
-    startGame(diff) {
+    startGame(diff: number) {
         this.difficulty = diff;
         UIElements.difficulty.classList.add("hidden");
+        this.restart();
     }
 
     defaultHazardMods() {
@@ -147,7 +191,6 @@ export class BlockGame {
             damageMult: 1,
             noPreview: false,
             startRocks: 0,
-            startHoles: 0,
             startGarbage: 0,
             hpCostPerCell: 0,
             randomShape: false,
@@ -172,8 +215,8 @@ export class BlockGame {
         this.updateUI();
         Logger.log(i18n.t("logger.game_started"));
 
-        const dragMove = (e) => this.handleDragMove(e);
-        const dragEnd = (e) => this.handleDragEnd(e);
+        const dragMove = (e: any) => this.handleDragMove(e);
+        const dragEnd = (e: any) => this.handleDragEnd(e);
 
         document.addEventListener("touchmove", dragMove, {
             passive: false,
@@ -257,7 +300,7 @@ export class BlockGame {
         );
     }
 
-    unlockAchievement(id) {
+    unlockAchievement(id: string) {
         if (this.achUnlocked.has(id)) return;
         this.achUnlocked.add(id);
         this.saveAchievements();
@@ -336,7 +379,7 @@ export class BlockGame {
         return cellSize + gap;
     }
 
-    getGridPosFromPoint(clientX, clientY, layout) {
+    getGridPosFromPoint(clientX: number, clientY: number, layout: number[][]) {
         const gridRect = UIElements.grid.getBoundingClientRect();
         const st = getComputedStyle(UIElements.grid);
         const pad = parseFloat(st.paddingLeft) || 8;
@@ -362,24 +405,29 @@ export class BlockGame {
         return { row, col };
     }
 
-    cellIsFilled(val) {
-        // With current rules: rocks/garbage count as filled; only null is empty.
+    cellIsFilled(val: any) {
         return val !== null;
     }
 
-    hasArtifact(id) {
+    hasArtifact(id: string) {
         return this.artifacts.some((a) => a.id === id);
     }
 
-    artifactPrice(artifact) {
+    artifactPrice(artifact: any) {
         const baseByRarity = { 1: 45, 2: 70, 3: 95 };
-        let price = baseByRarity[artifact.rarity || 2] || 70;
+        let price = (baseByRarity as any)[artifact.rarity || 2] || 70;
         if (this.hasArtifact("coupon"))
             price = Math.floor(price * 0.8);
         return price;
     }
 
-    addArtifact(artifact) {
+    checkAffinityCaps(artifact: any) {
+        if (!artifact) return;
+        if (this.hasArtifact(artifact.id)) return;
+        this.artifacts.push(artifact);
+    }
+
+    addArtifact(artifact: any) {
         if (!artifact) return;
         if (this.hasArtifact(artifact.id)) return;
         this.artifacts.push(artifact);
@@ -443,7 +491,7 @@ export class BlockGame {
         this.updateUI();
     }
 
-    addStatus(target, type, stacks) {
+    addStatus(target: string, type: string, stacks: number) {
         if (this.hasArtifact("omni_prism")) stacks += 1;
 
         const table =
@@ -458,7 +506,7 @@ export class BlockGame {
             this.unlockAchievement("elementalist");
     }
 
-    decayStatus(target, type, amount = 1) {
+    decayStatus(target: string, type: string, amount: number = 1) {
         const table =
             target === "enemy"
                 ? this.enemyStatuses
@@ -506,7 +554,7 @@ export class BlockGame {
             el.textContent = "—";
             return;
         }
-        const meta = ELEMENTS[e.element] || {
+        const meta = (ELEMENTS as any)[e.element] || {
             icon: "⚔️",
             name: "Физ.",
         };
@@ -535,7 +583,7 @@ export class BlockGame {
         this.renderCodex();
         if (focusEnemy) {
             setTimeout(() => {
-                const block = UIElements.codex.enemy;
+                const block = UIElements.codex.enemy as HTMLElement;
                 block?.scrollIntoView({
                     behavior: "smooth",
                     block: "center",
@@ -577,7 +625,7 @@ export class BlockGame {
     // ------------------------------
     restart() {
         this.resetRun();
-        UIElements.modal.forEach(e => e.classList.add("hidden"));
+        Object.values(UIElements.modal).forEach(e => e.classList.add("hidden"));
         UIElements.shop.modal.classList.add("hidden");
         UIElements.hazard.modal.classList.add("hidden");
 
@@ -589,6 +637,7 @@ export class BlockGame {
         this.updateUI();
         Logger.clear();
         Logger.log(i18n.t("logger.new_run"));
+        soundManager.play("start");
 
         this.renderCodex();
     }
@@ -601,7 +650,8 @@ export class BlockGame {
         return pool[Math.floor(Math.random() * pool.length)];
     }
 
-    rollHazard() {
+    rollHazard(_modWeight: number = 0) {
+        if (!HAZARDS || HAZARDS.length === 0) return { id: "none", name: "None" };
         // Weighted random across all entries
         const list = HAZARDS;
         const total = list.reduce((s, h) => s + (h.weight || 1), 0);
@@ -613,7 +663,7 @@ export class BlockGame {
         return HAZARDS.find((h) => h.id === "none");
     }
 
-    applyHazard(hazard) {
+    applyHazard(hazard: any) {
         this.hazard = hazard;
         this.hazardMods = this.defaultHazardMods();
         if (hazard && hazard.mods) {
@@ -633,7 +683,7 @@ export class BlockGame {
         this.openHazardInfo();
     }
 
-    pickTrackForTheme(theme) {
+    pickTrackForTheme(theme: string) {
         const map = {
             "theme-magma": "magma",
             "theme-ice": "ice",
@@ -642,23 +692,23 @@ export class BlockGame {
             "theme-forest": "forest",
             "theme-ocean": "ocean",
             "theme-desert": "desert",
-            "theme-neon": "neon",
+            "theme-neon": "cyber",
             "theme-cosmos": "dream",
-            "theme-crypt": "forest",
-            "theme-lab": "arcade",
+            "theme-crypt": "industrial",
+            "theme-lab": "retro",
             "theme-blood": "ashen",
             "theme-ruins": "ruins",
             "theme-aurora": "aurora",
-            "theme-arcade": "arcade",
-            "theme-ashen": "ashen",
+            "theme-arcade": "retro",
+            "theme-ashen": "industrial",
             "theme-sakura": "sakura",
             "theme-abyss": "abyss",
-            "theme-toxic": "toxic",
+            "theme-toxic": "glitch",
             "theme-tundra": "tundra",
             "theme-gilded": "gilded",
-            "theme-dream": "dream",
+            "theme-dream": "lullaby",
         };
-        return map[theme] || "deep";
+        return (map as any)[theme] || "deep";
     }
 
     spawnEnemy() {
@@ -673,14 +723,18 @@ export class BlockGame {
         document.body.className = `h-screen w-screen flex flex-col items-center justify-between p-2 select-none ${enemyTemplate.theme}`;
 
         // music theme
-        const track = this.pickTrackForTheme(enemyTemplate.theme);
-        if (Math.random() < 0.15) {
-            const ids = Object.keys(soundManager.tracks);
-            soundManager.setTrack(
-                ids[Math.floor(Math.random() * ids.length)]
-            );
+        if (enemyTemplate.trackId) {
+            soundManager.setTrack(enemyTemplate.trackId);
         } else {
-            soundManager.setTrack(track);
+            const track = this.pickTrackForTheme(enemyTemplate.theme);
+            if (Math.random() < 0.15) {
+                const ids = Object.keys(soundManager.tracks);
+                soundManager.setTrack(
+                    ids[Math.floor(Math.random() * ids.length)]
+                );
+            } else {
+                soundManager.setTrack(track);
+            }
         }
 
         const baseHp = 105 * (1 + this.level * 0.22);
@@ -749,12 +803,13 @@ export class BlockGame {
                 const pick = keys.find(
                     (k) => (this.playerStatuses[k] || 0) > 0
                 );
-                this.playerStatuses[pick] = Math.max(
-                    0,
-                    (this.playerStatuses[pick] || 0) - 1
-                );
-                Logger.log(i18n.t("artifact.halo.use"));
-
+                if (pick) {
+                    this.playerStatuses[pick] = Math.max(
+                        0,
+                        (this.playerStatuses[pick] || 0) - 1
+                    );
+                    Logger.log(i18n.t("artifact.halo.use"));
+                }
             }
         }
 
@@ -817,7 +872,7 @@ export class BlockGame {
         );
     }
 
-    resizeGrid(newSize, scale = "36px") {
+    resizeGrid(newSize: number, scale: string = "36px") {
         GRID_SIZE = newSize;
         document.documentElement.style.setProperty(
             "--grid-size",
@@ -846,21 +901,16 @@ export class BlockGame {
             }
         }
 
-        // Mask first (shape changes) -> now rocks instead of holes
         if (this.hazardMods.mask)
             this.applyMask(this.hazardMods.mask);
 
         if (this.hazardMods.startRocks)
             this.spawnRocks(this.hazardMods.startRocks);
-        // Compatibility: if something still calls startHoles, treat as rocks
-        if (this.hazardMods.startHoles)
-            this.spawnRocks(this.hazardMods.startHoles);
         if (this.hazardMods.startGarbage)
             this.spawnGarbage(this.hazardMods.startGarbage);
         if (this.hazardMods.startMines)
             this.spawnMines(this.hazardMods.startMines);
 
-        // Artifact: trowel (remove 2 rocks/garbage)
         if (this.hasArtifact("trowel")) {
             const removed = this.removeRandomSpecificCells(
                 ["ROCK", "GARBAGE"],
@@ -870,8 +920,8 @@ export class BlockGame {
         }
     }
 
-    applyMask(type) {
-        const setMask = (r, c) => {
+    applyMask(type: string) {
+        const setMask = (r: number, c: number) => {
             if (r < 0 || c < 0 || r >= GRID_SIZE || c >= GRID_SIZE)
                 return;
             if (this.grid[r][c] === null) {
@@ -931,7 +981,7 @@ export class BlockGame {
                     this.setCellClass(r, c, "cell rock maskrock");
                 }
 
-            const carve = (r, c) => {
+            const carve = (r: number, c: number) => {
                 if (
                     r < 0 ||
                     c < 0 ||
@@ -967,7 +1017,7 @@ export class BlockGame {
         }
     }
 
-    spawnRocks(count) {
+    spawnRocks(count: number) {
         let tries = 0;
         while (count > 0 && tries < 400) {
             tries++;
@@ -981,7 +1031,7 @@ export class BlockGame {
         }
     }
 
-    spawnGarbage(count) {
+    spawnGarbage(count: number) {
         let tries = 0;
         while (count > 0 && tries < 500) {
             tries++;
@@ -995,7 +1045,7 @@ export class BlockGame {
         }
     }
 
-    spawnMines(count) {
+    spawnMines(count: number) {
         let tries = 0;
         while (count > 0 && tries < 500) {
             tries++;
@@ -1009,7 +1059,7 @@ export class BlockGame {
         }
     }
 
-    removeRandomSpecificCells(allowedValues, count) {
+    removeRandomSpecificCells(allowedValues: any[], count: number) {
         const filled = [];
         for (let r = 0; r < GRID_SIZE; r++) {
             for (let c = 0; c < GRID_SIZE; c++) {
@@ -1028,12 +1078,12 @@ export class BlockGame {
         return removed;
     }
 
-    removeRandomFilledCells(count) {
+    removeRandomFilledCells(count: number) {
         const filled = [];
         for (let r = 0; r < GRID_SIZE; r++) {
             for (let c = 0; c < GRID_SIZE; c++) {
                 const v = this.grid[r][c];
-                if (v !== null && v !== "HOLE") filled.push([r, c]);
+                if (v !== null && v !== "ROCK") filled.push([r, c]);
             }
         }
         for (let i = 0; i < count && filled.length > 0; i++) {
@@ -1044,7 +1094,7 @@ export class BlockGame {
         }
     }
 
-    healEnemy(amt) {
+    healEnemy(amt: number) {
         this.enemyHp = Math.min(
             this.enemyMaxHp,
             this.enemyHp + amt
@@ -1052,7 +1102,7 @@ export class BlockGame {
         this.updateUI();
     }
 
-    healPlayer(amount) {
+    healPlayer(amount: number) {
         this.hp = Math.min(this.maxHp, this.hp + amount);
         this.updateUI();
     }
@@ -1060,17 +1110,19 @@ export class BlockGame {
     // ------------------------------
     // Grid render
     // ------------------------------
+
+
     renderGrid() {
         UIElements.grid.innerHTML = "";
         for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
             const cell = document.createElement("div");
             cell.className = "cell";
-            cell.dataset.index = i;
+            cell.dataset.index = String(i);
             UIElements.grid.appendChild(cell);
         }
     }
 
-    setCellClass(r, c, cls) {
+    setCellClass(r: number, c: number, cls: string) {
         const idx = r * GRID_SIZE + c;
         const el = UIElements.grid.children[idx];
         if (!el) return;
@@ -1087,7 +1139,7 @@ export class BlockGame {
         return size;
     }
 
-    checkCanFit(shape, clipMode) {
+    checkCanFit(shape: any, clipMode: boolean) {
         const layout = shape.layout;
         const rows = layout.length;
         const cols = layout[0].length;
@@ -1116,7 +1168,7 @@ export class BlockGame {
 
         const size = this.getHandSize();
         const clipMode = !!this.hazardMods.mask;
-        let validShapesCache = [];
+        let validShapesCache: any[] = [];
 
         const COLORS = [
             "bg-cyan-500", "bg-purple-500",
@@ -1124,7 +1176,7 @@ export class BlockGame {
             "bg-emerald-500", "bg-fuchsia-500",
             "bg-yellow-400", "bg-blue-300",
         ];
-        const trim = (matrix) => {
+        const trim = (matrix: number[][]) => {
             const rows = matrix.length, cols = matrix[0].length;
             let firstRow = -1, lastRow = -1, firstCol = -1, lastCol = -1;
             for (let r = 0; r < rows; r++)
@@ -1228,13 +1280,13 @@ export class BlockGame {
         this.hand.forEach((b, idx) => {
             if (!b) return;
             if (this.lockedSlots.has(idx)) {
-                b.element.classList.add("frozen");
-                b.element.title = "Заморожено";
+                b.domElement.classList.add("frozen");
+                b.domElement.title = "Заморожено";
             }
         });
     }
 
-    createHandBlock(shapeData, index) {
+    createHandBlock(shapeData: any, index: number) {
         const container = document.createElement("div");
         container.className =
             "block-container cursor-grab active:cursor-grabbing p-2 transition-transform hover:scale-105";
@@ -1244,8 +1296,8 @@ export class BlockGame {
         miniGrid.style.gridTemplateColumns = `repeat(${shapeData.layout[0].length}, 20px)`;
         miniGrid.style.gridTemplateRows = `repeat(${shapeData.layout.length}, 20px)`;
 
-        shapeData.layout.forEach((row) => {
-            row.forEach((cell) => {
+        shapeData.layout.forEach((row: number[]) => {
+            row.forEach((cell: number) => {
                 const div = document.createElement("div");
                 if (cell)
                     div.className = `mini-cell ${shapeData.color}`;
@@ -1258,12 +1310,12 @@ export class BlockGame {
 
         const blockObj = {
             ...shapeData,
-            id: index,
-            element: container,
+            handIndex: index,
+            domElement: container,
         };
         this.hand[index] = blockObj;
 
-        const startDrag = (e) => {
+        const startDrag = (e: any) => {
             e.preventDefault();
             if (this.paused) return;
             if (this.hp <= 0) return;
@@ -1276,7 +1328,7 @@ export class BlockGame {
         container.addEventListener("touchstart", startDrag);
     }
 
-    startDrag(block, e) {
+    startDrag(block: any, e: any) {
         this.draggedBlock = block;
         const clientX = e.touches
             ? e.touches[0].clientX
@@ -1285,17 +1337,17 @@ export class BlockGame {
             ? e.touches[0].clientY+this.offsetY
             : e.clientY+this.offsetY;
 
-        const ghost = block.element.cloneNode(true);
+        const ghost = block.domElement.cloneNode(true) as HTMLElement;
         ghost.classList.add("drag-ghost");
         ghost.id = "drag-ghost";
         document.body.appendChild(ghost);
 
         ghost.style.left = `${clientX}px`;
         ghost.style.top = `${clientY}px`;
-        block.element.style.opacity = "0";
+        block.domElement.style.opacity = "0";
     }
 
-    handleDragMove(e) {
+    handleDragMove(e: any) {
         if (!this.draggedBlock) return;
         if (this.paused) return;
         e.preventDefault();
@@ -1307,13 +1359,13 @@ export class BlockGame {
             ? e.touches[0].clientY+this.offsetY
             : e.clientY+this.offsetY;
 
-        const ghost = document.querySelector("#drag-ghost");
+        const ghost = document.querySelector("#drag-ghost") as HTMLElement;
         if (ghost) {
             ghost.style.left = `${clientX}px`;
             ghost.style.top = `${clientY}px`;
         }
 
-        this.clearPreviews();
+        /*this.clearPreviews();
 
         if (
             this.hazardMods.noPreview &&
@@ -1336,12 +1388,12 @@ export class BlockGame {
             col,
             this.draggedBlock.layout,
             !isValid
-        );
+        );*/
     }
 
-    handleDragEnd(e) {
+    handleDragEnd(e: any) {
         if (!this.draggedBlock) return;
-        const ghost = document.querySelector("#drag-ghost");
+        const ghost = document.getElementById("drag-ghost");
         if (ghost) ghost.remove();
 
         const clientX = e.changedTouches
@@ -1362,21 +1414,21 @@ export class BlockGame {
             this.isValidPosition(row, col, this.draggedBlock.layout)
         ) {
             this.placeBlock(row, col, this.draggedBlock);
-            this.draggedBlock.element.remove();
-            this.hand[this.draggedBlock.id] = null;
+            this.draggedBlock.domElement.remove();
+            this.hand[this.draggedBlock.handIndex] = null;
             this.checkHandEmpty();
         } else {
-            this.draggedBlock.element.style.opacity = "1";
+            this.draggedBlock.domElement.style.opacity = "1";
             soundManager.play("invalid");
         }
 
-        this.clearPreviews();
+        // this.clearPreviews();
         this.draggedBlock = null;
     }
 
     // In masked fights we allow "clipping": cells that fall outside the grid are ignored.
     // This makes placement on strange-shaped arenas feel fair.
-    isValidPosition(r, c, layout) {
+    isValidPosition(r: number, c: number, layout: number[][]) {
         const clip = !!this.hazardMods.mask;
         let anyPlaced = false;
 
@@ -1406,13 +1458,13 @@ export class BlockGame {
         return anyPlaced;
     }
 
-    clearPreviews() {
+    /* clearPreviews() {
         Array.from(UIElements.grid.children).forEach((c) =>
             c.classList.remove("preview", "invalid")
         );
     }
 
-    drawPreview(r, c, layout, invalid) {
+    drawPreview(r: number, c: number, layout: number[][], invalid: boolean) {
         const clip = !!this.hazardMods.mask;
         for (let i = 0; i < layout.length; i++) {
             for (let j = 0; j < layout[0].length; j++) {
@@ -1435,9 +1487,9 @@ export class BlockGame {
                 el.classList.add(invalid ? "invalid" : "preview");
             }
         }
-    }
+    } */
 
-    placeBlock(r, c, block) {
+    placeBlock(r: number, c: number, block: any) {
         soundManager.play("place");
 
         let cellsPlaced = 0;
@@ -1594,8 +1646,8 @@ export class BlockGame {
         }
     }
 
-    async performClear(rows, cols, count) {
-        soundManager.play("clear");
+    async performClear(rows: number[], cols: number[], count: number) {
+        soundManager.play("lines");
         this.clearsThisFight += count;
 
         let damage = count * 20 * (count > 1 ? 1.5 : 1);
@@ -1667,7 +1719,7 @@ export class BlockGame {
             }
         }
 
-        const cellsToClear = new Set();
+        const cellsToClear = new Set<number>();
         rows.forEach((r) => {
             for (let c = 0; c < GRID_SIZE; c++)
                 cellsToClear.add(r * GRID_SIZE + c);
@@ -1686,7 +1738,6 @@ export class BlockGame {
             const r = Math.floor(idx / GRID_SIZE);
             const c = idx % GRID_SIZE;
             const val = this.grid[r][c];
-            // Keep MASK/ROCK, but allow lines to clear
             if (val === "ROCK" || val === "MASK") {
                 UIElements.grid.children[idx].classList.remove(
                     "line-clear"
@@ -1828,7 +1879,7 @@ export class BlockGame {
         }
     }
 
-    damageEnemy(amount, isCrit = false, isDot = false) {
+    damageEnemy(amount: number, isCrit = false, isDot = false) {
         if (this.enemyHp <= 0) return;
 
         // Weak debuff on player reduces damage
@@ -1959,7 +2010,7 @@ export class BlockGame {
         this.updateUI();
     }
 
-    spawnFloatingText(text, target, color) {
+    spawnFloatingText(text: string | number, target: HTMLElement, color: string) {
         if (!target || !target.getBoundingClientRect) return;
         const rect = target.getBoundingClientRect();
         const el = document.createElement("div");
@@ -2172,12 +2223,15 @@ export class BlockGame {
                     indices[
                     Math.floor(Math.random() * indices.length)
                     ];
-                const el = this.hand[idx].element;
-                el.style.opacity = "0";
-                setTimeout(() => el.remove(), 200);
-                this.hand[idx] = null;
-                Logger.log(i18n.t("hazard.random_discard.action"))
-                this.checkHandEmpty();
+                const item = this.hand[idx];
+                if (item) {
+                    const el = item.domElement;
+                    el.style.opacity = "0";
+                    setTimeout(() => el.remove(), 200);
+                    this.hand[idx] = null;
+                    Logger.log(i18n.t("hazard.random_discard.action"))
+                    this.checkHandEmpty();
+                }
             }
         }
 
@@ -2286,6 +2340,6 @@ export class BlockGame {
     }
 
     updateUI() {
-        UI.updateUI.call(this);
+        UI.updateUI(this);
     }
 }

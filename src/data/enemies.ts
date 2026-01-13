@@ -1,7 +1,9 @@
 import { Logger } from "../logger.js";
 import { UIElements } from "../ui.js";
 
-export const ENEMIES = [
+import type { Enemy } from "../types";
+
+export const ENEMIES: Enemy[] = [
     // Regular
     {
         id: "slime",
@@ -13,6 +15,7 @@ export const ENEMIES = [
         hpMod: 0.9,
         atkMod: 0.85,
         desc: "Иногда регенит.",
+        trackId: "toxic",
         ability: (g) => {
             if (Math.random() < 0.25) {
                 g.healEnemy(8);
@@ -35,6 +38,7 @@ export const ENEMIES = [
         hpMod: 0.85,
         atkMod: 1.25,
         desc: "Плавит щит героя.",
+        trackId: "magma",
         ability: (g) => {
             if (g.shield > 0) {
                 g.shield = Math.floor(g.shield * 0.6);
@@ -57,6 +61,7 @@ export const ENEMIES = [
         hpMod: 0.95,
         atkMod: 1.05,
         desc: "Понемногу высасывает жизнь.",
+        trackId: "void",
         ability: (g) => {
             g.hp -= 2;
             g.damageTakenThisFight += 2;
@@ -74,6 +79,7 @@ export const ENEMIES = [
         hpMod: 1.25,
         atkMod: 0.8,
         desc: "Наращивает броню.",
+        trackId: "ice",
         ability: (g) => {
             g.enemyShield += 6;
             Logger.log("Голем: +6 ARM");
@@ -94,6 +100,7 @@ export const ENEMIES = [
         hpMod: 0.95,
         atkMod: 1.1,
         desc: "Иногда накладывает шок.",
+        trackId: "storm",
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.addStatus("player", "shock", 1);
@@ -604,6 +611,7 @@ export const ENEMIES = [
         hpMod: 1.55,
         atkMod: 1.0,
         desc: "Тянет на дно: провалы и заморозка.",
+        trackId: "boss_ice",
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.spawnRocks(1);
@@ -628,6 +636,7 @@ export const ENEMIES = [
         hpMod: 1.55,
         atkMod: 1.1,
         desc: "Жар и пепел: горение и мусор.",
+        trackId: "boss_fire",
         ability: (g) => {
             g.addStatus("player", "burn", 2);
             if (Math.random() < 0.45) g.spawnGarbage(2);
@@ -644,6 +653,7 @@ export const ENEMIES = [
         hpMod: 1.35,
         atkMod: 1.05,
         desc: "Искажает: слабость и броня.",
+        trackId: "boss_void",
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.addStatus("player", "weak", 1);
@@ -662,6 +672,7 @@ export const ENEMIES = [
         hpMod: 1.6,
         atkMod: 1.0,
         desc: "Панели и броня: мусор + армор.",
+        trackId: "boss_storm",
         ability: (g) => {
             g.enemyShield += 10;
             if (Math.random() < 0.5) g.spawnGarbage(3);
@@ -680,6 +691,7 @@ export const ENEMIES = [
         hpMod: 1.45,
         atkMod: 1.05,
         desc: "Меняет правила: усиливает слабость и шок.",
+        trackId: "boss_void",
         ability: (g) => {
             if (Math.random() < 0.55) {
                 g.addStatus("player", "weak", 1);
@@ -698,6 +710,7 @@ export const ENEMIES = [
         hpMod: 1.55,
         atkMod: 1.0,
         desc: "Засоряет и травит.",
+        trackId: "boss_poison",
         ability: (g) => {
             g.addStatus("player", "poison", 2);
             if (Math.random() < 0.55) g.spawnGarbage(2);
@@ -714,6 +727,7 @@ export const ENEMIES = [
         hpMod: 1.8,
         atkMod: 0.95,
         desc: "Огромный. Давит камнями и бронёй.",
+        trackId: "boss_earth",
         ability: (g) => {
             g.spawnRocks(3);
             g.enemyShield += 6;
@@ -730,6 +744,7 @@ export const ENEMIES = [
         hpMod: 1.4,
         atkMod: 1.0,
         desc: "Лечит себя и ставит броню, но слабее бьёт.",
+        trackId: "boss_fire",
         ability: (g) => {
             g.healEnemy(14);
             g.enemyShield += 8;
@@ -746,6 +761,7 @@ export const ENEMIES = [
         hpMod: 1.55,
         atkMod: 1.05,
         desc: "Сильно замораживает руку.",
+        trackId: "boss_ice",
         ability: (g) => {
             g.freezeNextHand = Math.min(2, g.freezeNextHand + 2);
             Logger.log("Змей: сильная заморозка");
@@ -763,7 +779,7 @@ export const ENEMIES = [
         hpMod: 0.9,
         atkMod: 1.1,
         desc: "Крадет HP при атаке.",
-        ability: (g) => {
+        ability: () => {
             Logger.log(
                 "Вампир готовится к укусу"
             ); /* Effect handled in enemyTurn logic check */
@@ -835,6 +851,7 @@ export const ENEMIES = [
         hpMod: 1.8,
         atkMod: 0.8,
         desc: "Огромное здоровье.",
+        trackId: "ethereal",
         ability: (g) => {
             if (Math.random() < 0.4) {
                 g.addStatus("player", "weak", 2);
@@ -854,6 +871,7 @@ export const ENEMIES = [
         hpMod: 1.7,
         atkMod: 1.3,
         desc: "Призывает адское пламя (Горение + Урон).",
+        trackId: "boss_fire",
         ability: (g) => {
             g.addStatus("player", "burn", 3);
             g.hp -= 3;
@@ -870,6 +888,7 @@ export const ENEMIES = [
         hpMod: 1.5,
         atkMod: 1.1,
         desc: "Манипулирует временем (Шок + Пропуск хода?).",
+        trackId: "boss_storm",
         ability: (g) => {
             g.addStatus("player", "shock", 2);
             if (Math.random() < 0.2) {
@@ -888,6 +907,7 @@ export const ENEMIES = [
         hpMod: 2.0,
         atkMod: 0.9,
         desc: "Регенерирует и ставит корни (камни).",
+        trackId: "boss_earth",
         ability: (g) => {
             g.healEnemy(15);
             g.spawnRocks(2);

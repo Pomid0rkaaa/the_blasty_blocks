@@ -1,4 +1,6 @@
-export const ARTIFACTS = [
+import type { Artifact } from "../types";
+
+export const ARTIFACTS: Artifact[] = [
     // Core economy/survival
     {
         id: "vampire",

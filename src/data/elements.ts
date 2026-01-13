@@ -1,4 +1,6 @@
-export const ELEMENTS = {
+import type { ElementDef } from "../types";
+
+export const ELEMENTS: Record<string, ElementDef> = {
     fire: {
         id: "fire",
         name: "Огонь",

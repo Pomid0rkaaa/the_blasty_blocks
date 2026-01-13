@@ -1,4 +1,6 @@
-export const HAZARDS = [
+import type { Hazard } from "../types";
+
+export const HAZARDS: Hazard[] = [
     // Mostly none
     {
         id: "none",
