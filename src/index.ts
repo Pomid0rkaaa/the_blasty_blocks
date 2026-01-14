@@ -47,7 +47,7 @@ Array.prototype.choose = function <T, K extends keyof T>(
 const game = new BlockGame();
 i18n.updateDOM();
 
-const savedLang = localStorage.getItem("lang") || i18n.lang;
+const savedLang = localStorage.getItem("lang") || navigator.language.slice(0, 2) || i18n.lang;
 if (savedLang && savedLang !== i18n.lang) i18n.load(savedLang);
 const i18nBtn = document.getElementById("i18n-btn") as HTMLSelectElement;
 if (i18nBtn) i18nBtn.value = savedLang;
