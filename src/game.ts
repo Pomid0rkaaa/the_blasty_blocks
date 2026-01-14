@@ -1271,7 +1271,7 @@ export class BlockGame {
 		const cellSize = parseFloat(rootStyles.getPropertyValue("--cell-size"));
 		const container = document.createElement("div");
 		container.className =
-			"block-container cursor-grab active:cursor-grabbing p-2"// transition-transform hover:scale-105";
+			"block-container cursor-grab active:cursor-grabbing p-2 transition-transform hover:scale-105";
 
 		const miniGrid = document.createElement("div");
 		miniGrid.className = "mini-grid";
@@ -1341,10 +1341,16 @@ export class BlockGame {
 			: e.clientY + this.offsetY;
 
 		const ghost = document.querySelector("#drag-ghost") as HTMLElement;
-		if (ghost) {
-			ghost.style.left = `${clientX}px`;
-			ghost.style.top = `${clientY}px`;
-		}
+		if (!ghost) return 
+        ghost.style.left = `${clientX}px`;
+        ghost.style.top = `${clientY}px`;
+
+        const { row, col } = this.getGridPosFromPoint(
+			clientX,
+			clientY,
+			this.draggedBlock.layout
+		);
+        ghost.style.opacity = this.isValidPosition(row, col, this.draggedBlock.layout) ? "1" : "0.7"
 	}
 
 	handleDragEnd(e: any) {
@@ -1408,114 +1414,126 @@ export class BlockGame {
 		return anyPlaced;
 	}
 
-	placeBlock(r: number, c: number, block: any) {
-		soundManager.play("place");
+    placeBlock(r: number, c: number, block: any) {
+        // ---------- Fast exits & caches ----------
+        const layout = block.layout;
+        const color = block.color;
+        const grid = this.grid;
+        const gridSize = GRID_SIZE;
+        const gridChildren = UIElements.grid.children;
+        const hazardMods = this.hazardMods;
+        const clip = !!hazardMods.mask;
 
-		let cellsPlaced = 0;
-		const layout = block.layout;
-		const clip = !!this.hazardMods.mask;
+        let cellsPlaced = 0;
+        const placedCells: HTMLElement[] = [];
 
-		for (let i = 0; i < layout.length; i++) {
-			for (let j = 0; j < layout[0].length; j++) {
-				if (layout[i][j] !== 1) continue;
-				const rr = r + i;
-				const cc = c + j;
+        // Cache artifacts (VERY important for mobile)
+        const has = {
+            fortify: this.hasArtifact("fortify"),
+            surgeon: this.hasArtifact("surgeon"),
+            flame: this.hasArtifact("flame"),
+            venom: this.hasArtifact("venom"),
+            focus: this.hasArtifact("focus"),
+            crusher: this.hasArtifact("crusher"),
+            gemcutter: this.hasArtifact("gemcutter"),
+            gambler: this.hasArtifact("gambler"),
+            thunder: this.hasArtifact("thunder"),
+        };
 
-				if (rr < 0 || cc < 0 || rr >= GRID_SIZE || cc >= GRID_SIZE)
-					continue;
+        // ---------- Grid placement (NO DOM writes yet) ----------
+        for (let i = 0; i < layout.length; i++) {
+            for (let j = 0; j < layout[0].length; j++) {
+                if (layout[i][j] !== 1) continue;
 
-				if (clip && this.grid[rr][cc] === "MASK") continue;
-				if (this.grid[rr][cc] !== null) continue;
+                const rr = r + i;
+                const cc = c + j;
 
-				this.grid[rr][cc] = block.color;
-				const idx = rr * GRID_SIZE + cc;
-				const cellEl = UIElements.grid.children[idx];
-				cellEl.className = `cell filled ${block.color}`;
-				cellEl.animate(
-					[{ transform: "scale(0.5)" }, { transform: "scale(1)" }],
-					{ duration: 160 }
-				);
-				cellsPlaced++;
-			}
-		}
+                if (rr < 0 || cc < 0 || rr >= gridSize || cc >= gridSize) continue;
+                if (clip && grid[rr][cc] === "MASK") continue;
+                if (grid[rr][cc] !== null) continue;
 
-		// Hazard: HP per cell
-		if (this.hazardMods.hpCostPerCell > 0) {
-			const cost = cellsPlaced * this.hazardMods.hpCostPerCell;
-			this.hp -= cost;
-			this.damageTakenThisFight += cost;
-			Logger.log(i18n.t("damage.spikes", { cost }));
-			this.spawnFloatingText(cost, UIElements.player.hp_bar, "#ef4444");
-			soundManager.play("damage");
-			if (this.hp <= 0) {
-				this.hp = 0;
-				this.loseGame();
-				return;
-			}
-		}
+                grid[rr][cc] = color;
+                placedCells.push(gridChildren[rr * gridSize + cc] as HTMLElement);
+                cellsPlaced++;
+            }
+        }
 
-		// Artifact: Fortify
-		if (this.hasArtifact("fortify")) this.shield += cellsPlaced;
+        // Nothing placed → nothing else to do
+        if (cellsPlaced === 0) return;
 
-		// Artifact: medic
-		if (this.hasArtifact("surgeon") && this.medicThisTurn < 8) {
-			const heal = Math.min(1, 8 - this.medicThisTurn);
-			this.medicThisTurn += heal;
-			this.healPlayer(heal);
-		}
+        // ---------- Apply DOM updates in one batch ----------
+        for (const cell of placedCells) {
+            cell.className = `cell filled ${color}`;
+            cell.classList.add("pop"); // CSS animation (GPU friendly)
+        }
 
-		// Element application from artifacts
-		if (this.hasArtifact("flame")) this.addStatus("enemy", "burn", 1);
-		if (this.hasArtifact("venom") && cellsPlaced >= 3)
-			this.addStatus("enemy", "poison", 2);
+        soundManager.play("place");
 
-		// Damage from placed cells
-		let placeDamage = cellsPlaced;
+        // ---------- Hazard: HP per cell ----------
+        if (hazardMods.hpCostPerCell > 0) {
+            const cost = cellsPlaced * hazardMods.hpCostPerCell;
+            this.hp -= cost;
+            this.damageTakenThisFight += cost;
 
-		// Focus: single cell bonus
-		if (this.hasArtifact("focus") && cellsPlaced === 1) placeDamage += 6;
+            Logger.log(i18n.t("damage.spikes", { cost }));
+            this.spawnFloatingText(cost, UIElements.player.hp_bar, "#ef4444");
+            soundManager.play("damage");
 
-		// Crusher scales with clears
-		if (this.hasArtifact("crusher")) placeDamage += this.clearsThisFight;
+            if (this.hp <= 0) {
+                this.hp = 0;
+                this.loseGame();
+                return;
+            }
+        }
 
-		// Gemcutter scales with line clears this fight
-		if (this.hasArtifact("gemcutter"))
-			placeDamage += this.placeBonusThisFight;
+        // ---------- Artifacts: immediate effects ----------
+        if (has.fortify) this.shield += cellsPlaced;
 
-		// Overcharge from crits
-		placeDamage += this.overchargeThisFight || 0;
+        if (has.surgeon && this.medicThisTurn < 8) {
+            const heal = Math.min(1, 8 - this.medicThisTurn);
+            this.medicThisTurn += heal;
+            this.healPlayer(heal);
+        }
 
-		if (this.hasArtifact("gambler") && Math.random() < 0.25) {
-			placeDamage *= 2;
-			Logger.log(i18n.t("artifact.gambler.use"));
-			this.spawnFloatingText(
-				"JACKPOT!",
-				UIElements.enemy.sprite,
-				"#fbbf24"
-			);
-		}
+        if (has.flame) this.addStatus("enemy", "burn", 1);
+        if (has.venom && cellsPlaced >= 3)
+            this.addStatus("enemy", "poison", 2);
 
-		this.damageEnemy(placeDamage, false);
+        // ---------- Damage calculation ----------
+        let placeDamage = cellsPlaced;
 
-		// Thunder artifact
-		if (this.hasArtifact("thunder")) {
-			this.blocksPlaced++;
-			if (this.blocksPlaced % 3 === 0) {
-				this.addStatus("enemy", "shock", 1);
-				this.damageEnemy(10, true);
-				Logger.log(i18n.t("artifact.thunder.use"));
+        if (has.focus && cellsPlaced === 1) placeDamage += 6;
+        if (has.crusher) placeDamage += this.clearsThisFight;
+        if (has.gemcutter) placeDamage += this.placeBonusThisFight;
 
-				this.spawnFloatingText(
-					"ZAP!",
-					UIElements.enemy.sprite,
-					"#facc15"
-				);
-			}
-		}
+        placeDamage += this.overchargeThisFight || 0;
 
-		this.checkLines();
-		this.updateUI();
-	}
+        if (has.gambler && Math.random() < 0.25) {
+            placeDamage *= 2;
+            Logger.log(i18n.t("artifact.gambler.use"));
+            this.spawnFloatingText("JACKPOT!", UIElements.enemy.sprite, "#fbbf24");
+        }
+
+        this.damageEnemy(placeDamage, false);
+
+        // ---------- Thunder artifact ----------
+        if (has.thunder) {
+            this.blocksPlaced++;
+            if (this.blocksPlaced % 3 === 0) {
+                this.addStatus("enemy", "shock", 1);
+                this.damageEnemy(10, true);
+
+                Logger.log(i18n.t("artifact.thunder.use"));
+                this.spawnFloatingText("ZAP!", UIElements.enemy.sprite, "#facc15");
+            }
+        }
+
+        // ---------- Defer heavy UI work ----------
+        requestAnimationFrame(() => {
+            this.checkLines();
+            this.updateUI();
+        });
+    }
 
 	// ------------------------------
 	// Lines
@@ -2091,7 +2109,7 @@ export class BlockGame {
 			for (let c = 0; c < GRID_SIZE; c++) {
 				if (
 					this.grid[r][c] &&
-					this.grid[r][c] !== "HOLE" &&
+					this.grid[r][c] !== "ROCK" &&
 					Math.random() > 0.72
 				) {
 					this.grid[r][c] = null;

@@ -9,6 +9,11 @@
 	}
 }
 
+@keyframes pop {
+	from { transform: scale(0.5); }
+	to   { transform: scale(1); }
+}
+
 .hover-anim {
 	animation: 2s ease-in-out infinite hover;
 }
