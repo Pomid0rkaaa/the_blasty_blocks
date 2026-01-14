@@ -202,7 +202,7 @@ export class SoundManager {
 		osc.stop(t + 0.12);
 	}
 
-	play(sound: string) {
+	async play(sound: string) {
 		const randomize = (v: number, amt = 0.05) =>
 			v * (1 + (Math.random() * amt * 2 - amt));
 
@@ -220,7 +220,8 @@ export class SoundManager {
 			case "clear":
 			case "lines":
 				this.playTone(660, "sine", 0.1, 0.09);
-				setTimeout(() => this.playTone(880, "sine", 0.18, 0.08), 70);
+                await this.audioWait(70);
+				() => this.playTone(880, "sine", 0.18, 0.08);
 				break;
 			case "damage":
 				this.playTone(95, "sawtooth", 0.12, 0.18);
@@ -230,25 +231,22 @@ export class SoundManager {
 				break;
 			case "crit":
 				this.playTone(800, "square", 0.06, 0.1);
-				setTimeout(() => this.playTone(1200, "square", 0.08, 0.08), 50);
+				await this.audioWait(50);
+                this.playTone(1200, "square", 0.08, 0.08);
 				break;
 			case "victory":
 			case "win":
-				[523, 659, 784, 1046].forEach((f, i) =>
-					setTimeout(
-						() => this.playTone(f, "square", 0.18, 0.09),
-						i * 90
-					)
-				);
+				[523, 659, 784, 1046].forEach(async (f, i) => {
+					await this.audioWait(i * 90);
+                    this.playTone(f, "square", 0.18, 0.09);
+				});
 				break;
 			case "gameover":
 			case "lose":
-				[392, 330, 262, 196].forEach((f, i) =>
-					setTimeout(
-						() => this.playTone(f, "sawtooth", 0.28, 0.1),
-						i * 140
-					)
-				);
+				[392, 330, 262, 196].forEach(async (f, i) => {
+					await this.audioWait(i * 140);
+                    this.playTone(f, "sawtooth", 0.28, 0.1)
+                });
 				break;
 			case "hover":
 				this.playNoise(0.005, 0.005, 3000);
@@ -408,6 +406,19 @@ export class SoundManager {
 			clearInterval(this.musicTimer);
 			this.musicTimer = null;
 		}
+	}
+
+	audioWait(ms: number): Promise<void> {
+		if (!this.ctx) return Promise.resolve();
+		const start = this.ctx.currentTime;
+		const waitSec = ms / 1000;
+		return new Promise(resolve => {
+			const check = () => {
+				if (this.ctx!.currentTime - start >= waitSec) resolve();
+				else requestAnimationFrame(check);
+			};
+			check();
+		});
 	}
 }
 
