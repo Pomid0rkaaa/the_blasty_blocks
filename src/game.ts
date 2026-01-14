@@ -1271,15 +1271,15 @@ export class BlockGame {
 		const cellSize = parseFloat(rootStyles.getPropertyValue("--cell-size"));
 		const container = document.createElement("div");
 		container.className =
-			"block-container cursor-grab active:cursor-grabbing p-2 transition-transform hover:scale-105";
+			"block-container cursor-grab active:cursor-grabbing p-2"// transition-transform hover:scale-105";
 
 		const miniGrid = document.createElement("div");
 		miniGrid.className = "mini-grid";
 		miniGrid.style.gridTemplateColumns = `repeat(${
 			shapeData.layout[0].length
-		}, ${(cellSize * 2) / 3}px)`;
+		}, ${cellSize}px)`;
 		miniGrid.style.gridTemplateRows = `repeat(${shapeData.layout.length}, ${
-			(cellSize * 2) / 3
+			cellSize
 		}px)`;
 
 		shapeData.layout.forEach((row: number[]) => {
