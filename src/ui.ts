@@ -147,7 +147,7 @@ export class UI {
         const el = (ELEMENTS as any)[state.currentEnemy?.element] || {
             icon: "⚔️",
             color: "#e2e8f0",
-            name: i18n.t("element.physical"),
+            get name() { return i18n.t("element.physical") },
         };
         UIElements.enemy.element.textContent = el.icon;
         UIElements.enemy.element.title = i18n.t("enemy.element", {element: el.name})

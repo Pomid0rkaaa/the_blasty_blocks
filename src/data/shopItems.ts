@@ -20,8 +20,8 @@ export const BASE_SHOP_ITEMS: ShopItem[] = [
 	{
 		type: "stat",
 		id: "heal",
-		name: i18n.t("shop_item.heal"),
-		desc: i18n.t("shop_item.heal.desc"),
+		get name() { return i18n.t("shop_item.heal") },
+        get desc() { return i18n.t("shop_item.heal.desc") },
 		icon: "🧃",
 		price: (coupon) => (coupon ? 32 : 40),
 		apply: (ctx) => ctx.healPlayer(25),
@@ -29,8 +29,8 @@ export const BASE_SHOP_ITEMS: ShopItem[] = [
 	{
 		type: "stat",
 		id: "shield",
-		name: i18n.t("shop_item.shield"),
-		desc: i18n.t("shop_item.shield.desc"),
+		get name() { return i18n.t("shop_item.shield") },
+        get desc() { return i18n.t("shop_item.shield.desc") },
 		icon: "🛡️",
 		price: (coupon) => (coupon ? 36 : 45),
 		apply: (ctx) => {
@@ -40,8 +40,8 @@ export const BASE_SHOP_ITEMS: ShopItem[] = [
 	{
 		type: "stat",
 		id: "clean",
-		name: i18n.t("shop_item.clean"),
-		desc: i18n.t("shop_item.clean.desc"),
+		get name() { return i18n.t("shop_item.clean") },
+        get desc() { return i18n.t("shop_item.clean.desc") },
 		icon: "🧽",
 		price: (coupon) => (coupon ? 44 : 55),
 		apply: (ctx) => ctx.removeRandomFilledCells(5),
@@ -52,8 +52,8 @@ export const FALLBACK_SHOP_ITEMS: ShopItem[] = [
 	{
 		type: "stat",
 		id: "gold",
-		name: i18n.t("shop_item.gold"),
-		desc: i18n.t("shop_item.gold.desc"),
+		get name() { return i18n.t("shop_item.gold") },
+        get desc() { return i18n.t("shop_item.gold.desc") },
 		icon: "🧰",
 		price: (coupon) => (coupon ? 52 : 65),
 		apply: (ctx) => {

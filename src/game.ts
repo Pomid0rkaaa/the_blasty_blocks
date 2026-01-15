@@ -531,7 +531,7 @@ export class BlockGame {
 		}
 		const meta = (ELEMENTS as any)[e.element] || {
 			icon: "⚔️",
-			name: i18n.t("element.physical"),
+			get name() { return i18n.t("element.physical") },
 		};
 		const bossTag = i18n.t(
 			this.level % 5 === 0 ? "label.boss" : "label.enemy"

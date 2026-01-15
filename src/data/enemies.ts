@@ -9,13 +9,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "slime",
         kind: "enemy",
-        name: i18n.t("enemy.slime"),
+        get name() { return i18n.t("enemy.slime") },
+        get desc() { return i18n.t("enemy.slime.desc") },
         theme: "theme-forest",
         style: "boss-slime",
         element: "poison",
         hpMod: 0.9,
         atkMod: 0.85,
-        desc: i18n.t("enemy.slime.desc"),
         trackId: "toxic",
         ability: (g) => {
             if (Math.random() < 0.25) {
@@ -32,13 +32,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "magma",
         kind: "enemy",
-        name: i18n.t("enemy.magma"),
+        get name() { return i18n.t("enemy.magma") },
+        get desc() { return i18n.t("enemy.magma.desc") },
         theme: "theme-magma",
         style: "boss-magma",
         element: "fire",
         hpMod: 0.85,
         atkMod: 1.25,
-        desc: i18n.t("enemy.magma.desc"),
         trackId: "magma",
         ability: (g) => {
             if (g.shield > 0) {
@@ -55,13 +55,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "void",
         kind: "enemy",
-        name: i18n.t("enemy.void"),
+        get name() { return i18n.t("enemy.void") },
+        get desc() { return i18n.t("enemy.void.desc") },
         theme: "theme-void",
         style: "boss-void",
         element: "void",
         hpMod: 0.95,
         atkMod: 1.05,
-        desc: i18n.t("enemy.void.desc"),
         trackId: "void",
         ability: (g) => {
             g.hp -= 2;
@@ -73,13 +73,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "ice",
         kind: "enemy",
-        name: i18n.t("enemy.ice"),
+        get name() { return i18n.t("enemy.ice") },
+        get desc() { return i18n.t("enemy.ice.desc") },
         theme: "theme-ice",
         style: "boss-ice",
         element: "ice",
         hpMod: 1.25,
         atkMod: 0.8,
-        desc: i18n.t("enemy.ice.desc"),
         trackId: "ice",
         ability: (g) => {
             g.enemyShield += 6;
@@ -94,13 +94,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "storm",
         kind: "enemy",
-        name: i18n.t("enemy.storm"),
+        get name() { return i18n.t("enemy.storm") },
+        get desc() { return i18n.t("enemy.storm.desc") },
         theme: "theme-storm",
         style: "boss-storm",
         element: "storm",
         hpMod: 0.95,
         atkMod: 1.1,
-        desc: i18n.t("enemy.storm.desc"),
         trackId: "storm",
         ability: (g) => {
             if (Math.random() < 0.35) {
@@ -117,13 +117,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "sand",
         kind: "enemy",
-        name: i18n.t("enemy.sand"),
+        get name() { return i18n.t("enemy.sand") },
+        get desc() { return i18n.t("enemy.sand.desc") },
         theme: "theme-desert",
         style: "boss-sand",
         element: "earth",
         hpMod: 1.05,
         atkMod: 0.95,
-        desc: i18n.t("enemy.sand.desc"),
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.spawnRocks(2);
@@ -139,13 +139,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "robot",
         kind: "enemy",
-        name: i18n.t("enemy.robot.desc"),
+        get name() { return i18n.t("enemy.robot") },
+        get desc() { return i18n.t("enemy.robot.desc") },
         theme: "theme-ocean",
         style: "boss-robot",
         element: "storm",
         hpMod: 0.9,
         atkMod: 1.15,
-        desc: i18n.t("enemy.robot.desc"),
         ability: (g) => {
             g.enemyShield += 5;
             Logger.log(i18n.t("enemy.robot.ability"));
@@ -154,13 +154,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "fungus",
         kind: "enemy",
-        name: i18n.t("enemy.fungus"),
+        get name() { return i18n.t("enemy.fungus") },
+        get desc() { return i18n.t("enemy.fungus.desc") },
         theme: "theme-crypt",
         style: "boss-fungus",
         element: "poison",
         hpMod: 1.1,
         atkMod: 0.9,
-        desc: i18n.t("enemy.fungus.desc"),
         ability: (g) => {
             if (Math.random() < 0.3) {
                 g.addStatus("player", "poison", 2);
@@ -178,13 +178,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "scarab",
         kind: "enemy",
-        name: i18n.t("enemy.scarab"),
+        get name() { return i18n.t("enemy.scarab") },
+        get desc() { return i18n.t("enemy.scarab.desc") },
         theme: "theme-desert",
         style: "boss-scarab",
         element: "earth",
         hpMod: 0.95,
         atkMod: 1.05,
-        desc: i18n.t("enemy.scarab.desc"),
         ability: (g) => {
             if (Math.random() < 0.45) {
                 g.enemyShield += 4;
@@ -196,13 +196,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "siren",
         kind: "enemy",
-        name: i18n.t("enemy.siren"),
+        get name() { return i18n.t("enemy.siren") },
+        get desc() { return i18n.t("enemy.siren.desc") },
         theme: "theme-ocean",
         style: "boss-void",
         element: "ice",
         hpMod: 0.92,
         atkMod: 1.0,
-        desc: i18n.t("enemy.siren.desc"),
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.freezeNextHand = Math.min(
@@ -221,13 +221,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "pyro",
         kind: "enemy",
-        name: i18n.t("enemy.pyro"),
+        get name() { return i18n.t("enemy.pyro") },
+        get desc() { return i18n.t("enemy.pyro.desc") },
         theme: "theme-magma",
         style: "boss-magma",
         element: "fire",
         hpMod: 0.92,
         atkMod: 1.0,
-        desc: i18n.t("enemy.pyro.desc"),
         ability: (g) => {
             if (Math.random() < 0.4) {
                 g.addStatus("player", "burn", 2);
@@ -243,13 +243,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "mechanist",
         kind: "enemy",
-        name: i18n.t("enemy.mechanist"),
+        get name() { return i18n.t("enemy.mechanist") },
+        get desc() { return i18n.t("enemy.mechanist.desc") },
         theme: "theme-lab",
         style: "boss-robot",
         element: "storm",
         hpMod: 1.0,
         atkMod: 0.95,
-        desc: i18n.t("enemy.mechanist.desc"),
         ability: (g) => {
             if (Math.random() < 0.28) {
                 g.spawnGarbage(2);
@@ -261,13 +261,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "wisp",
         kind: "enemy",
-        name: i18n.t("enemy.wisp"),
+        get name() { return i18n.t("enemy.wisp") },
+        get desc() { return i18n.t("enemy.wisp.desc") },
         theme: "theme-cosmos",
         style: "boss-wisp",
         element: "void",
         hpMod: 0.8,
         atkMod: 1.0,
-        desc: i18n.t("enemy.wisp.desc"),
         ability: (g) => {
             if (Math.random() < 0.45) {
                 g.addStatus("player", "weak", 1);
@@ -291,13 +291,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "brute",
         kind: "enemy",
-        name: i18n.t("enemy.brute"),
+        get name() { return i18n.t("enemy.brute") },
+        get desc() { return i18n.t("enemy.brute.desc") },
         theme: "theme-blood",
         style: "boss-brute",
         element: "earth",
         hpMod: 1.15,
         atkMod: 1.05,
-        desc: i18n.t("enemy.brute.desc"),
         ability: (g) => {
             if (Math.random() < 0.3) {
                 g.spawnGarbage(3);
@@ -313,13 +313,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "cultist",
         kind: "enemy",
-        name: i18n.t("enemy.cultist"),
+        get name() { return i18n.t("enemy.cultist") },
+        get desc() { return i18n.t("enemy.cultist.desc") },
         theme: "theme-crypt",
         style: "boss-cultist",
         element: "void",
         hpMod: 0.95,
         atkMod: 0.9,
-        desc: i18n.t("enemy.cultist.desc"),
         ability: (g) => {
             g.enemyAttack = Math.ceil(g.enemyAttack * 1.06);
             Logger.log(i18n.t("enemy.cultist.ability"));
@@ -333,13 +333,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "wardenling",
         kind: "enemy",
-        name: i18n.t("enemy.wardenling"),
+        get name() { return i18n.t("enemy.wardenling") },
+        get desc() { return i18n.t("enemy.wardenling.desc") },
         theme: "theme-lab",
         style: "boss-warden",
         element: "storm",
         hpMod: 0.9,
         atkMod: 1.0,
-        desc: i18n.t("enemy.wardenling.desc"),
         ability: (g) => {
             if (Math.random() < 0.35 && g.shield > 0) {
                 const take = Math.min(8, g.shield);
@@ -359,13 +359,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "assassin",
         kind: "enemy",
-        name: i18n.t("enemy.assassin"),
+        get name() { return i18n.t("enemy.assassin") },
+        get desc() { return i18n.t("enemy.assassin.desc") },
         theme: "theme-abyss",
         style: "boss-void",
         element: "void",
         hpMod: 0.78,
         atkMod: 1.35,
-        desc: i18n.t("enemy.assassin.desc"),
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.addStatus("player", "weak", 1);
@@ -376,13 +376,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "bloom",
         kind: "enemy",
-        name: i18n.t("enemy.bloom"),
+        get name() { return i18n.t("enemy.bloom") },
+        get desc() { return i18n.t("enemy.bloom.desc") },
         theme: "theme-toxic",
         style: "boss-fungus",
         element: "poison",
         hpMod: 0.95,
         atkMod: 0.9,
-        desc: i18n.t("enemy.bloom.desc"),
         ability: (g) => {
             g.addStatus("player", "poison", 1);
             if (Math.random() < 0.25)
@@ -393,13 +393,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "mason",
         kind: "enemy",
-        name: i18n.t("enemy.mason"),
+        get name() { return i18n.t("enemy.mason") },
+        get desc() { return i18n.t("enemy.mason.desc") },
         theme: "theme-ruins",
         style: "boss-colossus",
         element: "earth",
         hpMod: 1.1,
         atkMod: 0.9,
-        desc: i18n.t("enemy.mason.desc"),
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.spawnRocks(2);
@@ -411,13 +411,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "seer",
         kind: "enemy",
-        name: i18n.t("enemy.seer"),
+        get name() { return i18n.t("enemy.seer") },
+        get desc() { return i18n.t("enemy.seer.desc") },
         theme: "theme-dream",
         style: "boss-oracle",
         element: "void",
         hpMod: 0.9,
         atkMod: 0.95,
-        desc: i18n.t("enemy.seer.desc"),
         ability: (g) => {
             if (Math.random() < 0.35 && g.shield > 0) {
                 const cut = Math.min(10, g.shield);
@@ -433,13 +433,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "paladin",
         kind: "enemy",
-        name: i18n.t("enemy.paladin"),
+        get name() { return i18n.t("enemy.paladin") },
+        get desc() { return i18n.t("enemy.paladin.desc") },
         theme: "theme-gilded",
         style: "boss-priest",
         element: "light",
         hpMod: 1.0,
         atkMod: 0.95,
-        desc: i18n.t("enemy.paladin.desc"),
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.enemyShield += 6;
@@ -451,13 +451,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "frostling",
         kind: "enemy",
-        name: i18n.t("enemy.frostling"),
+        get name() { return i18n.t("enemy.frostling") },
+        get desc() { return i18n.t("enemy.frostling.desc") },
         theme: "theme-tundra",
         style: "boss-ice",
         element: "ice",
         hpMod: 0.85,
         atkMod: 0.95,
-        desc: i18n.t("enemy.frostling.desc"),
         ability: (g) => {
             if (Math.random() < 0.55) {
                 g.freezeNextHand = Math.min(
@@ -473,13 +473,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "necro",
         kind: "boss",
-        name: i18n.t("enemy.necro"),
+        get name() { return i18n.t("enemy.necro") },
+        get desc() { return i18n.t("enemy.necro.desc") },
         theme: "theme-neon",
         style: "boss-necro",
         element: "void",
         hpMod: 1.35,
         atkMod: 1.05,
-        desc: i18n.t("enemy.necro.desc"),
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.spawnRocks(3);
@@ -495,13 +495,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "tempest",
         kind: "boss",
-        name: i18n.t("enemy.tempest"),
+        get name() { return i18n.t("enemy.tempest") },
+        get desc() { return i18n.t("enemy.tempest.desc") },
         theme: "theme-storm",
         style: "boss-storm",
         element: "storm",
         hpMod: 1.25,
         atkMod: 1.2,
-        desc: i18n.t("enemy.tempest.desc"),
         ability: (g) => {
             g.enemyAttack = Math.floor(g.enemyAttack * 1.05);
             g.addStatus("player", "shock", 1);
@@ -511,13 +511,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "wyrm",
         kind: "boss",
-        name: i18n.t("enemy.wyrm"),
+        get name() { return i18n.t("enemy.wyrm") },
+        get desc() { return i18n.t("enemy.wyrm.desc") },
         theme: "theme-magma",
         style: "boss-magma",
         element: "fire",
         hpMod: 1.2,
         atkMod: 1.25,
-        desc: i18n.t("enemy.wyrm.desc"),
         ability: (g) => {
             g.addStatus("player", "burn", 2);
             Logger.log(i18n.t("enemy.wyrm.ability"));
@@ -531,13 +531,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "archon",
         kind: "boss",
-        name: i18n.t("enemy.archon"),
+        get name() { return i18n.t("enemy.archon") },
+        get desc() { return i18n.t("enemy.archon.desc") },
         theme: "theme-ice",
         style: "boss-ice",
         element: "ice",
         hpMod: 1.45,
         atkMod: 0.95,
-        desc: i18n.t("enemy.archon.desc"),
         ability: (g) => {
             g.freezeNextHand = Math.min(2, g.freezeNextHand + 1);
             Logger.log(i18n.t("enemy.archon.ability"));
@@ -551,13 +551,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "hydra",
         kind: "boss",
-        name: i18n.t("enemy.hydra"),
+        get name() { return i18n.t("enemy.hydra") },
+        get desc() { return i18n.t("enemy.hydra.desc") },
         theme: "theme-forest",
         style: "boss-hydra",
         element: "poison",
         hpMod: 1.35,
         atkMod: 1.05,
-        desc: i18n.t("enemy.hydra.desc"),
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.addStatus("player", "poison", 2);
@@ -572,13 +572,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "colossus",
         kind: "boss",
-        name: i18n.t("enemy.colossus"),
+        get name() { return i18n.t("enemy.colossus") },
+        get desc() { return i18n.t("enemy.colossus.desc") },
         theme: "theme-desert",
         style: "boss-colossus",
         element: "earth",
         hpMod: 1.65,
         atkMod: 0.95,
-        desc: i18n.t("enemy.colossus.desc"),
         ability: (g) => {
             g.enemyShield += 8;
             if (Math.random() < 0.4) g.spawnRocks(2);
@@ -588,13 +588,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "lich",
         kind: "boss",
-        name: i18n.t("enemy.lich"),
+        get name() { return i18n.t("enemy.lich") },
+        get desc() { return i18n.t("enemy.lich.desc") },
         theme: "theme-void",
         style: "boss-lich",
         element: "void",
         hpMod: 1.35,
         atkMod: 1.15,
-        desc: i18n.t("enemy.lich.desc"),
         ability: (g) => {
             g.spawnGarbage(3);
             if (Math.random() < 0.5)
@@ -605,13 +605,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "kraken",
         kind: "boss",
-        name: i18n.t("enemy.kraken"),
+        get name() { return i18n.t("enemy.kraken") },
+        get desc() { return i18n.t("enemy.kraken.desc") },
         theme: "theme-ocean",
         style: "boss-kraken",
         element: "ice",
         hpMod: 1.55,
         atkMod: 1.0,
-        desc: i18n.t("enemy.kraken.desc"),
         trackId: "boss_ice",
         ability: (g) => {
             if (Math.random() < 0.5) {
@@ -630,13 +630,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "dragon",
         kind: "boss",
-        name: i18n.t("enemy.dragon"),
+        get name() { return i18n.t("enemy.dragon") },
+        get desc() { return i18n.t("enemy.dragon.desc") },
         theme: "theme-magma",
         style: "boss-dragon",
         element: "fire",
         hpMod: 1.55,
         atkMod: 1.1,
-        desc: i18n.t("enemy.dragon.desc"),
         trackId: "boss_fire",
         ability: (g) => {
             g.addStatus("player", "burn", 2);
@@ -647,13 +647,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "mirror",
         kind: "boss",
-        name: i18n.t("enemy.mirror"),
+        get name() { return i18n.t("enemy.mirror") },
+        get desc() { return i18n.t("enemy.mirror.desc") },
         theme: "theme-cosmos",
         style: "boss-mirror",
         element: "void",
         hpMod: 1.35,
         atkMod: 1.05,
-        desc: i18n.t("enemy.mirror.desc"),
         trackId: "boss_void",
         ability: (g) => {
             if (Math.random() < 0.5) {
@@ -666,13 +666,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "warden",
         kind: "boss",
-        name: i18n.t("enemy.warden"),
+        get name() { return i18n.t("enemy.warden") },
+        get desc() { return i18n.t("enemy.warden.desc") },
         theme: "theme-lab",
         style: "boss-warden",
         element: "storm",
         hpMod: 1.6,
         atkMod: 1.0,
-        desc: i18n.t("enemy.warden.desc"),
         trackId: "boss_storm",
         ability: (g) => {
             g.enemyShield += 10;
@@ -685,13 +685,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "oracle",
         kind: "boss",
-        name: i18n.t("enemy.oracle"),
+        get name() { return i18n.t("enemy.oracle") },
+        get desc() { return i18n.t("enemy.oracle.desc") },
         theme: "theme-dream",
         style: "boss-oracle",
         element: "void",
         hpMod: 1.45,
         atkMod: 1.05,
-        desc: i18n.t("enemy.oracle.desc"),
         trackId: "boss_void",
         ability: (g) => {
             if (Math.random() < 0.55) {
@@ -704,13 +704,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "toxicqueen",
         kind: "boss",
-        name: i18n.t("enemy.toxicqueen"),
+        get name() { return i18n.t("enemy.toxicqueen") },
+        get desc() { return i18n.t("enemy.toxicqueen.desc") },
         theme: "theme-toxic",
         style: "boss-fungus",
         element: "poison",
         hpMod: 1.55,
         atkMod: 1.0,
-        desc: i18n.t("enemy.toxicqueen.desc"),
         trackId: "boss_poison",
         ability: (g) => {
             g.addStatus("player", "poison", 2);
@@ -721,13 +721,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "behemoth",
         kind: "boss",
-        name: i18n.t("enemy.behemoth"),
+        get name() { return i18n.t("enemy.behemoth") },
+        get desc() { return i18n.t("enemy.behemoth.desc") },
         theme: "theme-ruins",
         style: "boss-brute",
         element: "earth",
         hpMod: 1.8,
         atkMod: 0.95,
-        desc: i18n.t("enemy.behemoth.desc"),
         trackId: "boss_earth",
         ability: (g) => {
             g.spawnRocks(3);
@@ -738,13 +738,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "sunpriest",
         kind: "boss",
-        name: i18n.t("enemy.sunpriest"),
+        get name() { return i18n.t("enemy.sunpriest") },
+        get desc() { return i18n.t("enemy.sunpriest.desc") },
         theme: "theme-gilded",
         style: "boss-priest",
         element: "light",
         hpMod: 1.4,
         atkMod: 1.0,
-        desc: i18n.t("enemy.sunpriest.desc"),
         trackId: "boss_fire",
         ability: (g) => {
             g.healEnemy(14);
@@ -755,13 +755,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "frostwyrm",
         kind: "boss",
-        name: i18n.t("enemy.frostwyrm"),
+        get name() { return i18n.t("enemy.frostwyrm") },
+        get desc() { return i18n.t("enemy.frostwyrm.desc") },
         theme: "theme-tundra",
         style: "boss-ice",
         element: "ice",
         hpMod: 1.55,
         atkMod: 1.05,
-        desc: i18n.t("enemy.frostwyrm.desc"),
         trackId: "boss_ice",
         ability: (g) => {
             g.freezeNextHand = Math.min(2, g.freezeNextHand + 2);
@@ -773,13 +773,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "vampire_bat",
         kind: "enemy",
-        name: i18n.t("enemy.vampire_bat"),
+        get name() { return i18n.t("enemy.vampire_bat") },
+        get desc() { return i18n.t("enemy.vampire_bat.desc") },
         theme: "theme-blood",
         style: "boss-void",
         element: "void",
         hpMod: 0.9,
         atkMod: 1.1,
-        desc: i18n.t("enemy.vampire_bat.desc"),
         ability: () => {
             Logger.log(
                 i18n.t("enemy.vampire_bat.ability")
@@ -789,13 +789,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "golem_sentry",
         kind: "enemy",
-        name: i18n.t("enemy.golem_sentry"),
+        get name() { return i18n.t("enemy.golem_sentry") },
+        get desc() { return i18n.t("enemy.golem_sentry.desc") },
         theme: "theme-ruins",
         style: "boss-robot",
         element: "earth",
         hpMod: 1.3,
         atkMod: 0.8,
-        desc: i18n.t("enemy.golem_sentry.desc"),
         ability: (g) => {
             g.enemyShield += 4;
             Logger.log(i18n.t("enemy.golem_sentry.ability"));
@@ -804,13 +804,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "chaos_imp",
         kind: "enemy",
-        name: i18n.t("enemy.chaos_imp"),
+        get name() { return i18n.t("enemy.chaos_imp") },
+        get desc() { return i18n.t("enemy.chaos_imp.desc") },
         theme: "theme-magma",
         style: "boss-imp",
         element: "fire",
         hpMod: 0.8,
         atkMod: 1.0,
-        desc: i18n.t("enemy.chaos_imp.desc"),
         ability: (g) => {
             const r = Math.random();
             if (r < 0.33) {
@@ -828,13 +828,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "mimic",
         kind: "enemy",
-        name: i18n.t("enemy.mimic"),
+        get name() { return i18n.t("enemy.mimic") },
+        get desc() { return i18n.t("enemy.mimic.desc") },
         theme: "theme-gilded",
         style: "boss-chest",
         element: "earth",
         hpMod: 1.2,
         atkMod: 1.4,
-        desc: i18n.t("enemy.mimic.desc"),
         ability: (g) => {
             if (Math.random() < 0.2) {
                 g.gold = Math.max(0, g.gold - 5);
@@ -845,13 +845,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "void_whale",
         kind: "enemy",
-        name: i18n.t("enemy.void_whale"),
+        get name() { return i18n.t("enemy.void_whale") },
+        get desc() { return i18n.t("enemy.void_whale.desc") },
         theme: "theme-cosmos",
         style: "boss-whale",
         element: "void",
         hpMod: 1.8,
         atkMod: 0.8,
-        desc: i18n.t("enemy.void_whale.desc"),
         trackId: "ethereal",
         ability: (g) => {
             if (Math.random() < 0.4) {
@@ -865,13 +865,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "demon_lord",
         kind: "boss",
-        name: i18n.t("enemy.demon_lord"),
+        get name() { return i18n.t("enemy.demon_lord") },
+        get desc() { return i18n.t("enemy.demon_lord.desc") },
         theme: "theme-blood",
         style: "boss-demon",
         element: "fire",
         hpMod: 1.7,
         atkMod: 1.3,
-        desc: i18n.t("enemy.demon_lord.desc"),
         trackId: "boss_fire",
         ability: (g) => {
             g.addStatus("player", "burn", 3);
@@ -882,13 +882,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "quantum_core",
         kind: "boss",
-        name: i18n.t("enemy.quantum_core"),
+        get name() { return i18n.t("enemy.quantum_core") },
+        get desc() { return i18n.t("enemy.quantum_core.desc") },
         theme: "theme-lab",
         style: "boss-core",
         element: "storm",
         hpMod: 1.5,
         atkMod: 1.1,
-        desc: i18n.t("enemy.quantum_core.desc"),
         trackId: "boss_storm",
         ability: (g) => {
             g.addStatus("player", "shock", 2);
@@ -901,13 +901,13 @@ export const ENEMIES: Enemy[] = [
     {
         id: "ancient_tree",
         kind: "boss",
-        name: i18n.t("enemy.ancient_tree"),
+        get name() { return i18n.t("enemy.ancient_tree") },
+        get desc() { return i18n.t("enemy.ancient_tree.desc") },
         theme: "theme-forest",
         style: "boss-tree",
         element: "earth",
         hpMod: 2.0,
         atkMod: 0.9,
-        desc: i18n.t("enemy.ancient_tree.desc"),
         trackId: "boss_earth",
         ability: (g) => {
             g.healEnemy(15);
