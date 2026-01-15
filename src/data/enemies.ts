@@ -1,5 +1,6 @@
 import { Logger } from "../logger.js";
 import { UIElements } from "../ui.js";
+import i18n from "../i18n";
 
 import type { Enemy } from "../types";
 
@@ -8,18 +9,18 @@ export const ENEMIES: Enemy[] = [
     {
         id: "slime",
         kind: "enemy",
-        name: "Слизень",
+        name: i18n.t("enemy.slime"),
         theme: "theme-forest",
         style: "boss-slime",
         element: "poison",
         hpMod: 0.9,
         atkMod: 0.85,
-        desc: "Иногда регенит.",
+        desc: i18n.t("enemy.slime.desc"),
         trackId: "toxic",
         ability: (g) => {
             if (Math.random() < 0.25) {
                 g.healEnemy(8);
-                Logger.log("Слизень регенит +8");
+                Logger.log(i18n.t("enemy.slime.ability"));
                 g.spawnFloatingText(
                     "REGEN",
                     UIElements.enemy.sprite,
@@ -31,18 +32,18 @@ export const ENEMIES: Enemy[] = [
     {
         id: "magma",
         kind: "enemy",
-        name: "Огненный рыцарь",
+        name: i18n.t("enemy.magma"),
         theme: "theme-magma",
         style: "boss-magma",
         element: "fire",
         hpMod: 0.85,
         atkMod: 1.25,
-        desc: "Плавит щит героя.",
+        desc: i18n.t("enemy.magma.desc"),
         trackId: "magma",
         ability: (g) => {
             if (g.shield > 0) {
                 g.shield = Math.floor(g.shield * 0.6);
-                Logger.log("Огонь плавит щит");
+                Logger.log(i18n.t("enemy.magma.ability"));
                 g.spawnFloatingText(
                     "MELT",
                     UIElements.player.hp_bar,
@@ -54,35 +55,35 @@ export const ENEMIES: Enemy[] = [
     {
         id: "void",
         kind: "enemy",
-        name: "Кастер пустоты",
+        name: i18n.t("enemy.void"),
         theme: "theme-void",
         style: "boss-void",
         element: "void",
         hpMod: 0.95,
         atkMod: 1.05,
-        desc: "Понемногу высасывает жизнь.",
+        desc: i18n.t("enemy.void.desc"),
         trackId: "void",
         ability: (g) => {
             g.hp -= 2;
             g.damageTakenThisFight += 2;
-            Logger.log("Пустота: -2 HP");
+            Logger.log(i18n.t("enemy.void.ability"));
             g.spawnFloatingText(2, UIElements.player.hp_bar, "#a78bfa");
         },
     },
     {
         id: "ice",
         kind: "enemy",
-        name: "Ледяной голем",
+        name: i18n.t("enemy.ice"),
         theme: "theme-ice",
         style: "boss-ice",
         element: "ice",
         hpMod: 1.25,
         atkMod: 0.8,
-        desc: "Наращивает броню.",
+        desc: i18n.t("enemy.ice.desc"),
         trackId: "ice",
         ability: (g) => {
             g.enemyShield += 6;
-            Logger.log("Голем: +6 DEF");
+            Logger.log(i18n.t("enemy.ice.ability"));
             g.spawnFloatingText(
                 "+6 DEF",
                 UIElements.enemy.sprite,
@@ -93,18 +94,18 @@ export const ENEMIES: Enemy[] = [
     {
         id: "storm",
         kind: "enemy",
-        name: "Грозовой идол",
+        name: i18n.t("enemy.storm"),
         theme: "theme-storm",
         style: "boss-storm",
         element: "storm",
         hpMod: 0.95,
         atkMod: 1.1,
-        desc: "Иногда накладывает шок.",
+        desc: i18n.t("enemy.storm.desc"),
         trackId: "storm",
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.addStatus("player", "shock", 1);
-                Logger.log("Шок!");
+                Logger.log(i18n.t("enemy.storm.ability"));
                 g.spawnFloatingText(
                     "SHOCK",
                     UIElements.player.hp_bar,
@@ -116,17 +117,17 @@ export const ENEMIES: Enemy[] = [
     {
         id: "sand",
         kind: "enemy",
-        name: "Песчаный зверь",
+        name: i18n.t("enemy.sand"),
         theme: "theme-desert",
         style: "boss-sand",
         element: "earth",
         hpMod: 1.05,
         atkMod: 0.95,
-        desc: "Засыпает сетку камнями.",
+        desc: i18n.t("enemy.sand.desc"),
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.spawnRocks(2);
-                Logger.log("Песок: +2 камня");
+                Logger.log(i18n.t("enemy.sand.ability"));
                 g.spawnFloatingText(
                     "SAND!",
                     UIElements.enemy.sprite,
@@ -138,32 +139,32 @@ export const ENEMIES: Enemy[] = [
     {
         id: "robot",
         kind: "enemy",
-        name: "Стальной дрон",
+        name: i18n.t("enemy.robot.desc"),
         theme: "theme-ocean",
         style: "boss-robot",
         element: "storm",
         hpMod: 0.9,
         atkMod: 1.15,
-        desc: "Генерирует щит.",
+        desc: i18n.t("enemy.robot.desc"),
         ability: (g) => {
             g.enemyShield += 5;
-            Logger.log("Дрон: +5 DEF");
+            Logger.log(i18n.t("enemy.robot.ability"));
         },
     },
     {
         id: "fungus",
         kind: "enemy",
-        name: "Грибной король",
+        name: i18n.t("enemy.fungus"),
         theme: "theme-crypt",
         style: "boss-fungus",
         element: "poison",
         hpMod: 1.1,
         atkMod: 0.9,
-        desc: "Ядовитые споры.",
+        desc: i18n.t("enemy.fungus.desc"),
         ability: (g) => {
             if (Math.random() < 0.3) {
                 g.addStatus("player", "poison", 2);
-                Logger.log("Споры: яд");
+                Logger.log(i18n.t("enemy.fungus.ability"));
                 g.spawnFloatingText(
                     "SPORES",
                     UIElements.player.hp_bar,
@@ -177,38 +178,38 @@ export const ENEMIES: Enemy[] = [
     {
         id: "scarab",
         kind: "enemy",
-        name: "Скарабей",
+        name: i18n.t("enemy.scarab"),
         theme: "theme-desert",
         style: "boss-scarab",
         element: "earth",
         hpMod: 0.95,
         atkMod: 1.05,
-        desc: "Зарывается в песок: броня и камни.",
+        desc: i18n.t("enemy.scarab.desc"),
         ability: (g) => {
             if (Math.random() < 0.45) {
                 g.enemyShield += 4;
                 g.spawnRocks(1);
-                Logger.log("Скарабей: +4 DEF и камень");
+                Logger.log(i18n.t("enemy.scarab.ability"));
             }
         },
     },
     {
         id: "siren",
         kind: "enemy",
-        name: "Сирена",
+        name: i18n.t("enemy.siren"),
         theme: "theme-ocean",
         style: "boss-void",
         element: "ice",
         hpMod: 0.92,
         atkMod: 1.0,
-        desc: "Замораживает руку.",
+        desc: i18n.t("enemy.siren.desc"),
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.freezeNextHand = Math.min(
                     2,
                     g.freezeNextHand + 1
                 );
-                Logger.log("Сирена: заморозка руки");
+                Logger.log(i18n.t("enemy.siren.ability"));
                 g.spawnFloatingText(
                     "FREEZE",
                     UIElements.enemy.sprite,
@@ -220,17 +221,17 @@ export const ENEMIES: Enemy[] = [
     {
         id: "pyro",
         kind: "enemy",
-        name: "Пиромант",
+        name: i18n.t("enemy.pyro"),
         theme: "theme-magma",
         style: "boss-magma",
         element: "fire",
         hpMod: 0.92,
         atkMod: 1.0,
-        desc: "Поджигает героя.",
+        desc: i18n.t("enemy.pyro.desc"),
         ability: (g) => {
             if (Math.random() < 0.4) {
                 g.addStatus("player", "burn", 2);
-                Logger.log("Пиромант: горение");
+                Logger.log(i18n.t("enemy.pyro.ability"));
                 g.spawnFloatingText(
                     "BURN",
                     UIElements.player.hp_bar,
@@ -242,35 +243,35 @@ export const ENEMIES: Enemy[] = [
     {
         id: "mechanist",
         kind: "enemy",
-        name: "Механист",
+        name: i18n.t("enemy.mechanist"),
         theme: "theme-lab",
         style: "boss-robot",
         element: "storm",
         hpMod: 1.0,
         atkMod: 0.95,
-        desc: "Ставит панели мусора и броню.",
+        desc: i18n.t("enemy.mechanist.desc"),
         ability: (g) => {
             if (Math.random() < 0.28) {
                 g.spawnGarbage(2);
                 g.enemyShield += 3;
-                Logger.log("Механист: мусор + броня");
+                Logger.log(i18n.t("enemy.mechanist.ability"));
             }
         },
     },
     {
         id: "wisp",
         kind: "enemy",
-        name: "Светляк пустоты",
+        name: i18n.t("enemy.wisp"),
         theme: "theme-cosmos",
         style: "boss-wisp",
         element: "void",
         hpMod: 0.8,
         atkMod: 1.0,
-        desc: "Сбивает с толку: Слабость/Шок.",
+        desc: i18n.t("enemy.wisp.desc"),
         ability: (g) => {
             if (Math.random() < 0.45) {
                 g.addStatus("player", "weak", 1);
-                Logger.log("Светляк: слабость");
+                Logger.log(i18n.t("enemy.wisp.ability.weak"));
                 g.spawnFloatingText(
                     "WEAK",
                     UIElements.player.hp_bar,
@@ -278,7 +279,7 @@ export const ENEMIES: Enemy[] = [
                 );
             } else if (Math.random() < 0.35) {
                 g.addStatus("player", "shock", 1);
-                Logger.log("Светляк: шок");
+                Logger.log(i18n.t("enemy.wisp.ability.shock"));
                 g.spawnFloatingText(
                     "SHOCK",
                     UIElements.player.hp_bar,
@@ -290,17 +291,17 @@ export const ENEMIES: Enemy[] = [
     {
         id: "brute",
         kind: "enemy",
-        name: "Бугай",
+        name: i18n.t("enemy.brute"),
         theme: "theme-blood",
         style: "boss-brute",
         element: "earth",
         hpMod: 1.15,
         atkMod: 1.05,
-        desc: "Грубой силой ломает сетку.",
+        desc: i18n.t("enemy.brute.desc"),
         ability: (g) => {
             if (Math.random() < 0.3) {
                 g.spawnGarbage(3);
-                Logger.log("Бугай: +3 мусора");
+                Logger.log(i18n.t("enemy.brute.ability"));
                 g.spawnFloatingText(
                     "TRASH",
                     UIElements.enemy.sprite,
@@ -312,16 +313,16 @@ export const ENEMIES: Enemy[] = [
     {
         id: "cultist",
         kind: "enemy",
-        name: "Культист",
+        name: i18n.t("enemy.cultist"),
         theme: "theme-crypt",
         style: "boss-cultist",
         element: "void",
         hpMod: 0.95,
         atkMod: 0.9,
-        desc: "С каждым ходом усиливается.",
+        desc: i18n.t("enemy.cultist.desc"),
         ability: (g) => {
             g.enemyAttack = Math.ceil(g.enemyAttack * 1.06);
-            Logger.log("Культист усиливается");
+            Logger.log(i18n.t("enemy.cultist.ability"));
             g.spawnFloatingText(
                 "CHANT",
                 UIElements.enemy.sprite,
@@ -332,19 +333,19 @@ export const ENEMIES: Enemy[] = [
     {
         id: "wardenling",
         kind: "enemy",
-        name: "Страж-бот",
+        name: i18n.t("enemy.wardenling"),
         theme: "theme-lab",
         style: "boss-warden",
         element: "storm",
         hpMod: 0.9,
         atkMod: 1.0,
-        desc: "Питается щитом: превращает щит героя в броню.",
+        desc: i18n.t("enemy.wardenling.desc"),
         ability: (g) => {
             if (Math.random() < 0.35 && g.shield > 0) {
                 const take = Math.min(8, g.shield);
                 g.shield -= take;
                 g.enemyShield += take;
-                Logger.log(`Страж: украл ${take} щита`);
+                Logger.log(i18n.t("enemy.wardenling.ability", {take}));
                 g.spawnFloatingText(
                     "-SHD",
                     UIElements.player.hp_bar,
@@ -358,112 +359,112 @@ export const ENEMIES: Enemy[] = [
     {
         id: "assassin",
         kind: "enemy",
-        name: "Теневой убийца",
+        name: i18n.t("enemy.assassin"),
         theme: "theme-abyss",
         style: "boss-void",
         element: "void",
         hpMod: 0.78,
         atkMod: 1.35,
-        desc: "Высокий урон, но хрупкий. Иногда накладывает слабость.",
+        desc: i18n.t("enemy.assassin.desc"),
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.addStatus("player", "weak", 1);
-                Logger.log("Убийца: слабость");
+                Logger.log(i18n.t("enemy.assassin.ability"));
             }
         },
     },
     {
         id: "bloom",
         kind: "enemy",
-        name: "Ядовитый цветок",
+        name: i18n.t("enemy.bloom"),
         theme: "theme-toxic",
         style: "boss-fungus",
         element: "poison",
         hpMod: 0.95,
         atkMod: 0.9,
-        desc: "Травит и “цветёт”: больше яда со временем.",
+        desc: i18n.t("enemy.bloom.desc"),
         ability: (g) => {
             g.addStatus("player", "poison", 1);
             if (Math.random() < 0.25)
                 g.addStatus("player", "poison", 1);
-            Logger.log("Цветок: яд");
+            Logger.log(i18n.t("enemy.bloom.ability"));
         },
     },
     {
         id: "mason",
         kind: "enemy",
-        name: "Каменный мастер",
+        name: i18n.t("enemy.mason"),
         theme: "theme-ruins",
         style: "boss-colossus",
         element: "earth",
         hpMod: 1.1,
         atkMod: 0.9,
-        desc: "Поднимает камни и броню.",
+        desc: i18n.t("enemy.mason.desc"),
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.spawnRocks(2);
                 g.enemyShield += 3;
-                Logger.log("Мастер: камни + броня");
+                Logger.log(i18n.t("enemy.mason.ability"));
             }
         },
     },
     {
         id: "seer",
         kind: "enemy",
-        name: "Провидец",
+        name: i18n.t("enemy.seer"),
         theme: "theme-dream",
         style: "boss-oracle",
         element: "void",
         hpMod: 0.9,
         atkMod: 0.95,
-        desc: "Искажает: снимает щит и даёт шок.",
+        desc: i18n.t("enemy.seer.desc"),
         ability: (g) => {
             if (Math.random() < 0.35 && g.shield > 0) {
                 const cut = Math.min(10, g.shield);
                 g.shield -= cut;
-                Logger.log("Провидец: -щит");
+                Logger.log(i18n.t("enemy.seer.ability.shield"));
             }
             if (Math.random() < 0.3) {
                 g.addStatus("player", "shock", 1);
-                Logger.log("Провидец: шок");
+                Logger.log(i18n.t("enemy.seer.ability.shock"));
             }
         },
     },
     {
         id: "paladin",
         kind: "enemy",
-        name: "Светлый страж",
+        name: i18n.t("enemy.paladin"),
         theme: "theme-gilded",
         style: "boss-priest",
         element: "light",
         hpMod: 1.0,
         atkMod: 0.95,
-        desc: "Периодически лечится/ставит броню.",
+        desc: i18n.t("enemy.paladin.desc"),
         ability: (g) => {
             if (Math.random() < 0.35) {
                 g.enemyShield += 6;
                 g.healEnemy(6);
-                Logger.log("Страж света: +DEF и лечение");
+                Logger.log(i18n.t("enemy.paladin.ability"));
             }
         },
     },
     {
         id: "frostling",
         kind: "enemy",
-        name: "Ледышка",
+        name: i18n.t("enemy.frostling"),
         theme: "theme-tundra",
         style: "boss-ice",
         element: "ice",
         hpMod: 0.85,
         atkMod: 0.95,
-        desc: "Часто замораживает руку.",
+        desc: i18n.t("enemy.frostling.desc"),
         ability: (g) => {
             if (Math.random() < 0.55) {
                 g.freezeNextHand = Math.min(
                     2,
                     g.freezeNextHand + 1
                 );
-                Logger.log("Ледышка: заморозка руки");
+                Logger.log(i18n.t("enemy.frostling.ability"));
             }
         },
     },
@@ -472,17 +473,17 @@ export const ENEMIES: Enemy[] = [
     {
         id: "necro",
         kind: "boss",
-        name: "Некромант",
+        name: i18n.t("enemy.necro"),
         theme: "theme-neon",
         style: "boss-necro",
         element: "void",
         hpMod: 1.35,
         atkMod: 1.05,
-        desc: "Проклинает клетки (камни).",
+        desc: i18n.t("enemy.necro.desc"),
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.spawnRocks(3);
-                Logger.log("Некромант: проклятье (+3 камня)");
+                Logger.log(i18n.t("enemy.necro.ability"));
                 g.spawnFloatingText(
                     "CURSE",
                     UIElements.enemy.sprite,
@@ -494,32 +495,32 @@ export const ENEMIES: Enemy[] = [
     {
         id: "tempest",
         kind: "boss",
-        name: "Властелин бури",
+        name: i18n.t("enemy.tempest"),
         theme: "theme-storm",
         style: "boss-storm",
         element: "storm",
         hpMod: 1.25,
         atkMod: 1.2,
-        desc: "Шокирует и усиливается.",
+        desc: i18n.t("enemy.tempest.desc"),
         ability: (g) => {
             g.enemyAttack = Math.floor(g.enemyAttack * 1.05);
             g.addStatus("player", "shock", 1);
-            Logger.log("Буря усиливается");
+            Logger.log(i18n.t("enemy.tempest.ability"));
         },
     },
     {
         id: "wyrm",
         kind: "boss",
-        name: "Пламенный червь",
+        name: i18n.t("enemy.wyrm"),
         theme: "theme-magma",
         style: "boss-magma",
         element: "fire",
         hpMod: 1.2,
         atkMod: 1.25,
-        desc: "Поджигает героя.",
+        desc: i18n.t("enemy.wyrm.desc"),
         ability: (g) => {
             g.addStatus("player", "burn", 2);
-            Logger.log("Червь: горение");
+            Logger.log(i18n.t("enemy.wyrm.ability"));
             g.spawnFloatingText(
                 "BURN",
                 UIElements.player.hp_bar,
@@ -530,16 +531,16 @@ export const ENEMIES: Enemy[] = [
     {
         id: "archon",
         kind: "boss",
-        name: "Архон льда",
+        name: i18n.t("enemy.archon"),
         theme: "theme-ice",
         style: "boss-ice",
         element: "ice",
         hpMod: 1.45,
         atkMod: 0.95,
-        desc: "Замораживает руку сильнее.",
+        desc: i18n.t("enemy.archon.desc"),
         ability: (g) => {
             g.freezeNextHand = Math.min(2, g.freezeNextHand + 1);
-            Logger.log("Архон: заморозка руки");
+            Logger.log(i18n.t("enemy.archon.ability"));
             g.spawnFloatingText(
                 "FREEZE",
                 UIElements.enemy.sprite,
@@ -550,114 +551,114 @@ export const ENEMIES: Enemy[] = [
     {
         id: "hydra",
         kind: "boss",
-        name: "Гидра",
+        name: i18n.t("enemy.hydra"),
         theme: "theme-forest",
         style: "boss-hydra",
         element: "poison",
         hpMod: 1.35,
         atkMod: 1.05,
-        desc: "Споры и регенерация.",
+        desc: i18n.t("enemy.hydra.desc"),
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.addStatus("player", "poison", 2);
-                Logger.log("Гидра: яд");
+                Logger.log(i18n.t("enemy.hydra.ability.poison"));
             }
             if (Math.random() < 0.35) {
                 g.healEnemy(10);
-                Logger.log("Гидра: реген +10");
+                Logger.log(i18n.t("enemy.hydra.ability.regen"));
             }
         },
     },
     {
         id: "colossus",
         kind: "boss",
-        name: "Колосс",
+        name: i18n.t("enemy.colossus"),
         theme: "theme-desert",
         style: "boss-colossus",
         element: "earth",
         hpMod: 1.65,
         atkMod: 0.95,
-        desc: "Засоряет поле и держит броню.",
+        desc: i18n.t("enemy.colossus.desc"),
         ability: (g) => {
             g.enemyShield += 8;
             if (Math.random() < 0.4) g.spawnRocks(2);
-            Logger.log("Колосс: броня/камни");
+            Logger.log(i18n.t("enemy.colossus.ability"));
         },
     },
     {
         id: "lich",
         kind: "boss",
-        name: "Лич",
+        name: i18n.t("enemy.lich"),
         theme: "theme-void",
         style: "boss-lich",
         element: "void",
         hpMod: 1.35,
         atkMod: 1.15,
-        desc: "Проклятие: мусор и слабость.",
+        desc: i18n.t("enemy.lich.desc"),
         ability: (g) => {
             g.spawnGarbage(3);
             if (Math.random() < 0.5)
                 g.addStatus("player", "weak", 1);
-            Logger.log("Лич: проклятие");
+            Logger.log(i18n.t("enemy.lich.ability"));
         },
     },
     {
         id: "kraken",
         kind: "boss",
-        name: "Кракен",
+        name: i18n.t("enemy.kraken"),
         theme: "theme-ocean",
         style: "boss-kraken",
         element: "ice",
         hpMod: 1.55,
         atkMod: 1.0,
-        desc: "Тянет на дно: провалы и заморозка.",
+        desc: i18n.t("enemy.kraken.desc"),
         trackId: "boss_ice",
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.spawnRocks(1);
-                Logger.log("Кракен: провал");
+                Logger.log(i18n.t("enemy.kraken.ability.rocks"));
             }
             if (Math.random() < 0.35) {
                 g.freezeNextHand = Math.min(
                     2,
                     g.freezeNextHand + 1
                 );
-                Logger.log("Кракен: заморозка руки");
+                Logger.log(i18n.t("enemy.kraken.ability.freeze"));
             }
         },
     },
     {
         id: "dragon",
         kind: "boss",
-        name: "Дракон",
+        name: i18n.t("enemy.dragon"),
         theme: "theme-magma",
         style: "boss-dragon",
         element: "fire",
         hpMod: 1.55,
         atkMod: 1.1,
-        desc: "Жар и пепел: горение и мусор.",
+        desc: i18n.t("enemy.dragon.desc"),
         trackId: "boss_fire",
         ability: (g) => {
             g.addStatus("player", "burn", 2);
             if (Math.random() < 0.45) g.spawnGarbage(2);
-            Logger.log("Дракон: пламя");
+            Logger.log(i18n.t("enemy.dragon.ability"));
         },
     },
     {
         id: "mirror",
         kind: "boss",
-        name: "Зеркальный дух",
+        name: i18n.t("enemy.mirror"),
         theme: "theme-cosmos",
         style: "boss-mirror",
         element: "void",
         hpMod: 1.35,
         atkMod: 1.05,
-        desc: "Искажает: слабость и броня.",
+        desc: i18n.t("enemy.mirror.desc"),
         trackId: "boss_void",
         ability: (g) => {
             if (Math.random() < 0.5) {
                 g.addStatus("player", "weak", 1);
-                Logger.log("Зеркало: слабость");
+                Logger.log(i18n.t("enemy.mirror.ability"));
             }
             g.enemyShield += 6;
         },
@@ -665,18 +666,18 @@ export const ENEMIES: Enemy[] = [
     {
         id: "warden",
         kind: "boss",
-        name: "Главный страж",
+        name: i18n.t("enemy.warden"),
         theme: "theme-lab",
         style: "boss-warden",
         element: "storm",
         hpMod: 1.6,
         atkMod: 1.0,
-        desc: "Панели и броня: мусор + армор.",
+        desc: i18n.t("enemy.warden.desc"),
         trackId: "boss_storm",
         ability: (g) => {
             g.enemyShield += 10;
             if (Math.random() < 0.5) g.spawnGarbage(3);
-            Logger.log("Страж: укрепление");
+            Logger.log(i18n.t("enemy.warden.ability"));
         },
     },
 
@@ -684,87 +685,87 @@ export const ENEMIES: Enemy[] = [
     {
         id: "oracle",
         kind: "boss",
-        name: "Оракул",
+        name: i18n.t("enemy.oracle"),
         theme: "theme-dream",
         style: "boss-oracle",
         element: "void",
         hpMod: 1.45,
         atkMod: 1.05,
-        desc: "Меняет правила: усиливает слабость и шок.",
+        desc: i18n.t("enemy.oracle.desc"),
         trackId: "boss_void",
         ability: (g) => {
             if (Math.random() < 0.55) {
                 g.addStatus("player", "weak", 1);
                 g.addStatus("player", "shock", 1);
-                Logger.log("Оракул: слабость+шок");
+                Logger.log(i18n.t("enemy.oracle.ability"));
             }
         },
     },
     {
         id: "toxicqueen",
         kind: "boss",
-        name: "Ядовитая королева",
+        name: i18n.t("enemy.toxicqueen"),
         theme: "theme-toxic",
         style: "boss-fungus",
         element: "poison",
         hpMod: 1.55,
         atkMod: 1.0,
-        desc: "Засоряет и травит.",
+        desc: i18n.t("enemy.toxicqueen.desc"),
         trackId: "boss_poison",
         ability: (g) => {
             g.addStatus("player", "poison", 2);
             if (Math.random() < 0.55) g.spawnGarbage(2);
-            Logger.log("Королева: яд/мусор");
+            Logger.log(i18n.t("enemy.toxicqueen.ability"));
         },
     },
     {
         id: "behemoth",
         kind: "boss",
-        name: "Бегемот руин",
+        name: i18n.t("enemy.behemoth"),
         theme: "theme-ruins",
         style: "boss-brute",
         element: "earth",
         hpMod: 1.8,
         atkMod: 0.95,
-        desc: "Огромный. Давит камнями и бронёй.",
+        desc: i18n.t("enemy.behemoth.desc"),
         trackId: "boss_earth",
         ability: (g) => {
             g.spawnRocks(3);
             g.enemyShield += 6;
-            Logger.log("Бегемот: камни + DEF");
+            Logger.log(i18n.t("enemy.behemoth.ability"));
         },
     },
     {
         id: "sunpriest",
         kind: "boss",
-        name: "Жрец света",
+        name: i18n.t("enemy.sunpriest"),
         theme: "theme-gilded",
         style: "boss-priest",
         element: "light",
         hpMod: 1.4,
         atkMod: 1.0,
-        desc: "Лечит себя и ставит броню, но слабее бьёт.",
+        desc: i18n.t("enemy.sunpriest.desc"),
         trackId: "boss_fire",
         ability: (g) => {
             g.healEnemy(14);
             g.enemyShield += 8;
-            Logger.log("Жрец: лечение + DEF");
+            Logger.log(i18n.t("enemy.sunpriest.ability"));
         },
     },
     {
         id: "frostwyrm",
         kind: "boss",
-        name: "Ледяной змей",
+        name: i18n.t("enemy.frostwyrm"),
         theme: "theme-tundra",
         style: "boss-ice",
         element: "ice",
         hpMod: 1.55,
         atkMod: 1.05,
-        desc: "Сильно замораживает руку.",
+        desc: i18n.t("enemy.frostwyrm.desc"),
         trackId: "boss_ice",
         ability: (g) => {
             g.freezeNextHand = Math.min(2, g.freezeNextHand + 2);
-            Logger.log("Змей: сильная заморозка");
+            Logger.log(i18n.t("enemy.frostwyrm.ability"));
         },
     },
 
@@ -772,90 +773,90 @@ export const ENEMIES: Enemy[] = [
     {
         id: "vampire_bat",
         kind: "enemy",
-        name: "Вампир",
+        name: i18n.t("enemy.vampire_bat"),
         theme: "theme-blood",
         style: "boss-void",
         element: "void",
         hpMod: 0.9,
         atkMod: 1.1,
-        desc: "Крадет HP при атаке.",
+        desc: i18n.t("enemy.vampire_bat.desc"),
         ability: () => {
             Logger.log(
-                "Вампир готовится к укусу"
-            ); /* Effect handled in enemyTurn logic check */
+                i18n.t("enemy.vampire_bat.ability")
+            ); /* TODO: Add logic */
         },
     },
     {
         id: "golem_sentry",
         kind: "enemy",
-        name: "Часовой",
+        name: i18n.t("enemy.golem_sentry"),
         theme: "theme-ruins",
         style: "boss-robot",
         element: "earth",
         hpMod: 1.3,
         atkMod: 0.8,
-        desc: "Каждый ход +4 Брони.",
+        desc: i18n.t("enemy.golem_sentry.desc"),
         ability: (g) => {
             g.enemyShield += 4;
-            Logger.log("Часовой: +4 DEF");
+            Logger.log(i18n.t("enemy.golem_sentry.ability"));
         },
     },
     {
         id: "chaos_imp",
         kind: "enemy",
-        name: "Бес хаоса",
+        name: i18n.t("enemy.chaos_imp"),
         theme: "theme-magma",
         style: "boss-imp",
         element: "fire",
         hpMod: 0.8,
         atkMod: 1.0,
-        desc: "Случайный эффект каждый ход.",
+        desc: i18n.t("enemy.chaos_imp.desc"),
         ability: (g) => {
             const r = Math.random();
             if (r < 0.33) {
                 g.addStatus("player", "burn", 1);
-                Logger.log("Бес: горение");
+                Logger.log(i18n.t("enemy.chaos_imp.ability.burn"));
             } else if (r < 0.66) {
                 g.spawnGarbage(1);
-                Logger.log("Бес: мусор");
+                Logger.log(i18n.t("enemy.chaos_imp.ability.garbage"));
             } else {
                 g.enemyShield += 3;
-                Logger.log("Бес: броня");
+                Logger.log(i18n.t("enemy.chaos_imp.ability.shield"));
             }
         },
     },
     {
         id: "mimic",
         kind: "enemy",
-        name: "Мимик",
+        name: i18n.t("enemy.mimic"),
         theme: "theme-gilded",
         style: "boss-chest",
         element: "earth",
         hpMod: 1.2,
         atkMod: 1.4,
-        desc: "Притворялся сундуком. Бьет больно.",
+        desc: i18n.t("enemy.mimic.desc"),
         ability: (g) => {
             if (Math.random() < 0.2) {
                 g.gold = Math.max(0, g.gold - 5);
-                Logger.log("Мимик украл золото!");
+                Logger.log(i18n.t("enemy.mimic.ability"));
             }
         },
     },
     {
         id: "void_whale",
         kind: "enemy",
-        name: "Кит пустоты",
+        name: i18n.t("enemy.void_whale"),
         theme: "theme-cosmos",
         style: "boss-whale",
         element: "void",
         hpMod: 1.8,
         atkMod: 0.8,
-        desc: "Огромное здоровье.",
+        desc: i18n.t("enemy.void_whale.desc"),
         trackId: "ethereal",
         ability: (g) => {
             if (Math.random() < 0.4) {
                 g.addStatus("player", "weak", 2);
-                Logger.log("Кит: слабость");
+                Logger.log(i18n.t("enemy.void_whale.ability"));
             }
         },
     },
@@ -864,54 +865,54 @@ export const ENEMIES: Enemy[] = [
     {
         id: "demon_lord",
         kind: "boss",
-        name: "Демон-Лорд",
+        name: i18n.t("enemy.demon_lord"),
         theme: "theme-blood",
         style: "boss-demon",
         element: "fire",
         hpMod: 1.7,
         atkMod: 1.3,
-        desc: "Призывает адское пламя (Горение + Урон).",
+        desc: i18n.t("enemy.demon_lord.desc"),
         trackId: "boss_fire",
         ability: (g) => {
             g.addStatus("player", "burn", 3);
             g.hp -= 3;
-            Logger.log("Лорд: Адское пламя");
+            Logger.log(i18n.t("enemy.demon_lord.ability"));
         },
     },
     {
         id: "quantum_core",
         kind: "boss",
-        name: "Квантовое Ядро",
+        name: i18n.t("enemy.quantum_core"),
         theme: "theme-lab",
         style: "boss-core",
         element: "storm",
         hpMod: 1.5,
         atkMod: 1.1,
-        desc: "Манипулирует временем (Шок + Пропуск хода?).",
+        desc: i18n.t("enemy.quantum_core.desc"),
         trackId: "boss_storm",
         ability: (g) => {
             g.addStatus("player", "shock", 2);
             if (Math.random() < 0.2) {
                 g.discardsThisFight++;
-                Logger.log("Ядро: сбой реальности (потеря сброса)");
+                Logger.log(i18n.t("enemy.quantum_core.ability"));
             }
         },
     },
     {
         id: "ancient_tree",
         kind: "boss",
-        name: "Древень",
+        name: i18n.t("enemy.ancient_tree"),
         theme: "theme-forest",
         style: "boss-tree",
         element: "earth",
         hpMod: 2.0,
         atkMod: 0.9,
-        desc: "Регенерирует и ставит корни (камни).",
+        desc: i18n.t("enemy.ancient_tree.desc"),
         trackId: "boss_earth",
         ability: (g) => {
             g.healEnemy(15);
             g.spawnRocks(2);
-            Logger.log("Древень: корни и рост");
+            Logger.log(i18n.t("enemy.ancient_tree.ability"));
         },
     },
 ];

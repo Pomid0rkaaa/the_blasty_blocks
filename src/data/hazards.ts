@@ -1,4 +1,5 @@
 import type { Hazard } from "../types";
+import i18n from "../i18n";
 
 export const HAZARDS: Hazard[] = [
     // Mostly none
@@ -7,8 +8,8 @@ export const HAZARDS: Hazard[] = [
         kind: "none",
         weight: 74,
         icon: "✅",
-        name: "Обычный бой",
-        desc: "Никаких странностей. Просто выживай.",
+        name: i18n.t("hazard.none"),
+        desc: i18n.t("hazard.none.desc"),
     },
 
     // Hazards
@@ -17,8 +18,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 6,
         icon: "🫧",
-        name: "Слабые удары",
-        desc: "Твой урон снижен на 25%.",
+        name: i18n.t("hazard.weak"),
+        desc: i18n.t("hazard.weak.desc"),
         mods: { damageMult: 0.75 },
     },
     {
@@ -26,8 +27,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 4,
         icon: "🪨",
-        name: "Трещины",
-        desc: "Сетка заражена камнями: +7 каменных клеток в начале боя.",
+        name: i18n.t("hazard.cracked"),
+        desc: i18n.t("hazard.cracked.desc"),
         mods: { startRocks: 7 },
     },
     {
@@ -35,8 +36,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 3,
         icon: "🪨",
-        name: "Обвал",
-        desc: "В начале боя появляются камни: +6 камней. Камни можно убирать линиями.",
+        name: i18n.t("hazard.holes"),
+        desc: i18n.t("hazard.holes.desc"),
         mods: { startRocks: 6 },
     },
     {
@@ -44,8 +45,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 3,
         icon: "🗡️",
-        name: "Шипастый пол",
-        desc: "Каждая поставленная клетка стоит тебе 1 HP.",
+        name: i18n.t("hazard.spikes"),
+        desc: i18n.t("hazard.spikes.desc"),
         mods: { hpCostPerCell: 1 },
     },
     {
@@ -53,8 +54,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 2,
         icon: "🧻",
-        name: "Мусор",
-        desc: "В начале боя появляется 10 мусорных блоков.",
+        name: i18n.t("hazard.junk"),
+        desc: i18n.t("hazard.junk.desc"),
         mods: { startGarbage: 10 },
     },
     {
@@ -62,8 +63,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 3,
         icon: "🔲",
-        name: "Увеличение сетки",
-        desc: "Сетка увеличивается до 12x12 на этот бой.",
+        name: i18n.t("hazard.cursed_grid"),
+        desc: i18n.t("hazard.cursed_grid.desc"),
         mods: { gridSize: 12, cellSize: "24px" },
     },
     {
@@ -71,8 +72,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 5,
         icon: "🎲",
-        name: "Случайная фигура",
-        desc: "В руке появляются фигуры сделанные случайным образом.",
+        name: i18n.t("hazard.random_shape"),
+        desc: i18n.t("hazard.random_shape.desc"),
         mods: { randomShape: true },
     },
 
@@ -82,8 +83,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 3,
         icon: "🧩",
-        name: "Рваная арена",
-        desc: "Часть клеток становится камнями. Поле ощущается странной формы (камни можно чистить линиями).",
+        name: i18n.t("hazard.shatter"),
+        desc: i18n.t("hazard.shatter.desc"),
         mods: { mask: "shatter" },
     },
     {
@@ -91,8 +92,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 2,
         icon: "🔷",
-        name: "Поле-ромб",
-        desc: "Вне ромба клетки превращаются в камни (их можно очистить линиями).",
+        name: i18n.t("hazard.diamond"),
+        desc: i18n.t("hazard.diamond.desc"),
         mods: { mask: "diamond" },
     },
     {
@@ -100,8 +101,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 2,
         icon: "♟️",
-        name: "Шахматка",
-        desc: "Каждая вторая клетка становится камнем — поле “ломаное”, но камни чистятся линиями.",
+        name: i18n.t("hazard.checker"),
+        desc: i18n.t("hazard.checker.desc"),
         mods: { mask: "checker" },
     },
     {
@@ -109,8 +110,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 1,
         icon: "🌀",
-        name: "Спираль",
-        desc: "Поле закручено камнями по шаблону (камни чистятся линиями).",
+        name: i18n.t("hazard.spiral"),
+        desc: i18n.t("hazard.spiral.desc"),
         mods: { mask: "spiral" },
     },
 
@@ -120,8 +121,8 @@ export const HAZARDS: Hazard[] = [
         kind: "boon",
         weight: 3,
         icon: "🛡️",
-        name: "Благословение щита",
-        desc: "В начале боя: +30 щита.",
+        name: i18n.t("hazard.bless_shield"),
+        desc: i18n.t("hazard.bless_shield.desc"),
         mods: { startShield: 30 },
     },
     {
@@ -129,8 +130,8 @@ export const HAZARDS: Hazard[] = [
         kind: "boon",
         weight: 2,
         icon: "💪",
-        name: "Благословение силы",
-        desc: "Твой урон +20% в этом бою.",
+        name: i18n.t("hazard.bless_power"),
+        desc: i18n.t("hazard.bless_power.desc"),
         mods: { damageMult: 1.2 },
     },
     {
@@ -138,8 +139,8 @@ export const HAZARDS: Hazard[] = [
         kind: "boon",
         weight: 2,
         icon: "🃏",
-        name: "Благословение руки",
-        desc: "+1 фигура в руке в этом бою.",
+        name: i18n.t("hazard.bless_hand"),
+        desc: i18n.t("hazard.bless_hand.desc"),
         mods: { tempHandPlus: 1 },
     },
     {
@@ -147,8 +148,8 @@ export const HAZARDS: Hazard[] = [
         kind: "boon",
         weight: 2,
         icon: "🧼",
-        name: "Благословение чистоты",
-        desc: "В начале боя: убрать 6 случайных заполненных клеток.",
+        name: i18n.t("hazard.bless_clean"),
+        desc: i18n.t("hazard.bless_clean.desc"),
         mods: { startClean: 6 },
     },
     {
@@ -156,8 +157,8 @@ export const HAZARDS: Hazard[] = [
         kind: "boon",
         weight: 1,
         icon: "❄️",
-        name: "Благословение холода",
-        desc: "В начале боя враг получает +3 Озноб.",
+        name: i18n.t("hazard.bless_frost"),
+        desc: i18n.t("hazard.bless_frost.desc"),
         mods: { startEnemyChill: 3 },
     },
     {
@@ -165,8 +166,8 @@ export const HAZARDS: Hazard[] = [
         kind: "boon",
         weight: 1,
         icon: "🪙",
-        name: "Благословение монет",
-        desc: "В начале боя: +20 золота.",
+        name: i18n.t("hazard.bless_gold"),
+        desc: i18n.t("hazard.bless_gold.desc"),
         mods: { startGold: 20 },
     },
     {
@@ -174,8 +175,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 2,
         icon: "💣",
-        name: "Минное поле",
-        desc: "На поле 3 мины. При очистке мины взрываются (урон врагу).",
+        name: i18n.t("hazard.minefield"),
+        desc: i18n.t("hazard.minefield.desc"),
         mods: { startMines: 3 },
     },
     {
@@ -183,8 +184,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 2,
         icon: "🧼",
-        name: "Скользкий пол",
-        desc: "Случайным образом сбрасывается 1 карта из руки каждый ход.",
+        name: i18n.t("hazard.slippery"),
+        desc: i18n.t("hazard.slippery.desc"),
         mods: { randomDiscard: true },
     },
     {
@@ -192,8 +193,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 1,
         icon: "💰",
-        name: "Проклятие Мидаса",
-        desc: "Золото не выпадает, но урон +10%.",
+        name: i18n.t("hazard.curse_midas"),
+        desc: i18n.t("hazard.curse_midas.desc"),
         mods: { noGold: true, damageMult: 1.1 },
     },
     {
@@ -201,8 +202,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 2,
         icon: "🤏",
-        name: "Тесная арена",
-        desc: "Края арены заблокированы стенами (Mask).",
+        name: i18n.t("hazard.tiny_arena"),
+        desc: i18n.t("hazard.tiny_arena.desc"),
         mods: { mask: "tiny" },
     },
     {
@@ -210,8 +211,8 @@ export const HAZARDS: Hazard[] = [
         kind: "hazard",
         weight: 1,
         icon: "👯",
-        name: "Двойные проблемы",
-        desc: "Враг имеет +50% HP и Атаки.",
+        name: i18n.t("hazard.double_trouble"),
+        desc: i18n.t("hazard.double_trouble.desc"),
         mods: { enemyBuff: 1.5 },
     },
     {
@@ -219,8 +220,8 @@ export const HAZARDS: Hazard[] = [
         kind: "boon",
         weight: 1,
         icon: "🧛",
-        name: "Вампиризм",
-        desc: "Восстанавливай 1 HP за каждую атаку.",
+        name: i18n.t("hazard.bless_vampire"),
+        desc: i18n.t("hazard.bless_vampire.desc"),
         mods: { lifesteal: 1 },
     },
     {
@@ -228,8 +229,8 @@ export const HAZARDS: Hazard[] = [
         kind: "boon",
         weight: 1,
         icon: "😡",
-        name: "Ярость",
-        desc: "Урон х2, но получаемый урон тоже х2.",
+        name: i18n.t("hazard.bless_rage"),
+        desc: i18n.t("hazard.bless_rage.desc"),
         mods: { glassMultiplier: 2 },
     },
     {
@@ -237,8 +238,8 @@ export const HAZARDS: Hazard[] = [
         kind: "boon",
         weight: 1,
         icon: "💎",
-        name: "Богатство",
-        desc: "Двойное золото за этот бой.",
+        name: i18n.t("hazard.bless_rich"),
+        desc: i18n.t("hazard.bless_rich.desc"),
         mods: { doubleGold: true },
     },
     {
@@ -246,8 +247,8 @@ export const HAZARDS: Hazard[] = [
         kind: "boon",
         weight: 2,
         icon: "🔲",
-        name: "Уменьшение сетки",
-        desc: "Сетка уменьшается до 5x5 на этот бой.",
+        name: i18n.t("hazard.bless_grid"),
+        desc: i18n.t("hazard.bless_grid.desc"),
         mods: { gridSize: 5 },
     },
 ];
