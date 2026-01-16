@@ -67,8 +67,6 @@ export class BlockGame {
 	achUnlocked: Set<string> = new Set();
 
 	constructor() {
-		this.resetRun();
-		this.ui = UIElements;
 		this.rewards = new Rewards(new Context(this));
 		this.shop = new Shop(new Context(this));
 		this.init();
@@ -213,12 +211,6 @@ export class BlockGame {
 	}
 
 	init() {
-		this.renderGrid();
-		this.spawnEnemy();
-		this.fillHand();
-		this.updateUI();
-		Logger.log(i18n.t("logger.game_started"));
-
 		const dragMove = (e: any) => this.handleDragMove(e);
 		const dragEnd = (e: any) => this.handleDragEnd(e);
 
@@ -233,18 +225,10 @@ export class BlockGame {
 			e.stopPropagation()
 		);
 
-		// Keys
-		// this.keyBuffer = "";
 		document.addEventListener("keydown", (e) => {
 			if (e.key === "?") this.openHelp();
 			if (e.key.toLowerCase() === "l") Logger.open();
 			if (e.key.toLowerCase() === "a") this.openAchievements();
-
-			// this.keyBuffer += e.key;
-			// if (this.keyBuffer.length > 20)
-			//     this.keyBuffer = this.keyBuffer.slice(-20);
-			// if (this.keyBuffer.endsWith("21best"))
-			//     this.toggleGodMode();
 		});
 
 		// Init audio and start music on first interaction
