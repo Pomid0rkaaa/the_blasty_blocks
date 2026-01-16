@@ -62,7 +62,7 @@
   "boon.start_gold": "Boon: +${gold} Gold",
   "boon.start_clean": "Boon: Purge (${clean})",
   
-  "button.next_turn": "End Turn (Enemy Moves)",
+  "button.next_turn": "End Turn",
   "button.new_game": "RETRY",
   "button.start_game.easy": "EASY",
   "button.start_game.easy.desc": "Weaker enemies, more HP",

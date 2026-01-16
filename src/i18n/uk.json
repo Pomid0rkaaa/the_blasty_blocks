@@ -62,7 +62,7 @@
   "boon.start_gold": "Благословення: +${gold} золота",
   "boon.start_clean": "Благословення: очищення (${clean})",
   
-  "button.next_turn": "Скидання (хід ворога)",
+  "button.next_turn": "Завершити Хід",
   "button.new_game": "ЩЕ РАЗ",
   "button.start_game.easy": "ЛЕГКО",
   "button.start_game.easy.desc": "Слабші вороги, більше HP",
