@@ -1,6 +1,7 @@
 import { STATUS } from './data/status';
 import { ELEMENTS } from './data/elements';
 import i18n from './I18n';
+import type { Game } from './Game';
 
 const id = (value: string) => document.getElementById(value);
 
@@ -74,19 +75,17 @@ export const UIElements = {
 };
 
 export class UI {
-    static renderStatusChips(container: HTMLElement, statuses: any) {
+    static renderStatusChips(container: HTMLElement, statuses: [string, number][]) {
         container.innerHTML = "";
-        const entries = Object.entries(statuses).filter(
-            ([, v]: [string, any]) => v > 0
-        );
 
-        entries.forEach(([k, v]) => {
+        statuses.forEach(([k, v]) => {
             const meta = (STATUS as any)[k] || {
                 icon: "•",
                 color: "#e2e8f0",
                 name: k,
                 desc: "",
             };
+
             const chip = document.createElement("span");
             chip.className = "status-chip";
             chip.style.borderColor = meta.color;
@@ -95,6 +94,7 @@ export class UI {
             container.appendChild(chip);
         });
     }
+
 
     static updateAffinitiesUI(affinities: Set<string>) {
         UIElements.affinity.innerHTML = "";
@@ -118,28 +118,26 @@ export class UI {
         });
     }
 
-    static updateUI(state: any) {
+    static updateUI(state: Game) {
         UIElements.level.innerText = `DEPTH ${state.level}`;
-        UIElements.score.innerText = state.score;
-        UIElements.gold.innerText = state.gold;
+        UIElements.score.innerText = String(state.score);
+        UIElements.gold.innerText = String(state.player.GOLD);
 
-        const hpPct = (state.hp / state.maxHp) * 100;
+        const hpPct = (state.player.HP / state.player.MAX_HP) * 100;
         UIElements.player.hp_bar.style.width = `${Math.max(0, hpPct)}%`;
-        UIElements.player.hp.innerText = `${state.hp}/${state.maxHp}`;
-        UIElements.player.shield.innerText = state.shield;
+        UIElements.player.hp.innerText = `${state.player.HP}/${state.player.MAX_HP}`;
+        UIElements.player.shield.innerText = String(state.player.DEF);
 
-        const eHpPct = (state.enemyHp / state.enemyMaxHp) * 100;
+        const eHpPct = (state.enemy.HP / state.enemy.MAX_HP) * 100;
         UIElements.enemy.hp_bar.style.width = `${Math.max(0, eHpPct)}%`;
-        UIElements.enemy.hp.innerText = `${state.enemyHp}/${state.enemyMaxHp}`;
+        UIElements.enemy.hp.innerText = `${state.enemy.HP}/${state.enemy.MAX_HP}`;
 
-        const enemyName = state.currentEnemy
-            ? state.currentEnemy.name
-            : i18n.t("label.enemy");
+        const enemyName = state.enemy.template.name;
         const shieldTxt =
-            state.enemyShield > 0 ? ` +${state.enemyShield} ARM` : "";
-        UIElements.enemy.intent.innerText = `${enemyName} [ATK ${state.enemyAttack}${shieldTxt}]`;
+            state.enemy.DEF > 0 ? ` +${state.enemy.DEF} DEF` : "";
+        UIElements.enemy.intent.innerText = `${enemyName} [ATK ${state.enemy.ATK}${shieldTxt}]`;
 
-        const el = (ELEMENTS as any)[state.currentEnemy?.element] || {
+        const el = (ELEMENTS as any)[state.enemy.template.element] || {
             icon: "⚔️",
             color: "#e2e8f0",
             get name() { return i18n.t("element.physical") },
@@ -165,11 +163,11 @@ export class UI {
         // Status chips
         UI.renderStatusChips(
             UIElements.enemy.status,
-            state.enemyStatuses
+            state.enemy.status.activeEntries()
         );
         UI.renderStatusChips(
             UIElements.player.status,
-            state.playerStatuses
+            state.player.status.activeEntries()
         );
 
         // Affinities

@@ -49,6 +49,17 @@ export interface Reward {
 	rarity?: number; // Only for artifacts usually, but logical to have optional
 }
 
+export type CommonStatus =
+  | "burn"
+  | "poison"
+  | "shock";
+export type PlayerStatus =
+  | CommonStatus
+  | "weak";
+export type EnemyStatus =
+  | CommonStatus
+  | "chill";
+
 export interface StatusDef {
 	icon: string;
 	color: string;
@@ -102,7 +113,7 @@ export interface HandShape extends Shape {
 	domElement: HTMLElement;
 }
 
-export interface Enemy {
+export interface IEnemy {
 	id: string;
 	kind: "enemy" | "boss";
 	name: string;

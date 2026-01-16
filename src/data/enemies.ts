@@ -2,9 +2,9 @@ import { Logger } from "../Logger.js";
 import { UIElements } from "../UI.js";
 import i18n from "../I18n.js";
 
-import type { Enemy } from "../types";
+import type { IEnemy } from "../types";
 
-export const ENEMIES: Enemy[] = [
+export const ENEMIES: IEnemy[] = [
     // Regular
     {
         id: "slime",

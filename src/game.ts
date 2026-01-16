@@ -1,5 +1,4 @@
 import { ELEMENTS } from "./data/elements";
-import { ENEMIES } from "./data/enemies";
 import { HAZARDS } from "./data/hazards";
 import { SHAPES } from "./data/shapes";
 import { STATUS } from "./data/status";
@@ -9,10 +8,13 @@ import { Logger } from "./Logger";
 import { Shop } from "./Shop";
 import { Rewards } from "./Rewards";
 import { Context } from "./Context";
+import { Enemy } from "./Enemy";
+import { EnemyContext } from "./EnemyContext";
+import { Player } from "./Player";
+import { PlayerContext } from "./PlayerContext";
 import i18n from "./I18n";
 import type {
 	Artifact,
-	Enemy,
 	Hazard,
 	GridCell,
 	HandShape,
@@ -22,34 +24,24 @@ import type {
 let GRID_SIZE = 8;
 
 export class Game {
-	ui: any;
+    player!: Player;
+    playerContext: PlayerContext;
 	rewards: Rewards;
 	shop: Shop;
 	isMobile: boolean = false;
 	offsetY: number = 0;
 	grid: (GridCell | string | null)[][] = [];
 	score: number = 0;
-	gold: number = 0;
 	level: number = 1;
 	difficulty: Difficulty = "NORMAL";
-	maxHp: number = 100;
-	hp: number = 100;
-	shield: number = 0;
 	artifacts: Artifact[] = [];
-	revived: boolean = false;
-	currentEnemy: Enemy | null = null;
-	enemyMaxHp: number = 100;
-	enemyHp: number = 100;
-	enemyShield: number = 0;
-	enemyAttack: number = 10;
+    enemy!: Enemy;
+    enemyContext: EnemyContext;
 	hand: (HandShape | null)[] = [];
 	draggedBlock: HandShape | null = null;
 	blocksPlaced: number = 0;
 	paused: boolean = false;
-	godMode: boolean = false;
 	affinities: Set<string> = new Set();
-	enemyStatuses: Record<string, number> = {};
-	playerStatuses: Record<string, number> = {};
 	prismCounter: number = 0;
 	clearsThisFight: number = 0;
 	placeBonusThisFight: number = 0;
@@ -63,14 +55,19 @@ export class Game {
 	discardsThisFight: number = 0;
 	lastHitWasCrit: boolean = false;
 	damageTakenThisFight: number = 0;
+    revived: boolean = false;
 
 	constructor() {
 		this.rewards = new Rewards(new Context(this));
 		this.shop = new Shop(new Context(this));
+        this.enemyContext = new EnemyContext(this);
+        this.playerContext = new PlayerContext(this);
 		this.init();
 	}
 
 	resetRun() {
+        this.enemy = new Enemy(this.enemyContext);
+        this.player = new Player(this.playerContext);
 		this.isMobile = window.innerWidth < 950;
 		this.offsetY = this.isMobile ? -100 : 0;
 
@@ -78,29 +75,13 @@ export class Game {
 			.fill(null)
 			.map(() => Array(GRID_SIZE).fill(null));
 		this.score = 0;
-		this.gold = 0;
 		this.level = 1;
 
 		// Difficulty handling
 		this.difficulty =
 			this.difficulty !== undefined ? this.difficulty : "NORMAL";
 
-		let startHp = 100;
-		if (this.difficulty === "EASY") startHp = 120;
-		if (this.difficulty === "HARD") startHp = 80;
-
-		this.maxHp = startHp;
-		this.hp = startHp;
-		this.shield = 0;
-
 		this.artifacts = [];
-		this.revived = false;
-
-		this.currentEnemy = null;
-		this.enemyMaxHp = 100;
-		this.enemyHp = 100;
-		this.enemyShield = 0;
-		this.enemyAttack = 10;
 
 		this.hand = [];
 		this.draggedBlock = null;
@@ -108,23 +89,8 @@ export class Game {
 
 		this.paused = false;
 
-		// God Mode
-		this.godMode = this.godMode || false;
-
 		// Elements/statuses
 		this.affinities = new Set();
-		this.enemyStatuses = {
-			burn: 0,
-			poison: 0,
-			shock: 0,
-			chill: 0,
-		};
-		this.playerStatuses = {
-			burn: 0,
-			poison: 0,
-			shock: 0,
-			weak: 0,
-		};
 		this.prismCounter = 0;
 		this.clearsThisFight = 0;
 		this.placeBonusThisFight = 0;
@@ -144,28 +110,10 @@ export class Game {
 		this.discardsThisFight = 0;
 		this.lastHitWasCrit = false;
 		this.damageTakenThisFight = 0;
+        this.revived = false;
 
 		// Log
 		Logger.clear();
-	}
-
-	toggleGodMode() {
-		this.godMode = !this.godMode;
-		if (this.godMode) {
-			Logger.log("GOD MODE ACTIVATED");
-			this.gold += 9999;
-			this.hp = 999;
-			this.maxHp = 999;
-			this.damageEnemy(999, true); // Kill current
-			this.updateUI();
-			this.spawnFloatingText(
-				"GOD MODE",
-				UIElements.player.hp_bar,
-				"#fbbf24"
-			);
-		} else {
-			Logger.log("GOD MODE DEACTIVATED");
-		}
 	}
 
 	showDifficultyModal() {
@@ -252,9 +200,6 @@ export class Game {
 		UIElements.enemy.sprite.addEventListener("click", () => {
 			this.openHelp(true);
 		});
-
-		// Initial codex render
-		this.renderCodex();
 	}
 
 	// ------------------------------
@@ -340,47 +285,30 @@ export class Game {
 
 		// On-pick effects
 		if (artifact.id === "sturdy") {
-			this.maxHp += 15;
-			this.healPlayer(15);
+			this.player.MAX_HP += 15;
+			this.player.HP += 15;
 			Logger.log(i18n.t("artifact.strurdy.pickup"));
 		}
 		if (artifact.id === "glass_cannon") {
-			this.maxHp = Math.floor(this.maxHp * 0.7);
-			this.hp = Math.min(this.hp, this.maxHp);
+			this.player.MAX_HP = Math.floor(this.player.MAX_HP * 0.7);
 			Logger.log(i18n.t("artifact.glass_cannon.pickup"));
 		}
 		if (artifact.id === "blood_pact") {
-			this.gold += 100;
-			this.hp -= 25;
-			if (this.hp <= 0) this.hp = 1;
+			this.player.GOLD += 100;
+			this.player.HP -= 25;
+			if (this.player.HP <= 0) this.player.HP = 1;
 			Logger.log(i18n.t("artifact.blood_pact.pickup"));
 		}
 		if (artifact.id === "thorns") {
-			this.shield += 15;
+			this.player.DEF += 15;
 			Logger.log(i18n.t("artifact.thorns.pickup"));
 		}
 		if (artifact.id === "inferno_ring") {
-			this.addStatus("enemy", "burn", 5);
+			this.enemy.status.add("burn", 5);
 		}
 
 		this.renderCodex();
 		this.updateUI();
-	}
-
-	addStatus(target: string, type: string, stacks: number) {
-		if (this.hasArtifact("omni_prism")) stacks += 1;
-
-		const table =
-			target === "enemy" ? this.enemyStatuses : this.playerStatuses;
-		if (!(type in table)) table[type] = 0;
-		table[type] = Math.min(99, table[type] + stacks);
-	}
-
-	decayStatus(target: string, type: string, amount: number = 1) {
-		const table =
-			target === "enemy" ? this.enemyStatuses : this.playerStatuses;
-		if (!(type in table)) return;
-		table[type] = Math.max(0, table[type] - amount);
 	}
 
 	// ------------------------------
@@ -391,7 +319,7 @@ export class Game {
 		Object.values(STATUS).forEach((s) => {
 			const row = document.createElement("div");
 			row.className = "flex gap-2 items-start";
-			row.innerHTML = `<div class="mt-[1px]">${s.icon}</div><div><div class="font-bold" style="color:${s.color}">${s.name}</div><div class="text-slate-200">${s.desc}</div></div>`;
+			row.innerHTML = `<div class="mt-px">${s.icon}</div><div><div class="font-bold" style="color:${s.color}">${s.name}</div><div class="text-slate-200">${s.desc}</div></div>`;
 			UIElements.codex.status.appendChild(row);
 		});
 
@@ -404,7 +332,7 @@ export class Game {
 			}-300">${i18n.t(
 				`codex.${hz.kind === "boon" ? "boon" : "hazard"}`
 			)}</span>`;
-			row.innerHTML = `<div class="mt-[1px]">${hz.icon}</div><div><div class="font-bold text-slate-100">${hz.name} ${tag}</div><div class="text-slate-200">${hz.desc}</div></div>`;
+			row.innerHTML = `<div class="mt-px">${hz.icon}</div><div><div class="font-bold text-slate-100">${hz.name} ${tag}</div><div class="text-slate-200">${hz.desc}</div></div>`;
 			UIElements.codex.hazards.appendChild(row);
 		});
 
@@ -414,12 +342,7 @@ export class Game {
 	renderEnemyCodex() {
 		const el = UIElements.codex.enemy;
 		if (!el) return;
-		const e = this.currentEnemy;
-		if (!e) {
-			el.textContent = "—";
-			return;
-		}
-		const meta = (ELEMENTS as any)[e.element] || {
+		const meta = (ELEMENTS as any)[this.enemy.template.element] || {
 			icon: "⚔️",
 			get name() { return i18n.t("element.physical") },
 		};
@@ -430,18 +353,18 @@ export class Game {
                     <div class="flex items-center justify-between gap-3">
                         <div>
                             <div class="font-bold text-slate-100">${bossTag}: ${
-			e.name
+			this.enemy.template.name
 		} <span class="opacity-80">${meta.icon}</span></div>
                             <div class="text-slate-300 mt-1">${
-								e.desc || "—"
+								this.enemy.template.desc || "-"
 							}</div>
                         </div>
                         <div class="text-right text-slate-200">
-                            <div>ATK: <b>${this.enemyAttack}</b></div>
-                            <div>HP: <b>${this.enemyHp}/${
-			this.enemyMaxHp
+                            <div>ATK: <b>${this.enemy.ATK}</b></div>
+                            <div>HP: <b>${this.enemy.HP}/${
+			this.enemy.MAX_HP
 		}</b></div>
-                            <div>DEF: <b>${this.enemyShield}</b></div>
+                            <div>DEF: <b>${this.enemy.DEF}</b></div>
                         </div>
                     </div>
                 `;
@@ -502,7 +425,7 @@ export class Game {
 		UIElements.artifacts.innerHTML = "";
 		UIElements.affinity.innerHTML = "";
 		this.renderGrid();
-		this.spawnEnemy();
+		this.enemy = new Enemy(this.enemyContext);
 		this.fillHand();
 		this.updateUI();
 		Logger.clear();
@@ -510,14 +433,6 @@ export class Game {
 		soundManager.play("start");
 
 		this.renderCodex();
-	}
-
-	chooseEnemyTemplate() {
-		const isBossFloor = this.level % 5 === 0;
-		const pool = ENEMIES.chooseAll({
-			kind: isBossFloor ? "boss" : "enemy",
-		});
-		return pool[Math.floor(Math.random() * pool.length)];
 	}
 
 	rollHazard(_modWeight: number = 0) {
@@ -580,168 +495,6 @@ export class Game {
 			"theme-dream": "lullaby",
 		};
 		return (map as any)[theme] || "deep";
-	}
-
-	spawnEnemy() {
-		const enemyTemplate = this.chooseEnemyTemplate();
-		this.currentEnemy = enemyTemplate;
-
-		const isBossFloor = this.level % 5 === 0;
-		UIElements.enemy.label.textContent = i18n.t(`label.${isBossFloor ? "boss" : "enemy"}`)
-
-		document.body.className = `h-screen w-screen flex flex-col items-center justify-between p-2 select-none ${enemyTemplate.theme}`;
-
-		// music theme
-		if (enemyTemplate.trackId) {
-			soundManager.setTrack(enemyTemplate.trackId);
-		} else {
-			const track = this.pickTrackForTheme(enemyTemplate.theme);
-			if (Math.random() < 0.15) {
-				const ids = Object.keys(soundManager.tracks);
-				soundManager.setTrack(
-					ids[Math.floor(Math.random() * ids.length)]
-				);
-			} else {
-				soundManager.setTrack(track);
-			}
-		}
-
-		const baseHp = 105 * (1 + this.level * 0.22);
-		const baseAtk = 8 + this.level * 1.6;
-
-		let diffHpMult = 1;
-		let diffAtkMult = 1;
-
-		if (this.difficulty === "EASY") {
-			diffHpMult = 0.8;
-			diffAtkMult = 0.8;
-		}
-		if (this.difficulty === "HARD") {
-			diffHpMult = 1.25;
-			diffAtkMult = 1.25;
-		}
-
-		// Hazard Buff
-		if (this.hazardMods.enemyBuff) {
-			diffHpMult *= this.hazardMods.enemyBuff;
-			diffAtkMult *= this.hazardMods.enemyBuff;
-		}
-
-		this.enemyMaxHp = Math.floor(baseHp * enemyTemplate.hpMod * diffHpMult);
-		this.enemyHp = this.enemyMaxHp;
-		this.enemyShield = 0;
-		this.enemyAttack = Math.max(
-			4,
-			Math.floor(baseAtk * enemyTemplate.atkMod * diffAtkMult)
-		);
-
-		// Reset statuses
-		this.enemyStatuses = {
-			burn: 0,
-			poison: 0,
-			shock: 0,
-			chill: 0,
-		};
-		this.medicThisTurn = 0;
-		this.clearsThisFight = 0;
-		this.placeBonusThisFight = 0;
-		this.discardsThisFight = 0;
-		this.lastHitWasCrit = false;
-		this.damageTakenThisFight = 0;
-		this.overchargeThisFight = 0;
-
-		// Start shield
-		if (this.hasArtifact("crystal")) this.shield += 20;
-
-		// Heal after battle
-		if (this.hasArtifact("regen")) this.healPlayer(5);
-
-		// Start enemy chill if glacier
-		if (this.hasArtifact("glacier")) this.addStatus("enemy", "chill", 2);
-
-		// Halo: cleanse 1 negative
-		if (this.hasArtifact("halo")) {
-			const keys = ["burn", "poison", "shock", "weak"];
-			const hasAny = keys.some((k) => (this.playerStatuses[k] || 0) > 0);
-			if (hasAny) {
-				const pick = keys.find(
-					(k) => (this.playerStatuses[k] || 0) > 0
-				);
-				if (pick) {
-					this.playerStatuses[pick] = Math.max(
-						0,
-						(this.playerStatuses[pick] || 0) - 1
-					);
-					Logger.log(i18n.t("artifact.halo.use"));
-				}
-			}
-		}
-
-		// Visual
-		UIElements.enemy.sprite.className = `enemy-sprite hover-anim rounded-xl flex justify-center items-center mb-2 ${enemyTemplate.style}`;
-		UIElements.enemy.sprite.classList.remove("shake");
-
-		// Hazard/boon
-		const hazard = this.rollHazard();
-		this.applyHazard(hazard);
-
-		// Apply hazard effects on grid
-		this.applyStartGridEffects();
-		if (
-			this.hazardMods.gridSize &&
-			this.hazardMods.gridSize !== GRID_SIZE
-		) {
-			this.resizeGrid(this.hazardMods.gridSize, this.hazardMods.cellSize);
-			Logger.log(
-				i18n.t("boon.grid_size", { size: this.hazardMods.gridSize })
-			);
-		}
-
-		// Grid cleanser artifact
-		if (this.hasArtifact("cleanser")) this.removeRandomFilledCells(3);
-
-		// Boon starts
-		if (this.hazardMods.startShield) {
-			this.shield += this.hazardMods.startShield;
-			Logger.log(
-				i18n.t("boon.start_shield", {
-					shield: this.hazardMods.startShield,
-				})
-			);
-		}
-		if (this.hazardMods.startHeal) {
-			this.healPlayer(this.hazardMods.startHeal);
-			Logger.log(
-				i18n.t("boon.start_heal", { heal: this.hazardMods.startHeal })
-			);
-		}
-		if (this.hazardMods.startGold) {
-			this.gold += this.hazardMods.startGold;
-			Logger.log(
-				i18n.t("boon.start_heal", { gold: this.hazardMods.startGold })
-			);
-		}
-		if (this.hazardMods.startClean) {
-			this.removeRandomFilledCells(this.hazardMods.startClean);
-			Logger.log(
-				i18n.t("boon.start_clean", {
-					clean: this.hazardMods.startClean,
-				})
-			);
-		}
-		if (this.hazardMods.startEnemyChill) {
-			this.addStatus("enemy", "chill", this.hazardMods.startEnemyChill);
-		}
-
-		this.updateUI();
-		this.renderEnemyCodex();
-		this.showHazardIfNeeded();
-
-		Logger.log(
-			i18n.t(`logger.${isBossFloor ? "boss" : "enemy"}`, {
-				name: enemyTemplate.name,
-			})
-		);
 	}
 
 	resizeGrid(newSize: number, scale: string = "36px") {
@@ -954,16 +707,6 @@ export class Game {
 		}
 	}
 
-	healEnemy(amt: number) {
-		this.enemyHp = Math.min(this.enemyMaxHp, this.enemyHp + amt);
-		this.updateUI();
-	}
-
-	healPlayer(amount: number) {
-		this.hp = Math.min(this.maxHp, this.hp + amount);
-		this.updateUI();
-	}
-
 	// ------------------------------
 	// Grid render
 	// ------------------------------
@@ -1017,8 +760,8 @@ export class Game {
 		this.lockedSlots = new Set();
 		this.medicThisTurn = 0;
 
-		if (this.hasArtifact("bulwark") && this.shield === 0) {
-			this.shield += 8;
+		if (this.hasArtifact("bulwark") && this.player.DEF === 0) {
+			this.player.DEF += 8;
 			Logger.log(i18n.t("artifact.bulwark.use"));
 		}
 
@@ -1190,7 +933,7 @@ export class Game {
 		const startDrag = (e: any) => {
 			e.preventDefault();
 			if (this.paused) return;
-			if (this.hp <= 0) return;
+			if (this.player.HP <= 0) return;
 
 			soundManager.play("pickup");
 			this.startDrag(blockObj, e);
@@ -1359,32 +1102,31 @@ export class Game {
         // ---------- Hazard: HP per cell ----------
         if (hazardMods.hpCostPerCell > 0) {
             const cost = cellsPlaced * hazardMods.hpCostPerCell;
-            this.hp -= cost;
+            this.player.HP -= cost;
             this.damageTakenThisFight += cost;
 
             Logger.log(i18n.t("damage.spikes", { cost }));
             this.spawnFloatingText(cost, UIElements.player.hp_bar, "#ef4444");
             soundManager.play("damage");
 
-            if (this.hp <= 0) {
-                this.hp = 0;
+            if (this.player.HP == 0) {
                 this.loseGame();
                 return;
             }
         }
 
         // ---------- Artifacts: immediate effects ----------
-        if (has.fortify) this.shield += cellsPlaced;
+        if (has.fortify) this.player.DEF += cellsPlaced;
 
         if (has.surgeon && this.medicThisTurn < 8) {
             const heal = Math.min(1, 8 - this.medicThisTurn);
             this.medicThisTurn += heal;
-            this.healPlayer(heal);
+            this.player.HP += heal;
         }
 
-        if (has.flame) this.addStatus("enemy", "burn", 1);
+        if (has.flame) this.enemy.status.add("burn", 1);
         if (has.venom && cellsPlaced >= 3)
-            this.addStatus("enemy", "poison", 2);
+            this.enemy.status.add("poison", 2);
 
         // ---------- Damage calculation ----------
         let placeDamage = cellsPlaced;
@@ -1407,7 +1149,7 @@ export class Game {
         if (has.thunder) {
             this.blocksPlaced++;
             if (this.blocksPlaced % 3 === 0) {
-                this.addStatus("enemy", "shock", 1);
+                this.enemy.status.add("shock", 1);
                 this.damageEnemy(10, true);
 
                 Logger.log(i18n.t("artifact.thunder.use"));
@@ -1458,22 +1200,22 @@ export class Game {
 
 		let shieldGain = count * 5;
 		if (this.hasArtifact("battery")) shieldGain += count * 3;
-		this.shield += shieldGain;
+		this.player.DEF += shieldGain;
 
 		if (this.hasArtifact("vampire")) {
-			this.healPlayer(count * 2);
+			this.player.HP += count * 2;
 			Logger.log(i18n.t("artifact.vampire.use", { count: count * 2 }));
 			this.spawnFloatingText("HEAL", UIElements.player.hp_bar, "#22c55e");
 		}
 
 		if (this.hasArtifact("goldlines")) {
 			const gg = count * 2;
-			this.gold += gg;
+			this.player.GOLD += gg;
 			Logger.log(i18n.t("artifact.vampire.use", { gold: gg }));
 		}
 
-		if (this.hasArtifact("frost")) this.addStatus("enemy", "chill", 2);
-		if (this.hasArtifact("stormrune")) this.addStatus("enemy", "shock", 2);
+		if (this.hasArtifact("frost")) this.enemy.status.add("chill", 2);
+		if (this.hasArtifact("stormrune")) this.enemy.status.add("shock", 2);
 		if (this.hasArtifact("gemcutter")) this.placeBonusThisFight += count;
 
 		if (this.hasArtifact("prism")) {
@@ -1481,7 +1223,7 @@ export class Game {
 			const el = picks[this.prismCounter % picks.length];
 			this.prismCounter++;
 			if (el === "fire") {
-				this.addStatus("enemy", "burn", 3);
+				this.enemy.status.add("burn", 3);
 				this.spawnFloatingText(
 					"🔥",
 					UIElements.enemy.sprite,
@@ -1489,7 +1231,7 @@ export class Game {
 				);
 			}
 			if (el === "ice") {
-				this.addStatus("enemy", "chill", 2);
+				this.enemy.status.add("chill", 2);
 				this.spawnFloatingText(
 					"❄️",
 					UIElements.enemy.sprite,
@@ -1497,7 +1239,7 @@ export class Game {
 				);
 			}
 			if (el === "storm") {
-				this.addStatus("enemy", "shock", 2);
+				this.enemy.status.add("shock", 2);
 				this.spawnFloatingText(
 					"⚡",
 					UIElements.enemy.sprite,
@@ -1505,7 +1247,7 @@ export class Game {
 				);
 			}
 			if (el === "poison") {
-				this.addStatus("enemy", "poison", 3);
+				this.enemy.status.add("poison", 3);
 				this.spawnFloatingText(
 					"☠️",
 					UIElements.enemy.sprite,
@@ -1571,28 +1313,28 @@ export class Game {
 		let dotDmg = 0;
 		let corrosionArmor = 0;
 
-		if (this.enemyStatuses.burn > 0) {
+		if (this.enemy.status.get("burn") > 0) {
 			const mult = this.hasArtifact("alchemist") ? 1.5 : 1;
-			dotDmg += Math.ceil(this.enemyStatuses.burn * 1 * mult);
-			this.decayStatus("enemy", "burn", 1);
+			dotDmg += Math.ceil(this.enemy.status.get("burn") * 1 * mult);
+			this.enemy.status.decay("burn");
 		}
-		if (this.enemyStatuses.poison > 0) {
+		if (this.enemy.status.get("poison") > 0) {
 			const mult = this.hasArtifact("alchemist") ? 1.5 : 1;
 			const p = Math.ceil(
-				Math.max(1, Math.floor(this.enemyStatuses.poison / 2)) * mult
+				Math.max(1, Math.floor(this.enemy.status.get("poison") / 2)) * mult
 			);
 			dotDmg += p;
-			if (this.hasArtifact("corrosive") && this.enemyShield > 0) {
-				corrosionArmor = Math.min(this.enemyShield, 1);
+			if (this.hasArtifact("corrosive") && this.enemy.DEF > 0) {
+				corrosionArmor = Math.min(this.enemy.DEF, 1);
 			}
-			this.decayStatus("enemy", "poison", 1);
+			this.enemy.status.decay("poison");
 		}
 
 		if (dotDmg > 0) {
 			this.damageEnemy(dotDmg, false, true);
 			this.spawnFloatingText(dotDmg, UIElements.enemy.sprite, "#22c55e");
 			if (corrosionArmor > 0) {
-				this.enemyShield -= corrosionArmor;
+				this.enemy.DEF -= corrosionArmor;
 				this.spawnFloatingText(
 					"-DEF",
 					UIElements.enemy.sprite,
@@ -1602,30 +1344,30 @@ export class Game {
 		}
 
 		// Artifact: cinder
-		if (this.hasArtifact("cinder") && this.enemyStatuses.burn > 0) {
+		if (this.hasArtifact("cinder") && this.enemy.status.get("burn") > 0) {
 			this.damageEnemy(3, false, true);
 			this.spawnFloatingText(3, UIElements.enemy.sprite, "#fb7185");
 		}
 
 		// Player DOT
-		if (this.playerStatuses.burn > 0) {
-			const burn = this.playerStatuses.burn;
-			this.hp -= burn;
+		if (this.player.status.get("burn") > 0) {
+			const burn = this.player.status.get("burn");
+			this.player.HP -= burn;
 			this.damageTakenThisFight += burn;
 			this.spawnFloatingText(burn, UIElements.player.hp_bar, "#fb7185");
-			this.decayStatus("player", "burn", 1);
+			this.player.status.decay("burn");
 		}
-		if (this.playerStatuses.poison > 0) {
-			const p = Math.max(1, Math.floor(this.playerStatuses.poison / 2));
-			this.hp -= p;
+		if (this.player.status.get("poison") > 0) {
+			const p = Math.max(1, Math.floor(this.player.status.get("poison") / 2));
+			this.player.HP -= p;
 			this.damageTakenThisFight += p;
 			this.spawnFloatingText(p, UIElements.player.hp_bar, "#22c55e");
-			this.decayStatus("player", "poison", 1);
+			this.player.status.decay("poison");
 		}
 
-		if (this.hp <= 0) {
+		if (this.player.HP == 0) {
 			if (this.hasArtifact("phoenix") && !this.revived) {
-				this.hp = Math.floor(this.maxHp / 2);
+				this.player.HP = Math.floor(this.player.MAX_HP / 2);
 				this.revived = true;
 				Logger.log(i18n.t("artifact.phoenix.use"));
 				this.spawnFloatingText(
@@ -1635,17 +1377,16 @@ export class Game {
 				);
 				soundManager.play("win");
 			} else {
-				this.hp = 0;
 				this.loseGame();
 			}
 		}
 	}
 
 	damageEnemy(amount: number, isCrit = false, isDot = false) {
-		if (this.enemyHp <= 0) return;
+		if (this.enemy.HP <= 0) return;
 
 		// Weak debuff on player reduces damage
-		if (this.playerStatuses.weak > 0) amount = Math.floor(amount * 0.75);
+		if (this.player.status.get("weak") > 0) amount = Math.floor(amount * 0.75);
 
 		// Hazard global mult
 		amount = Math.floor(amount * (this.hazardMods.damageMult || 1));
@@ -1659,14 +1400,11 @@ export class Game {
 
 		// Lifesteal boon
 		if (this.hazardMods.lifesteal && amount > 0) {
-			this.healPlayer(this.hazardMods.lifesteal);
+			this.player.HP += this.hazardMods.lifesteal;
 		}
 
-		// God Mode
-		if (this.godMode) amount *= 10;
-
 		// Rage
-		if (this.hasArtifact("rage") && this.hp / this.maxHp < 0.3) {
+		if (this.hasArtifact("rage") && this.player.HP / this.player.MAX_HP < 0.3) {
 			amount = Math.ceil(amount * 1.5);
 			isCrit = true;
 		}
@@ -1674,23 +1412,23 @@ export class Game {
 		// Executioner
 		if (
 			this.hasArtifact("executioner") &&
-			this.enemyHp / this.enemyMaxHp < 0.4
+			this.enemy.HP / this.enemy.MAX_HP < 0.4
 		) {
 			amount = Math.ceil(amount * 1.3);
 		}
 
 		// Shock increases next hit then clears
-		if (!isDot && this.enemyStatuses.shock > 0) {
-			const mult = 1 + 0.25 * this.enemyStatuses.shock;
+		if (!isDot && this.enemy.status.get("shock") > 0) {
+			const mult = 1 + 0.25 * this.enemy.status.get("shock");
 			amount = Math.ceil(amount * mult);
-			this.enemyStatuses.shock = 0;
+			this.enemy.status.decay("shock", -1);
 			isCrit = true;
 		}
 
 		// Enemy shield
-		if (this.enemyShield > 0) {
-			if (this.enemyShield >= amount) {
-				this.enemyShield -= amount;
+		if (this.enemy.DEF > 0) {
+			if (this.enemy.DEF >= amount) {
+				this.enemy.DEF -= amount;
 				amount = 0;
 				this.spawnFloatingText(
 					"BLOCK",
@@ -1698,15 +1436,14 @@ export class Game {
 					"#60a5fa"
 				);
 			} else {
-				amount -= this.enemyShield;
-				this.enemyShield = 0;
+				amount -= this.enemy.DEF;
 			}
 		}
 
 		this.lastHitWasCrit = isCrit && amount > 0;
 
 		if (amount > 0) {
-			this.enemyHp -= amount;
+			this.enemy.HP -= amount;
 			if (isCrit) soundManager.play("crit");
 			else soundManager.play("hit");
 
@@ -1735,8 +1472,8 @@ export class Game {
 			}
 		}
 
-		if (this.enemyHp <= 0) {
-			this.enemyHp = 0;
+		if (this.enemy.HP <= 0) {
+			this.enemy.HP = 0;
 			setTimeout(() => this.winLevel(), 450);
 		}
 
@@ -1754,7 +1491,7 @@ export class Game {
 		if (this.hazardMods.noGold) goldGain = 0;
 		if (this.hazardMods.doubleGold) goldGain *= 2;
 
-		this.gold += goldGain;
+		this.player.GOLD += goldGain;
 
 		this.updateUI();
 	}
@@ -1781,14 +1518,14 @@ export class Game {
 		if (this.hand.every((b) => b === null)) {
 			setTimeout(() => {
 				this.enemyTurn();
-				if (this.hp > 0 && this.enemyHp > 0) this.fillHand();
+				if (this.player.HP > 0 && this.enemy.HP > 0) this.fillHand();
 			}, 420);
 		}
 	}
 
 	discardHand() {
 		if (this.paused) return;
-		if (this.hp <= 0 || this.enemyHp <= 0) return;
+		if (this.player.HP <= 0 || this.enemy.HP <= 0) return;
 
 		this.discardsThisFight++;
 
@@ -1806,18 +1543,18 @@ export class Game {
 
 		setTimeout(() => {
 			this.enemyTurn();
-			if (this.hp > 0 && this.enemyHp > 0) this.fillHand();
+			if (this.player.HP > 0 && this.enemy.HP > 0) this.fillHand();
 			this.updateUI();
 		}, 250);
 	}
 
 	enemyTurn() {
-		if (this.enemyHp <= 0) return;
+		if (this.enemy.HP <= 0) return;
 		if (this.paused) return;
 
 		// Tick DOTs and statuses
 		this.tickStatusesBeforeEnemyActs();
-		if (this.hp <= 0 || this.enemyHp <= 0) return;
+		if (this.player.HP <= 0 || this.enemy.HP <= 0) return;
 
 		// Time warp
 		if (this.hasArtifact("warp") && Math.random() < 0.15) {
@@ -1833,11 +1570,11 @@ export class Game {
 		}
 
 		// Chill effect: slow/skip enemy
-		let effectiveAtk = this.enemyAttack;
-		if (this.enemyStatuses.chill > 0) {
-			const slow = Math.min(0.6, 0.15 * this.enemyStatuses.chill);
+		let effectiveAtk = this.enemy.ATK;
+		if (this.enemy.status.get("chill") > 0) {
+			const slow = Math.min(0.6, 0.15 * this.enemy.status.get("chill"));
 			effectiveAtk = Math.max(1, Math.floor(effectiveAtk * (1 - slow)));
-			if (this.enemyStatuses.chill >= 3 && Math.random() < 0.22) {
+			if (this.enemy.status.get("chill") >= 3 && Math.random() < 0.22) {
 				Logger.log(i18n.t("logger.enemy_frozen"));
 				this.spawnFloatingText(
 					"FROZEN!",
@@ -1845,23 +1582,21 @@ export class Game {
 					"#67e8f9"
 				);
 				soundManager.play("clear");
-				this.decayStatus("enemy", "chill", 2);
+				this.enemy.status.decay("chill", 2);
 				this.updateUI();
 				return;
 			}
-			this.decayStatus("enemy", "chill", 1);
+			this.enemy.status.decay("chill");
 		}
 
 		// Enemy ability
-		if (this.currentEnemy && this.currentEnemy.ability) {
-			this.currentEnemy.ability(this);
-		}
+			this.enemy.ability(this);
 
 		let dmg = effectiveAtk;
 
 		// Spiked shield reflect
-		if (this.hasArtifact("spikes") && this.shield > 0) {
-			this.damageEnemy(Math.min(this.shield, 30), false);
+		if (this.hasArtifact("spikes") && this.player.DEF > 0) {
+			this.damageEnemy(Math.min(this.player.DEF, 30), false);
 			this.spawnFloatingText(
 				"REFLECT",
 				UIElements.enemy.sprite,
@@ -1870,28 +1605,26 @@ export class Game {
 		}
 
 		// Player shock increases incoming
-		if (this.playerStatuses.shock > 0) {
-			dmg = Math.ceil(dmg * (1 + 0.25 * this.playerStatuses.shock));
-			this.playerStatuses.shock = 0;
+		if (this.player.status.get("shock") > 0) {
+			dmg = Math.ceil(dmg * (1 + 0.25 * this.player.status.get("shock")));
+			this.player.status.decay("shock", -1);
 		}
 
 		// Shield absorb
 		let absorbedFully = false;
-		if (this.shield > 0) {
-			if (this.shield >= dmg) {
-				this.shield -= dmg;
+		if (this.player.DEF > 0) {
+			if (this.player.DEF >= dmg) {
+				this.player.DEF -= dmg;
 				dmg = 0;
 				absorbedFully = true;
 			} else {
-				dmg -= this.shield;
-				this.shield = 0;
+				dmg -= this.player.DEF;
+				this.player.DEF = 0;
 			}
 		}
 
-		if (this.godMode) dmg = 0;
-
 		if (dmg > 0) {
-			this.hp -= dmg;
+			this.player.HP -= dmg;
 			this.damageTakenThisFight += dmg;
 			Logger.log(i18n.t("damage.enemy", { dmg }));
 			soundManager.play("damage");
@@ -1904,7 +1637,7 @@ export class Game {
 			}
 
 			if (this.hasArtifact("gold_tooth")) {
-				this.gold += 1;
+				this.player.GOLD += 1;
 				this.spawnFloatingText(
 					"+1G",
 					UIElements.player.hp_bar,
@@ -1915,11 +1648,11 @@ export class Game {
 			this.spawnFloatingText(dmg, UIElements.player.hp_bar, "#ef4444");
 
 			// Elemental on-hit from enemy element
-			const el = this.currentEnemy?.element;
-			if (el === "fire") this.addStatus("player", "burn", 1);
-			if (el === "ice") this.addStatus("player", "weak", 1);
-			if (el === "poison") this.addStatus("player", "poison", 1);
-			if (el === "storm") this.addStatus("player", "shock", 1);
+			const el = this.enemy.template.element;
+			if (el === "fire") this.player.status.add("burn", 1);
+			if (el === "ice") this.player.status.add("weak", 1);
+			if (el === "poison") this.player.status.add("poison", 1);
+			if (el === "storm") this.player.status.add("shock", 1);
 		} else {
 			Logger.log(i18n.t("logger.absorb"));
 			if (absorbedFully && this.hasArtifact("mirrorplate")) {
@@ -1962,9 +1695,9 @@ export class Game {
 			}
 		}
 
-		if (this.hp <= 0) {
+		if (this.player.HP <= 0) {
 			if (this.hasArtifact("phoenix") && !this.revived) {
-				this.hp = Math.floor(this.maxHp / 2);
+				this.player.HP = Math.floor(this.player.MAX_HP / 2);
 				this.revived = true;
 				Logger.log(i18n.t("artifact.phoenix.use"));
 				this.spawnFloatingText(
@@ -1974,7 +1707,6 @@ export class Game {
 				);
 				soundManager.play("win");
 			} else {
-				this.hp = 0;
 				this.loseGame();
 			}
 		}
@@ -2000,7 +1732,120 @@ export class Game {
 			}
 		}
 
-		this.spawnEnemy();
+		this.enemy = new Enemy(this.enemyContext);
+
+        const isBossFloor = this.level % 5 === 0;
+		UIElements.enemy.label.textContent = i18n.t(`label.${isBossFloor ? "boss" : "enemy"}`)
+
+		document.body.className = `h-screen w-screen flex flex-col items-center justify-between p-2 select-none ${this.enemy.template.theme}`;
+
+		// music theme
+		if (this.enemy.template.trackId) {
+			soundManager.setTrack(this.enemy.template.trackId);
+		} else {
+			const track = this.pickTrackForTheme(this.enemy.template.theme);
+			if (Math.random() < 0.15) {
+				const ids = Object.keys(soundManager.tracks);
+				soundManager.setTrack(
+					ids[Math.floor(Math.random() * ids.length)]
+				);
+			} else {
+				soundManager.setTrack(track);
+			}
+		}
+        
+		this.medicThisTurn = 0;
+		this.clearsThisFight = 0;
+		this.placeBonusThisFight = 0;
+		this.discardsThisFight = 0;
+		this.lastHitWasCrit = false;
+		this.damageTakenThisFight = 0;
+		this.overchargeThisFight = 0;
+
+		// Start shield
+		if (this.hasArtifact("crystal")) this.player.DEF += 20;
+
+		// Heal after battle
+		if (this.hasArtifact("regen")) this.player.HP += 5;
+
+		// Start enemy chill if glacier
+		if (this.hasArtifact("glacier")) this.enemy.status.add("chill", 2);
+
+		// Halo: cleanse 1 negative
+        if (this.hasArtifact("halo")) {
+            const activeStatuses = this.player.status.activeEntries();
+            if (activeStatuses.length > 0) {
+                const status =
+                activeStatuses[Math.floor(Math.random() * activeStatuses.length)];
+                this.player.status.decay(status[0]);
+                Logger.log(i18n.t("artifact.halo.use"));
+            }
+        }
+
+		// Visual
+		UIElements.enemy.sprite.className = `enemy-sprite hover-anim rounded-xl flex justify-center items-center mb-2 ${this.enemy.template.style}`;
+		UIElements.enemy.sprite.classList.remove("shake");
+
+		// Hazard/boon
+		const hazard = this.rollHazard();
+		this.applyHazard(hazard);
+
+		// Apply hazard effects on grid
+		this.applyStartGridEffects();
+		if (
+			this.hazardMods.gridSize &&
+			this.hazardMods.gridSize !== GRID_SIZE
+		) {
+			this.resizeGrid(this.hazardMods.gridSize, this.hazardMods.cellSize);
+			Logger.log(
+				i18n.t("boon.grid_size", { size: this.hazardMods.gridSize })
+			);
+		}
+
+		// Grid cleanser artifact
+		if (this.hasArtifact("cleanser")) this.removeRandomFilledCells(3);
+
+		// Boon starts
+		if (this.hazardMods.startShield) {
+			this.player.DEF += this.hazardMods.startShield;
+			Logger.log(
+				i18n.t("boon.start_shield", {
+					shield: this.hazardMods.startShield,
+				})
+			);
+		}
+		if (this.hazardMods.startHeal) {
+			this.player.HP += this.hazardMods.startHeal;
+			Logger.log(
+				i18n.t("boon.start_heal", { heal: this.hazardMods.startHeal })
+			);
+		}
+		if (this.hazardMods.startGold) {
+			this.player.GOLD += this.hazardMods.startGold;
+			Logger.log(
+				i18n.t("boon.start_heal", { gold: this.hazardMods.startGold })
+			);
+		}
+		if (this.hazardMods.startClean) {
+			this.removeRandomFilledCells(this.hazardMods.startClean);
+			Logger.log(
+				i18n.t("boon.start_clean", {
+					clean: this.hazardMods.startClean,
+				})
+			);
+		}
+		if (this.hazardMods.startEnemyChill) {
+			this.enemy.status.add("chill", this.hazardMods.startEnemyChill);
+		}
+        
+		Logger.log(
+			i18n.t(`logger.${isBossFloor ? "boss" : "enemy"}`, {
+				name: this.enemy.template.name,
+			})
+		);
+        
+		this.renderEnemyCodex();
+		this.showHazardIfNeeded();
 		this.fillHand();
 		this.updateUI();
 	}
@@ -2017,19 +1862,19 @@ export class Game {
 		if (this.hazardMods.noGold) bonus = 0;
 		if (this.hazardMods.doubleGold) bonus *= 2;
 
-		this.gold += bonus;
+		this.player.GOLD += bonus;
 		Logger.log(i18n.t("logger.win", { bonus }));
 
 		// Antidote
 		if (this.hasArtifact("antidote")) {
-			let reduced = 0;
-			["burn", "poison", "shock", "weak"].forEach((k) => {
-				const before = this.playerStatuses[k] || 0;
-				if (before > 0) {
-					this.playerStatuses[k] = Math.max(0, before - 1);
-					reduced++;
-				}
-			});
+            let reduced = 0;
+            const activeStatuses = this.player.status.activeEntries();
+            if (activeStatuses.length > 0) {
+                activeStatuses.forEach(s => {
+                    this.player.status.decay(s[0]);
+                    reduced++;
+                })
+            }
 			if (reduced > 0) Logger.log(i18n.t("artifact.antidote.use"));
 		}
 
