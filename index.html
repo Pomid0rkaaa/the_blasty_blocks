@@ -37,13 +37,6 @@
 			>
 				📜
 			</button>
-			<button
-				class="icon-btn"
-				data-i18n-title="button.achievements.hover"
-				id="ach-btn"
-			>
-				🏆
-			</button>
 			<select class="icon-btn" title="Language" id="i18n-btn">
 				<optgroup label="Language">
 					<option value="ru">🇷🇺</option>
@@ -592,57 +585,6 @@
 						class="log-box"
 						id="log-box"
 						style="max-height: 65vh"
-					></div>
-				</div>
-			</div>
-		</div>
-		<div
-			class="inset-0 fixed z-50 bg-black/95 hidden"
-			id="achievements-modal"
-		>
-			<div class="flex items-center justify-center w-full h-full px-4">
-				<div
-					class="w-full p-4 card-glow rounded-xl bg-slate-900 border border-slate-700 max-w-3xl scroll"
-				>
-					<div class="flex items-center justify-between mb-3">
-						<div>
-							<div
-								class="text-xs text-slate-400 tracking-widest"
-								data-i18n="label.achievements"
-							></div>
-							<div
-								class="pixel-font text-lg font-black text-slate-100"
-								data-i18n="achievements_modal.collection"
-							></div>
-							<div
-								class="text-slate-400 text-xs mt-1"
-								id="ach-summary"
-							>
-								0/0
-							</div>
-						</div>
-						<div class="flex gap-2 btn-holder">
-							<button
-								class="font-bold pixel-font rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 danger-btn"
-								id="reset-achievements-btn"
-								data-i18n-title="button.reset.hover"
-								data-i18n="button.reset"
-							></button>
-							<button
-								class="font-bold pixel-font rounded bg-white hover:bg-gray-200 text-black px-3 py-2 ok-btn"
-								id="close-achievements-btn"
-								data-i18n="button.ok"
-							></button>
-						</div>
-					</div>
-					<div
-						class="gap-3 grid grid-cols-1 md:grid-cols-2"
-						id="achievements-container"
-						style="max-height: 65vh; overflow: auto"
-					></div>
-					<div
-						class="text-slate-400 text-xs mt-3"
-						data-i18n="achievements_modal.tip"
 					></div>
 				</div>
 			</div>
