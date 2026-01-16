@@ -21,9 +21,9 @@ import type {
 	Difficulty,
 } from "./types";
 
-let GRID_SIZE = 8;
 
 export class Game {
+    gridSize: number = 8;
     player!: Player;
     playerContext: PlayerContext;
 	rewards: Rewards;
@@ -71,9 +71,9 @@ export class Game {
 		this.isMobile = window.innerWidth < 950;
 		this.offsetY = this.isMobile ? -100 : 0;
 
-		this.grid = Array(GRID_SIZE)
+		this.grid = Array(this.gridSize)
 			.fill(null)
-			.map(() => Array(GRID_SIZE).fill(null));
+			.map(() => Array(this.gridSize).fill(null));
 		this.score = 0;
 		this.level = 1;
 
@@ -498,7 +498,7 @@ export class Game {
 	}
 
 	resizeGrid(newSize: number, scale: string = "36px") {
-		GRID_SIZE = newSize;
+		this.gridSize = newSize;
 		document.documentElement.style.setProperty(
 			"--grid-size",
 			String(newSize)
@@ -513,8 +513,8 @@ export class Game {
 
 	applyStartGridEffects() {
 		// Per-fight soft cleanup: remove some filled cells to prevent permanent lockouts.
-		for (let r = 0; r < GRID_SIZE; r++) {
-			for (let c = 0; c < GRID_SIZE; c++) {
+		for (let r = 0; r < this.gridSize; r++) {
+			for (let c = 0; c < this.gridSize; c++) {
 				const v = this.grid[r][c];
 				if (v !== null && Math.random() > 0.68) {
 					this.grid[r][c] = null;
@@ -544,7 +544,7 @@ export class Game {
 
 	applyMask(type: string) {
 		const setMask = (r: number, c: number) => {
-			if (r < 0 || c < 0 || r >= GRID_SIZE || c >= GRID_SIZE) return;
+			if (r < 0 || c < 0 || r >= this.gridSize || c >= this.gridSize) return;
 			if (this.grid[r][c] === null) {
 				this.grid[r][c] = "MASK"; // Special type: Clips shapes, conducts lines, permanent
 				this.setCellClass(r, c, "cell rock maskrock");
@@ -552,11 +552,11 @@ export class Game {
 		};
 
 		if (type === "tiny") {
-			for (let i = 0; i < GRID_SIZE; i++) {
+			for (let i = 0; i < this.gridSize; i++) {
 				setMask(0, i);
-				setMask(GRID_SIZE - 1, i);
+				setMask(this.gridSize - 1, i);
 				setMask(i, 0);
-				setMask(i, GRID_SIZE - 1);
+				setMask(i, this.gridSize - 1);
 			}
 			return;
 		}
@@ -567,8 +567,8 @@ export class Game {
 			let count = target;
 			while (count > 0 && tries < 400) {
 				tries++;
-				const r = Math.floor(Math.random() * GRID_SIZE);
-				const c = Math.floor(Math.random() * GRID_SIZE);
+				const r = Math.floor(Math.random() * this.gridSize);
+				const c = Math.floor(Math.random() * this.gridSize);
 				if (this.grid[r][c] === null) {
 					setMask(r, c);
 					count--;
@@ -578,8 +578,8 @@ export class Game {
 		}
 
 		if (type === "diamond") {
-			for (let r = 0; r < GRID_SIZE; r++)
-				for (let c = 0; c < GRID_SIZE; c++) {
+			for (let r = 0; r < this.gridSize; r++)
+				for (let c = 0; c < this.gridSize; c++) {
 					const d = Math.abs(r - 3.5) + Math.abs(c - 3.5);
 					if (d > 3.6) setMask(r, c);
 				}
@@ -587,8 +587,8 @@ export class Game {
 		}
 
 		if (type === "checker") {
-			for (let r = 0; r < GRID_SIZE; r++)
-				for (let c = 0; c < GRID_SIZE; c++) {
+			for (let r = 0; r < this.gridSize; r++)
+				for (let c = 0; c < this.gridSize; c++) {
 					if ((r + c) % 2 === 1) setMask(r, c);
 				}
 			return;
@@ -596,22 +596,22 @@ export class Game {
 
 		if (type === "spiral") {
 			// Fill with mask
-			for (let r = 0; r < GRID_SIZE; r++)
-				for (let c = 0; c < GRID_SIZE; c++) {
+			for (let r = 0; r < this.gridSize; r++)
+				for (let c = 0; c < this.gridSize; c++) {
 					this.grid[r][c] = "MASK";
 					this.setCellClass(r, c, "cell rock maskrock");
 				}
 
 			const carve = (r: number, c: number) => {
-				if (r < 0 || c < 0 || r >= GRID_SIZE || c >= GRID_SIZE) return;
+				if (r < 0 || c < 0 || r >= this.gridSize || c >= this.gridSize) return;
 				this.grid[r][c] = null;
 				this.setCellClass(r, c, "cell");
 			};
 
 			let top = 0,
 				left = 0,
-				bottom = GRID_SIZE - 1,
-				right = GRID_SIZE - 1;
+				bottom = this.gridSize - 1,
+				right = this.gridSize - 1;
 			while (top <= bottom && left <= right) {
 				for (let c = left; c <= right; c++) carve(top, c);
 				top++;
@@ -634,8 +634,8 @@ export class Game {
 		let tries = 0;
 		while (count > 0 && tries < 400) {
 			tries++;
-			const r = Math.floor(Math.random() * GRID_SIZE);
-			const c = Math.floor(Math.random() * GRID_SIZE);
+			const r = Math.floor(Math.random() * this.gridSize);
+			const c = Math.floor(Math.random() * this.gridSize);
 			if (this.grid[r][c] === null) {
 				this.grid[r][c] = "ROCK";
 				this.setCellClass(r, c, "cell rock");
@@ -648,8 +648,8 @@ export class Game {
 		let tries = 0;
 		while (count > 0 && tries < 500) {
 			tries++;
-			const r = Math.floor(Math.random() * GRID_SIZE);
-			const c = Math.floor(Math.random() * GRID_SIZE);
+			const r = Math.floor(Math.random() * this.gridSize);
+			const c = Math.floor(Math.random() * this.gridSize);
 			if (this.grid[r][c] === null) {
 				this.grid[r][c] = "GARBAGE";
 				this.setCellClass(r, c, "cell garbage");
@@ -662,8 +662,8 @@ export class Game {
 		let tries = 0;
 		while (count > 0 && tries < 500) {
 			tries++;
-			const r = Math.floor(Math.random() * GRID_SIZE);
-			const c = Math.floor(Math.random() * GRID_SIZE);
+			const r = Math.floor(Math.random() * this.gridSize);
+			const c = Math.floor(Math.random() * this.gridSize);
 			if (this.grid[r][c] === null) {
 				this.grid[r][c] = "MINE";
 				this.setCellClass(r, c, "cell mine");
@@ -674,8 +674,8 @@ export class Game {
 
 	removeRandomSpecificCells(allowedValues: any[], count: number) {
 		const filled = [];
-		for (let r = 0; r < GRID_SIZE; r++) {
-			for (let c = 0; c < GRID_SIZE; c++) {
+		for (let r = 0; r < this.gridSize; r++) {
+			for (let c = 0; c < this.gridSize; c++) {
 				const v = this.grid[r][c];
 				if (allowedValues.includes(v)) filled.push([r, c]);
 			}
@@ -693,8 +693,8 @@ export class Game {
 
 	removeRandomFilledCells(count: number) {
 		const filled = [];
-		for (let r = 0; r < GRID_SIZE; r++) {
-			for (let c = 0; c < GRID_SIZE; c++) {
+		for (let r = 0; r < this.gridSize; r++) {
+			for (let c = 0; c < this.gridSize; c++) {
 				const v = this.grid[r][c];
 				if (v !== null && v !== "ROCK") filled.push([r, c]);
 			}
@@ -713,7 +713,7 @@ export class Game {
 
 	renderGrid() {
 		UIElements.grid.innerHTML = "";
-		for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
+		for (let i = 0; i < this.gridSize * this.gridSize; i++) {
 			const cell = document.createElement("div");
 			cell.className = "cell";
 			cell.dataset.index = String(i);
@@ -722,7 +722,7 @@ export class Game {
 	}
 
 	setCellClass(r: number, c: number, cls: string) {
-		const idx = r * GRID_SIZE + c;
+		const idx = r * this.gridSize + c;
 		const el = UIElements.grid.children[idx];
 		if (!el) return;
 		el.className = cls;
@@ -743,9 +743,9 @@ export class Game {
 		const rows = layout.length;
 		const cols = layout[0].length;
 		const rStart = clipMode ? -rows + 1 : 0;
-		const rEnd = clipMode ? GRID_SIZE - 1 : GRID_SIZE - rows;
+		const rEnd = clipMode ? this.gridSize - 1 : this.gridSize - rows;
 		const cStart = clipMode ? -cols + 1 : 0;
-		const cEnd = clipMode ? GRID_SIZE - 1 : GRID_SIZE - cols;
+		const cEnd = clipMode ? this.gridSize - 1 : this.gridSize - cols;
 		for (let r = rStart; r <= rEnd; r++) {
 			for (let c = cStart; c <= cEnd; c++) {
 				if (this.isValidPosition(r, c, layout)) return true;
@@ -1029,7 +1029,7 @@ export class Game {
 				const rr = r + i;
 				const cc = c + j;
 
-				if (rr < 0 || cc < 0 || rr >= GRID_SIZE || cc >= GRID_SIZE) {
+				if (rr < 0 || cc < 0 || rr >= this.gridSize || cc >= this.gridSize) {
 					if (clip) continue;
 					return false;
 				}
@@ -1049,7 +1049,7 @@ export class Game {
         const layout = block.layout;
         const color = block.color;
         const grid = this.grid;
-        const gridSize = GRID_SIZE;
+        const gridSize = this.gridSize;
         const gridChildren = UIElements.grid.children;
         const hazardMods = this.hazardMods;
         const clip = !!hazardMods.mask;
@@ -1171,14 +1171,14 @@ export class Game {
 		let rowsToClear = [];
 		let colsToClear = [];
 
-		for (let r = 0; r < GRID_SIZE; r++) {
+		for (let r = 0; r < this.gridSize; r++) {
 			if (this.grid[r].every((val) => this.cellIsFilled(val)))
 				rowsToClear.push(r);
 		}
 
-		for (let c = 0; c < GRID_SIZE; c++) {
+		for (let c = 0; c < this.gridSize; c++) {
 			let full = true;
-			for (let r = 0; r < GRID_SIZE; r++) {
+			for (let r = 0; r < this.gridSize; r++) {
 				if (!this.cellIsFilled(this.grid[r][c])) full = false;
 			}
 			if (full) colsToClear.push(c);
@@ -1258,12 +1258,12 @@ export class Game {
 
 		const cellsToClear = new Set<number>();
 		rows.forEach((r) => {
-			for (let c = 0; c < GRID_SIZE; c++)
-				cellsToClear.add(r * GRID_SIZE + c);
+			for (let c = 0; c < this.gridSize; c++)
+				cellsToClear.add(r * this.gridSize + c);
 		});
 		cols.forEach((c) => {
-			for (let r = 0; r < GRID_SIZE; r++)
-				cellsToClear.add(r * GRID_SIZE + c);
+			for (let r = 0; r < this.gridSize; r++)
+				cellsToClear.add(r * this.gridSize + c);
 		});
 
 		cellsToClear.forEach((idx) =>
@@ -1272,8 +1272,8 @@ export class Game {
 		await new Promise((r) => setTimeout(r, 280));
 
 		cellsToClear.forEach((idx) => {
-			const r = Math.floor(idx / GRID_SIZE);
-			const c = idx % GRID_SIZE;
+			const r = Math.floor(idx / this.gridSize);
+			const c = idx % this.gridSize;
 			const val = this.grid[r][c];
 			if (val === "ROCK" || val === "MASK") {
 				UIElements.grid.children[idx].classList.remove("line-clear");
@@ -1719,8 +1719,8 @@ export class Game {
 		UIElements.modal.victory.classList.add("hidden");
 
 		// Cleanup if too full
-		for (let r = 0; r < GRID_SIZE; r++) {
-			for (let c = 0; c < GRID_SIZE; c++) {
+		for (let r = 0; r < this.gridSize; r++) {
+			for (let c = 0; c < this.gridSize; c++) {
 				if (
 					this.grid[r][c] &&
 					this.grid[r][c] !== "ROCK" &&
@@ -1794,11 +1794,11 @@ export class Game {
 		this.applyStartGridEffects();
 		if (
 			this.hazardMods.gridSize &&
-			this.hazardMods.gridSize !== GRID_SIZE
+			this.hazardMods.gridSize !== this.gridSize
 		) {
 			this.resizeGrid(this.hazardMods.gridSize, this.hazardMods.cellSize);
 			Logger.log(
-				i18n.t("boon.grid_size", { size: this.hazardMods.gridSize })
+				i18n.t("boon.this.gridSize", { size: this.hazardMods.gridSize })
 			);
 		}
 
