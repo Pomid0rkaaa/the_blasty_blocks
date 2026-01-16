@@ -16,7 +16,7 @@ body {
 }
 
 #hand-container{
-    max-height: 20vh;
+    justify-content: space-evenly;
     overflow-y: hidden;
     scrollbar-gutter: stable;
 }
