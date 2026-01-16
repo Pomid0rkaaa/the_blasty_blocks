@@ -33,10 +33,6 @@ export class Context {
         this.game.removeRandomFilledCells(n);
     }
 
-    unlockAchievement(id: string) {
-        this.game.unlockAchievement(id);
-    }
-
     updateUI() {
         this.game.updateUI();
     }

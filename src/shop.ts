@@ -84,7 +84,6 @@ export class Shop {
 					}
 
 					item.sold = true;
-					this.ctx.unlockAchievement("shopper");
 					refresh();
 				};
 

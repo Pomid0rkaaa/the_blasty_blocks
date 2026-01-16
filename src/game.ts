@@ -1,4 +1,3 @@
-import { ACHIEVEMENTS } from "./data/achievements";
 import { ELEMENTS } from "./data/elements";
 import { ENEMIES } from "./data/enemies";
 import { HAZARDS } from "./data/hazards";
@@ -64,7 +63,6 @@ export class BlockGame {
 	discardsThisFight: number = 0;
 	lastHitWasCrit: boolean = false;
 	damageTakenThisFight: number = 0;
-	achUnlocked: Set<string> = new Set();
 
 	constructor() {
 		this.rewards = new Rewards(new Context(this));
@@ -149,14 +147,6 @@ export class BlockGame {
 
 		// Log
 		Logger.clear();
-
-		// Achievements
-		this.achUnlocked = new Set();
-		try {
-			const arr = JSON.parse(localStorage.getItem("achUnlocked") || "[]");
-			if (Array.isArray(arr))
-				arr.forEach((id) => this.achUnlocked.add(id));
-		} catch {}
 	}
 
 	toggleGodMode() {
@@ -228,7 +218,6 @@ export class BlockGame {
 		document.addEventListener("keydown", (e) => {
 			if (e.key === "?") this.openHelp();
 			if (e.key.toLowerCase() === "l") Logger.open();
-			if (e.key.toLowerCase() === "a") this.openAchievements();
 		});
 
 		// Init audio and start music on first interaction
@@ -266,82 +255,6 @@ export class BlockGame {
 
 		// Initial codex render
 		this.renderCodex();
-	}
-
-	// ------------------------------
-	// Achievements
-	// ------------------------------
-	saveAchievements() {
-		localStorage.setItem(
-			"achUnlocked",
-			JSON.stringify([...this.achUnlocked])
-		);
-	}
-
-	unlockAchievement(id: string) {
-		if (this.achUnlocked.has(id)) return;
-		this.achUnlocked.add(id);
-		this.saveAchievements();
-		const meta = ACHIEVEMENTS.find((a) => a.id === id);
-		if (meta) {
-			Logger.log(i18n.t("achievement.unlock", { name: meta.name }));
-			this.spawnFloatingText(
-				`🏆 ${meta.name}`,
-				UIElements.enemy.sprite,
-				"#fde047"
-			);
-		}
-	}
-
-	renderAchievements() {
-		const cont = UIElements.achievements;
-		const sum = document.getElementById("ach-summary");
-		if (!cont || !sum) return;
-		cont.innerHTML = "";
-		const total = ACHIEVEMENTS.length;
-		const unlocked = ACHIEVEMENTS.filter((a) =>
-			this.achUnlocked.has(a.id)
-		).length;
-		sum.textContent = `${unlocked}/${total}`;
-
-		ACHIEVEMENTS.forEach((a) => {
-			const got = this.achUnlocked.has(a.id);
-			const card = document.createElement("div");
-			card.className = `bg-black/30 border rounded-lg p-3 flex items-start gap-3 ${
-				got ? "border-emerald-400/40" : "border-white/10"
-			}`;
-			card.innerHTML = `
-                        <div class="text-2xl" style="filter:${
-							got ? "none" : "grayscale(1) opacity(0.35)"
-						}">${a.icon}</div>
-                        <div class="flex-1">
-                            <div class="font-bold ${
-								got ? "text-emerald-200" : "text-slate-200"
-							}">${a.name} <span class="text-[10px] text-${
-				got ? "emerald-300" : "slate-500"
-			}">${i18n.t(`achievements_modal.${got ? "got" : "locked"}`)}</span>
-                </div>
-                            <div class="text-sm text-slate-300 mt-1">${
-								a.desc
-							}</div>
-                        </div>
-                    `;
-			cont.appendChild(card);
-		});
-	}
-
-	openAchievements() {
-		UIElements.achievements.classList.remove("hidden");
-		this.renderAchievements();
-	}
-	closeAchievements() {
-		UIElements.achievements.classList.add("hidden");
-	}
-	resetAchievements() {
-		this.achUnlocked = new Set();
-		this.saveAchievements();
-		this.renderAchievements();
-		Logger.log(i18n.t("achievement.reset"));
 	}
 
 	// ------------------------------
@@ -450,9 +363,6 @@ export class BlockGame {
 			this.addStatus("enemy", "burn", 5);
 		}
 
-		if (this.artifacts.length >= 6) this.unlockAchievement("collector");
-		if (this.artifacts.length >= 12) this.unlockAchievement("hoarder");
-
 		this.renderCodex();
 		this.updateUI();
 	}
@@ -464,10 +374,6 @@ export class BlockGame {
 			target === "enemy" ? this.enemyStatuses : this.playerStatuses;
 		if (!(type in table)) table[type] = 0;
 		table[type] = Math.min(99, table[type] + stacks);
-
-		// Achievement: any stack >= 8 on enemy
-		if (target === "enemy" && table[type] >= 8)
-			this.unlockAchievement("elementalist");
 	}
 
 	decayStatus(target: string, type: string, amount: number = 1) {
@@ -830,9 +736,6 @@ export class BlockGame {
 		this.updateUI();
 		this.renderEnemyCodex();
 		this.showHazardIfNeeded();
-
-		if (this.level >= 10) this.unlockAchievement("depth10");
-		if (this.level >= 20) this.unlockAchievement("depth20");
 
 		Logger.log(
 			i18n.t(`logger.${isBossFloor ? "boss" : "enemy"}`, {
@@ -1656,8 +1559,6 @@ export class BlockGame {
 		});
 
 		if (this.hasArtifact("magnet")) this.removeRandomFilledCells(1);
-		if (count >= 1) this.unlockAchievement("first_clear");
-		if (count >= 4) this.unlockAchievement("mega_clear");
 
 		this.damageEnemy(Math.floor(damage), true);
 	}
@@ -1854,9 +1755,6 @@ export class BlockGame {
 		if (this.hazardMods.doubleGold) goldGain *= 2;
 
 		this.gold += goldGain;
-
-		if (this.gold >= 200) this.unlockAchievement("rich");
-		if (this.gold >= 400) this.unlockAchievement("very_rich");
 
 		this.updateUI();
 	}
@@ -2121,16 +2019,6 @@ export class BlockGame {
 
 		this.gold += bonus;
 		Logger.log(i18n.t("logger.win", { bonus }));
-
-		// Achievements
-		if (isBoss) {
-			this.unlockAchievement("boss_slayer");
-			if (this.discardsThisFight === 0)
-				this.unlockAchievement("perfect_boss");
-		}
-		if (this.hp < 10) this.unlockAchievement("survivor");
-		if (this.damageTakenThisFight === 0)
-			this.unlockAchievement("untouched");
 
 		// Antidote
 		if (this.hasArtifact("antidote")) {

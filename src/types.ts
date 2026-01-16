@@ -1,10 +1,3 @@
-export interface Achievement {
-	id: string;
-	icon: string;
-	name: string;
-	desc: string;
-}
-
 export interface ElementDef {
 	id: string;
 	name: string;

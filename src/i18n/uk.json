@@ -29,13 +29,6 @@
   "damage.spikes": "Шипи: -${cost} HP",
   "damage.enemy": "Ворог атакує: -${dmg} HP",
   
-  "achievement.unlock": "Досягнення: ${name}",
-  "achievement.reset": "Досягнення скинуто",
-  "achievements_modal.collection": "Колекція",
-  "achievements_modal.tip": "Досягнення зберігаються у браузері",
-  "achievements_modal.got": "(отримано)",
-  "achievements_modal.locked": "(закрито)",
-  
   "artifact.halo.use": "Німб: очищення статусу",
   "artifact.antidote.use": "Сироватка: статуси послаблено",
   "artifact.mirrorplate.use": "Дзеркальна броня: 6 шкоди",
@@ -72,7 +65,6 @@
   "button.start_game.hard.desc": "Сильніші вороги, менше нагород",
   "button.volume.hover": "Налаштування звуку",
   "button.log.hover": "Журнал бою",
-  "button.achievements.hover": "Досягнення",
   "button.help.hover": "Довідка",
   "button.next": "ДАЛІ",
   "button.fight": "У БІЙ",
@@ -99,7 +91,6 @@
   "label.boon": "БЛАГОСЛОВЕННЯ",
   "label.help": "ДОВІДКА",
   "label.log": "ЖУРНАЛ",
-  "label.achievements": "ТРОФЕЇ",
   "label.frozen": "ЗАМОРОЖЕНО",
   
   "run_info.artifacts": "Артефакти",

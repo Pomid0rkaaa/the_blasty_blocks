@@ -32,7 +32,6 @@ export const UIElements = {
     grid: id("grid-container")!,
     hand: id("hand-container")!,
     artifacts: id("artifacts-container")!,
-    achievements: id("achievements-container")!,
     affinity: id("affinity-container")!,
     hazard_badge: id("hazard-badge")!,
     hazard_badge_text: id("hazard-badge-text")!,
@@ -63,7 +62,6 @@ export const UIElements = {
         game_over: id("game-over-modal")!,
         help: id("help-modal")!,
         log: id("log-modal")!,
-        achievements: id("achievements-modal")!,
     },
     hazard: {
         modal: id("hazard-modal")!,
@@ -129,9 +127,6 @@ export class UI {
         UIElements.player.hp_bar.style.width = `${Math.max(0, hpPct)}%`;
         UIElements.player.hp.innerText = `${state.hp}/${state.maxHp}`;
         UIElements.player.shield.innerText = state.shield;
-
-        if (state.shield >= 60)
-            state.unlockAchievement("shield_wall");
 
         const eHpPct = (state.enemyHp / state.enemyMaxHp) * 100;
         UIElements.enemy.hp_bar.style.width = `${Math.max(0, eHpPct)}%`;

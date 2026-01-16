@@ -1,6 +1,5 @@
 import { BlockGame } from "./game";
 import { soundManager } from "./soundManager";
-import { ACHIEVEMENTS } from "./data/achievements";
 import { ARTIFACTS } from "./data/artifacts";
 import { ELEMENTS } from "./data/elements";
 import { ENEMIES } from "./data/enemies";
@@ -87,9 +86,6 @@ document.addEventListener("click", (event: Event) => {
 		case "log-btn":
 			Logger.open();
 			break;
-		case "ach-btn":
-			game.openAchievements();
-			break;
 		case "mute-btn":
 			toggleMuteFromPanel();
 			break;
@@ -117,12 +113,6 @@ document.addEventListener("click", (event: Event) => {
 		case "close-log-btn":
 			Logger.close();
 			break;
-		case "reset-achievements-btn":
-			game.resetAchievements();
-			break;
-		case "close-achievements-btn":
-			game.closeAchievements();
-			break;
 	}
 });
 
@@ -139,7 +129,6 @@ window.soundManager = soundManager;
 window.Logger = Logger;
 
 window.data = {
-	ACHIEVEMENTS,
 	ARTIFACTS,
 	ELEMENTS,
 	ENEMIES,

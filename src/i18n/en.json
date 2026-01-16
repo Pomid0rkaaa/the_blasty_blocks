@@ -29,13 +29,6 @@
   "damage.spikes": "Spikes: -${cost} HP",
   "damage.enemy": "Enemy attacks: -${dmg} HP",
   
-  "achievement.unlock": "Achievement: ${name}",
-  "achievement.reset": "Achievements Reset",
-  "achievements_modal.collection": "Collection",
-  "achievements_modal.tip": "Achievements are saved in your browser",
-  "achievements_modal.got": "(unlocked)",
-  "achievements_modal.locked": "(locked)",
-  
   "artifact.halo.use": "Halo: Status Cleansed",
   "artifact.antidote.use": "Serum: Statuses weakened",
   "artifact.mirrorplate.use": "Mirror Plate: 6 Damage reflected",
@@ -72,14 +65,12 @@
   "button.start_game.hard.desc": "Stronger enemies, fewer rewards",
   "button.volume.hover": "Audio Settings",
   "button.log.hover": "Combat Log",
-  "button.achievements.hover": "Achievements",
   "button.help.hover": "How to Play",
   "button.next": "NEXT",
   "button.fight": "FIGHT",
   "button.ok": "OK",
   "button.clear": "CLEAR",
   "button.reset": "RESET",
-  "button.reset.hover": "Reset Achievements",
   
   "volume_panel.volume": "VOLUME",
   "volume_panel.desc": "Audio will enable after your first click",
@@ -99,7 +90,6 @@
   "label.boon": "BOON",
   "label.help": "HELP",
   "label.log": "LOG",
-  "label.achievements": "TROPHIES",
   "label.frozen": "FROZEN",
   
   "run_info.artifacts": "Artifacts",
