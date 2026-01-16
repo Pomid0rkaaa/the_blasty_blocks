@@ -1,5 +1,5 @@
 import type { ElementDef } from "../types";
-import i18n from "../i18n";
+import i18n from "../I18n";
 
 export const ELEMENTS: Record<string, ElementDef> = {
 	fire: {

@@ -1,17 +1,17 @@
-import { BlockGame } from "./game";
-import { soundManager } from "./soundManager";
+import { Game } from "./Game";
+import { soundManager } from "./SoundManager";
 import { ARTIFACTS } from "./data/artifacts";
 import { ELEMENTS } from "./data/elements";
 import { ENEMIES } from "./data/enemies";
 import { HAZARDS } from "./data/hazards";
 import { SHAPES } from "./data/shapes";
 import { STATUS } from "./data/status";
-import { Logger } from "./logger";
-import i18n from "./i18n";
+import { Logger } from "./Logger";
+import i18n from "./I18n";
 
 declare global {
 	interface Window {
-		game: BlockGame;
+		game: Game;
 		soundManager: any;
 		Logger: typeof Logger;
 		data: any;
@@ -57,7 +57,7 @@ if (select) {
 	});
 }
 
-const game = new BlockGame();
+const game = new Game();
 
 function toggleMuteFromPanel() {
 	soundManager.toggle();

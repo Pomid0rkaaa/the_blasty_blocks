@@ -1,4 +1,4 @@
-import i18n from "../i18n";
+import i18n from "../I18n";
 import type { StatusDef } from "../types";
 
 export const STATUS: Record<string, StatusDef> = {

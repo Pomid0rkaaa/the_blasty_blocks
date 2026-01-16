@@ -3,13 +3,13 @@ import { ENEMIES } from "./data/enemies";
 import { HAZARDS } from "./data/hazards";
 import { SHAPES } from "./data/shapes";
 import { STATUS } from "./data/status";
-import { soundManager } from "./soundManager";
-import { UI, UIElements } from "./ui";
-import { Logger } from "./logger";
-import { Shop } from "./shop";
-import { Rewards } from "./rewards";
-import { Context } from "./context";
-import i18n from "./i18n";
+import { soundManager } from "./SoundManager";
+import { UI, UIElements } from "./UI";
+import { Logger } from "./Logger";
+import { Shop } from "./Shop";
+import { Rewards } from "./Rewards";
+import { Context } from "./Context";
+import i18n from "./I18n";
 import type {
 	Artifact,
 	Enemy,
@@ -21,7 +21,7 @@ import type {
 
 let GRID_SIZE = 8;
 
-export class BlockGame {
+export class Game {
 	ui: any;
 	rewards: Rewards;
 	shop: Shop;

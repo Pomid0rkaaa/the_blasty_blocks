@@ -1,4 +1,4 @@
-import i18n from "../i18n";
+import i18n from "../I18n";
 import { ARTIFACTS } from "./artifacts";
 
 export type ShopItemType = "stat" | "artifact";

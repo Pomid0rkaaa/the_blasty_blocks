@@ -1,4 +1,4 @@
-import { UIElements } from "./ui.js";
+import { UIElements } from "./UI";
 
 export class Logger {
 
