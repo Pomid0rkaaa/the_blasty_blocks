@@ -21,17 +21,16 @@ export class I18n {
 		return lang in dictionaries;
 	}
 
-	load(lang: string) {
-		if (!this.isLanguage(lang)) {
-			console.warn(`[i18n] Invalid language: ${lang}`);
-			return false;
-		}
+	load(lang: string, persist = false) {
+        if (!this.isLanguage(lang)) return false;
 
-		this.lang = lang;
-		this.dict = dictionaries[lang];
-		this.updateDOM();
-		return true;
-	}
+        this.lang = lang;
+        this.dict = dictionaries[lang];
+        this.updateDOM();
+
+        if (persist) localStorage.setItem("lang", lang);
+        return true;
+    }
 
 	t(key: string, vars: Record<string, string | number> = {}) {
 		let value = this.dict[key];
@@ -65,6 +64,17 @@ export class I18n {
 					el.title = this.t(el.dataset.i18nTitle);
 			});
 	}
+
+    getPreferredLanguage(): Language {
+        const saved = localStorage.getItem("lang");
+        if (saved && this.isLanguage(saved)) return saved;
+
+        const nav = navigator.languages
+            ?.map((l) => l.slice(0, 2))
+            .find((l): l is Language => this.isLanguage(l));
+
+        return nav ?? this.lang;
+    }
 }
 
 export default new I18n();

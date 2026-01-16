@@ -9,7 +9,6 @@ import { SHAPES } from "./data/shapes";
 import { STATUS } from "./data/status";
 import { Logger } from "./logger";
 import i18n from "./i18n";
-import type { Language } from "./i18n";
 
 declare global {
 	interface Window {
@@ -45,36 +44,21 @@ Array.prototype.choose = function <T, K extends keyof T>(
 	return matches[randomIndex];
 };
 
-const game = new BlockGame();
-i18n.updateDOM();
+const lang = i18n.getPreferredLanguage();
+i18n.load(lang);
 
-const saved = localStorage.getItem("lang");
+const select = document.getElementById("i18n-btn") as HTMLSelectElement | null;
 
-const lang: Language =
-	(saved && i18n.isLanguage(saved) && saved) ||
-	navigator.languages
-		?.map((l) => l.slice(0, 2))
-		.find((l): l is Language => i18n.isLanguage(l)) ||
-	i18n.lang;
-
-if (lang !== i18n.lang) i18n.load(lang);
-
-const i18nBtn = document.getElementById("i18n-btn") as HTMLSelectElement;
-if (i18nBtn) i18nBtn.value = lang;
-
-if (i18nBtn) {
-	i18nBtn.addEventListener("change", (e: Event) => {
-		const target = e.target as HTMLSelectElement;
-		const newLang = target.value;
-		const success = i18n.load(newLang);
-		if (success) {
-			localStorage.setItem("lang", newLang);
-		} else {
-			alert(`Language "${newLang}" not available`);
-			target.value = i18n.lang;
+if (select) {
+	select.value = lang;
+	select.addEventListener("change", () => {
+		if (!i18n.load(select.value, true)) {
+			select.value = i18n.lang;
 		}
 	});
 }
+
+const game = new BlockGame();
 
 function toggleMuteFromPanel() {
 	soundManager.toggle();
