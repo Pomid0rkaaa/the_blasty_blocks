@@ -3,6 +3,7 @@ import { UIElements } from "../UI.js";
 import i18n from "../I18n.js";
 
 import type { IEnemy } from "../types";
+import type { Game } from "../Game.js";
 
 export const ENEMIES: IEnemy[] = [
     // Regular
@@ -17,9 +18,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 0.9,
         atkMod: 0.85,
         trackId: "toxic",
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.25) {
-                g.healEnemy(8);
+                g.enemy.HP += 8;
                 Logger.log(i18n.t("enemy.slime.ability"));
                 g.spawnFloatingText(
                     "REGEN",
@@ -40,9 +41,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 0.85,
         atkMod: 1.25,
         trackId: "magma",
-        ability: (g) => {
-            if (g.shield > 0) {
-                g.shield = Math.floor(g.shield * 0.6);
+        ability: (g: Game) => {
+            if (g.player.DEF > 0) {
+                g.player.DEF = Math.floor(g.player.DEF * 0.6);
                 Logger.log(i18n.t("enemy.magma.ability"));
                 g.spawnFloatingText(
                     "MELT",
@@ -63,8 +64,8 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 0.95,
         atkMod: 1.05,
         trackId: "void",
-        ability: (g) => {
-            g.hp -= 2;
+        ability: (g: Game) => {
+            g.player.HP -= 2;
             g.damageTakenThisFight += 2;
             Logger.log(i18n.t("enemy.void.ability"));
             g.spawnFloatingText(2, UIElements.player.hp_bar, "#a78bfa");
@@ -81,8 +82,8 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.25,
         atkMod: 0.8,
         trackId: "ice",
-        ability: (g) => {
-            g.enemyShield += 6;
+        ability: (g: Game) => {
+            g.enemy.DEF += 6;
             Logger.log(i18n.t("enemy.ice.ability"));
             g.spawnFloatingText(
                 "+6 DEF",
@@ -102,9 +103,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 0.95,
         atkMod: 1.1,
         trackId: "storm",
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.35) {
-                g.addStatus("player", "shock", 1);
+                g.player.status.add("shock", 1);
                 Logger.log(i18n.t("enemy.storm.ability"));
                 g.spawnFloatingText(
                     "SHOCK",
@@ -124,9 +125,9 @@ export const ENEMIES: IEnemy[] = [
         element: "earth",
         hpMod: 1.05,
         atkMod: 0.95,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.35) {
-                g.spawnRocks(2);
+                g.spawnRandom(2, "ROCK");
                 Logger.log(i18n.t("enemy.sand.ability"));
                 g.spawnFloatingText(
                     "SAND!",
@@ -146,8 +147,8 @@ export const ENEMIES: IEnemy[] = [
         element: "storm",
         hpMod: 0.9,
         atkMod: 1.15,
-        ability: (g) => {
-            g.enemyShield += 5;
+        ability: (g: Game) => {
+            g.enemy.DEF += 5;
             Logger.log(i18n.t("enemy.robot.ability"));
         },
     },
@@ -161,9 +162,9 @@ export const ENEMIES: IEnemy[] = [
         element: "poison",
         hpMod: 1.1,
         atkMod: 0.9,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.3) {
-                g.addStatus("player", "poison", 2);
+                g.player.status.add("poison", 2);
                 Logger.log(i18n.t("enemy.fungus.ability"));
                 g.spawnFloatingText(
                     "SPORES",
@@ -185,10 +186,10 @@ export const ENEMIES: IEnemy[] = [
         element: "earth",
         hpMod: 0.95,
         atkMod: 1.05,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.45) {
-                g.enemyShield += 4;
-                g.spawnRocks(1);
+                g.enemy.DEF += 4;
+                g.spawnRandom(1, "ROCK");
                 Logger.log(i18n.t("enemy.scarab.ability"));
             }
         },
@@ -203,7 +204,7 @@ export const ENEMIES: IEnemy[] = [
         element: "ice",
         hpMod: 0.92,
         atkMod: 1.0,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.35) {
                 g.freezeNextHand = Math.min(
                     2,
@@ -228,9 +229,9 @@ export const ENEMIES: IEnemy[] = [
         element: "fire",
         hpMod: 0.92,
         atkMod: 1.0,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.4) {
-                g.addStatus("player", "burn", 2);
+                g.player.status.add("burn", 2);
                 Logger.log(i18n.t("enemy.pyro.ability"));
                 g.spawnFloatingText(
                     "BURN",
@@ -250,10 +251,10 @@ export const ENEMIES: IEnemy[] = [
         element: "storm",
         hpMod: 1.0,
         atkMod: 0.95,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.28) {
-                g.spawnGarbage(2);
-                g.enemyShield += 3;
+                g.spawnRandom(2, "GARBAGE");
+                g.enemy.DEF += 3;
                 Logger.log(i18n.t("enemy.mechanist.ability"));
             }
         },
@@ -268,9 +269,9 @@ export const ENEMIES: IEnemy[] = [
         element: "void",
         hpMod: 0.8,
         atkMod: 1.0,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.45) {
-                g.addStatus("player", "weak", 1);
+                g.player.status.add("weak", 1);
                 Logger.log(i18n.t("enemy.wisp.ability.weak"));
                 g.spawnFloatingText(
                     "WEAK",
@@ -278,7 +279,7 @@ export const ENEMIES: IEnemy[] = [
                     "#60a5fa"
                 );
             } else if (Math.random() < 0.35) {
-                g.addStatus("player", "shock", 1);
+                g.player.status.add("shock", 1);
                 Logger.log(i18n.t("enemy.wisp.ability.shock"));
                 g.spawnFloatingText(
                     "SHOCK",
@@ -298,9 +299,9 @@ export const ENEMIES: IEnemy[] = [
         element: "earth",
         hpMod: 1.15,
         atkMod: 1.05,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.3) {
-                g.spawnGarbage(3);
+                g.spawnRandom(3, "GARBAGE");
                 Logger.log(i18n.t("enemy.brute.ability"));
                 g.spawnFloatingText(
                     "TRASH",
@@ -320,8 +321,8 @@ export const ENEMIES: IEnemy[] = [
         element: "void",
         hpMod: 0.95,
         atkMod: 0.9,
-        ability: (g) => {
-            g.enemyAttack = Math.ceil(g.enemyAttack * 1.06);
+        ability: (g: Game) => {
+            g.enemy.ATK = Math.ceil(g.enemy.ATK * 1.06);
             Logger.log(i18n.t("enemy.cultist.ability"));
             g.spawnFloatingText(
                 "CHANT",
@@ -340,11 +341,11 @@ export const ENEMIES: IEnemy[] = [
         element: "storm",
         hpMod: 0.9,
         atkMod: 1.0,
-        ability: (g) => {
-            if (Math.random() < 0.35 && g.shield > 0) {
-                const take = Math.min(8, g.shield);
-                g.shield -= take;
-                g.enemyShield += take;
+        ability: (g: Game) => {
+            if (Math.random() < 0.35 && g.player.DEF > 0) {
+                const take = Math.min(8, g.player.DEF);
+                g.player.DEF -= take;
+                g.enemy.DEF += take;
                 Logger.log(i18n.t("enemy.wardenling.ability", {take}));
                 g.spawnFloatingText(
                     "-SHD",
@@ -366,9 +367,9 @@ export const ENEMIES: IEnemy[] = [
         element: "void",
         hpMod: 0.78,
         atkMod: 1.35,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.35) {
-                g.addStatus("player", "weak", 1);
+                g.player.status.add("weak", 1);
                 Logger.log(i18n.t("enemy.assassin.ability"));
             }
         },
@@ -383,10 +384,10 @@ export const ENEMIES: IEnemy[] = [
         element: "poison",
         hpMod: 0.95,
         atkMod: 0.9,
-        ability: (g) => {
-            g.addStatus("player", "poison", 1);
+        ability: (g: Game) => {
+            g.player.status.add("poison", 1);
             if (Math.random() < 0.25)
-                g.addStatus("player", "poison", 1);
+                g.player.status.add("poison", 1);
             Logger.log(i18n.t("enemy.bloom.ability"));
         },
     },
@@ -400,10 +401,10 @@ export const ENEMIES: IEnemy[] = [
         element: "earth",
         hpMod: 1.1,
         atkMod: 0.9,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.5) {
-                g.spawnRocks(2);
-                g.enemyShield += 3;
+                g.spawnRandom(2, "ROCK");
+                g.enemy.DEF += 3;
                 Logger.log(i18n.t("enemy.mason.ability"));
             }
         },
@@ -418,14 +419,14 @@ export const ENEMIES: IEnemy[] = [
         element: "void",
         hpMod: 0.9,
         atkMod: 0.95,
-        ability: (g) => {
-            if (Math.random() < 0.35 && g.shield > 0) {
-                const cut = Math.min(10, g.shield);
-                g.shield -= cut;
+        ability: (g: Game) => {
+            if (Math.random() < 0.35 && g.player.DEF > 0) {
+                const cut = Math.min(10, g.player.DEF);
+                g.player.DEF -= cut;
                 Logger.log(i18n.t("enemy.seer.ability.shield"));
             }
             if (Math.random() < 0.3) {
-                g.addStatus("player", "shock", 1);
+                g.player.status.add("shock", 1);
                 Logger.log(i18n.t("enemy.seer.ability.shock"));
             }
         },
@@ -440,10 +441,10 @@ export const ENEMIES: IEnemy[] = [
         element: "light",
         hpMod: 1.0,
         atkMod: 0.95,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.35) {
-                g.enemyShield += 6;
-                g.healEnemy(6);
+                g.enemy.DEF += 6;
+                g.enemy.HP += 6;
                 Logger.log(i18n.t("enemy.paladin.ability"));
             }
         },
@@ -458,7 +459,7 @@ export const ENEMIES: IEnemy[] = [
         element: "ice",
         hpMod: 0.85,
         atkMod: 0.95,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.55) {
                 g.freezeNextHand = Math.min(
                     2,
@@ -480,9 +481,9 @@ export const ENEMIES: IEnemy[] = [
         element: "void",
         hpMod: 1.35,
         atkMod: 1.05,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.5) {
-                g.spawnRocks(3);
+                g.spawnRandom(3, "ROCK");
                 Logger.log(i18n.t("enemy.necro.ability"));
                 g.spawnFloatingText(
                     "CURSE",
@@ -502,9 +503,9 @@ export const ENEMIES: IEnemy[] = [
         element: "storm",
         hpMod: 1.25,
         atkMod: 1.2,
-        ability: (g) => {
-            g.enemyAttack = Math.floor(g.enemyAttack * 1.05);
-            g.addStatus("player", "shock", 1);
+        ability: (g: Game) => {
+            g.enemy.ATK = Math.floor(g.enemy.ATK * 1.05);
+            g.player.status.add("shock", 1);
             Logger.log(i18n.t("enemy.tempest.ability"));
         },
     },
@@ -518,8 +519,8 @@ export const ENEMIES: IEnemy[] = [
         element: "fire",
         hpMod: 1.2,
         atkMod: 1.25,
-        ability: (g) => {
-            g.addStatus("player", "burn", 2);
+        ability: (g: Game) => {
+            g.player.status.add("burn", 2);
             Logger.log(i18n.t("enemy.wyrm.ability"));
             g.spawnFloatingText(
                 "BURN",
@@ -538,7 +539,7 @@ export const ENEMIES: IEnemy[] = [
         element: "ice",
         hpMod: 1.45,
         atkMod: 0.95,
-        ability: (g) => {
+        ability: (g: Game) => {
             g.freezeNextHand = Math.min(2, g.freezeNextHand + 1);
             Logger.log(i18n.t("enemy.archon.ability"));
             g.spawnFloatingText(
@@ -558,13 +559,13 @@ export const ENEMIES: IEnemy[] = [
         element: "poison",
         hpMod: 1.35,
         atkMod: 1.05,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.5) {
-                g.addStatus("player", "poison", 2);
+                g.player.status.add("poison", 2);
                 Logger.log(i18n.t("enemy.hydra.ability.poison"));
             }
             if (Math.random() < 0.35) {
-                g.healEnemy(10);
+                g.enemy.HP += 10;
                 Logger.log(i18n.t("enemy.hydra.ability.regen"));
             }
         },
@@ -579,9 +580,9 @@ export const ENEMIES: IEnemy[] = [
         element: "earth",
         hpMod: 1.65,
         atkMod: 0.95,
-        ability: (g) => {
-            g.enemyShield += 8;
-            if (Math.random() < 0.4) g.spawnRocks(2);
+        ability: (g: Game) => {
+            g.enemy.DEF += 8;
+            if (Math.random() < 0.4) g.spawnRandom(2, "ROCK");
             Logger.log(i18n.t("enemy.colossus.ability"));
         },
     },
@@ -595,10 +596,10 @@ export const ENEMIES: IEnemy[] = [
         element: "void",
         hpMod: 1.35,
         atkMod: 1.15,
-        ability: (g) => {
-            g.spawnGarbage(3);
+        ability: (g: Game) => {
+            g.spawnRandom(3, "GARBAGE");
             if (Math.random() < 0.5)
-                g.addStatus("player", "weak", 1);
+                g.player.status.add("weak", 1);
             Logger.log(i18n.t("enemy.lich.ability"));
         },
     },
@@ -613,9 +614,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.55,
         atkMod: 1.0,
         trackId: "boss_ice",
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.5) {
-                g.spawnRocks(1);
+                g.spawnRandom(1, "ROCK");
                 Logger.log(i18n.t("enemy.kraken.ability.rocks"));
             }
             if (Math.random() < 0.35) {
@@ -638,9 +639,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.55,
         atkMod: 1.1,
         trackId: "boss_fire",
-        ability: (g) => {
-            g.addStatus("player", "burn", 2);
-            if (Math.random() < 0.45) g.spawnGarbage(2);
+        ability: (g: Game) => {
+            g.player.status.add("burn", 2);
+            if (Math.random() < 0.45) g.spawnRandom(2, "GARBAGE");
             Logger.log(i18n.t("enemy.dragon.ability"));
         },
     },
@@ -655,12 +656,12 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.35,
         atkMod: 1.05,
         trackId: "boss_void",
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.5) {
-                g.addStatus("player", "weak", 1);
+                g.player.status.add("weak", 1);
                 Logger.log(i18n.t("enemy.mirror.ability"));
             }
-            g.enemyShield += 6;
+            g.enemy.DEF += 6;
         },
     },
     {
@@ -674,9 +675,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.6,
         atkMod: 1.0,
         trackId: "boss_storm",
-        ability: (g) => {
-            g.enemyShield += 10;
-            if (Math.random() < 0.5) g.spawnGarbage(3);
+        ability: (g: Game) => {
+            g.enemy.DEF += 10;
+            if (Math.random() < 0.5) g.spawnRandom(3, "GARBAGE");
             Logger.log(i18n.t("enemy.warden.ability"));
         },
     },
@@ -693,10 +694,10 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.45,
         atkMod: 1.05,
         trackId: "boss_void",
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.55) {
-                g.addStatus("player", "weak", 1);
-                g.addStatus("player", "shock", 1);
+                g.player.status.add("weak", 1);
+                g.player.status.add("shock", 1);
                 Logger.log(i18n.t("enemy.oracle.ability"));
             }
         },
@@ -712,9 +713,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.55,
         atkMod: 1.0,
         trackId: "boss_poison",
-        ability: (g) => {
-            g.addStatus("player", "poison", 2);
-            if (Math.random() < 0.55) g.spawnGarbage(2);
+        ability: (g: Game) => {
+            g.player.status.add("poison", 2);
+            if (Math.random() < 0.55) g.spawnRandom(2, "GARBAGE");
             Logger.log(i18n.t("enemy.toxicqueen.ability"));
         },
     },
@@ -729,9 +730,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.8,
         atkMod: 0.95,
         trackId: "boss_earth",
-        ability: (g) => {
-            g.spawnRocks(3);
-            g.enemyShield += 6;
+        ability: (g: Game) => {
+            g.spawnRandom(3, "ROCK");
+            g.enemy.DEF += 6;
             Logger.log(i18n.t("enemy.behemoth.ability"));
         },
     },
@@ -746,9 +747,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.4,
         atkMod: 1.0,
         trackId: "boss_fire",
-        ability: (g) => {
-            g.healEnemy(14);
-            g.enemyShield += 8;
+        ability: (g: Game) => {
+            g.enemy.HP += 14;
+            g.enemy.DEF += 8;
             Logger.log(i18n.t("enemy.sunpriest.ability"));
         },
     },
@@ -763,7 +764,7 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.55,
         atkMod: 1.05,
         trackId: "boss_ice",
-        ability: (g) => {
+        ability: (g: Game) => {
             g.freezeNextHand = Math.min(2, g.freezeNextHand + 2);
             Logger.log(i18n.t("enemy.frostwyrm.ability"));
         },
@@ -796,8 +797,8 @@ export const ENEMIES: IEnemy[] = [
         element: "earth",
         hpMod: 1.3,
         atkMod: 0.8,
-        ability: (g) => {
-            g.enemyShield += 4;
+        ability: (g: Game) => {
+            g.enemy.DEF += 4;
             Logger.log(i18n.t("enemy.golem_sentry.ability"));
         },
     },
@@ -811,16 +812,16 @@ export const ENEMIES: IEnemy[] = [
         element: "fire",
         hpMod: 0.8,
         atkMod: 1.0,
-        ability: (g) => {
+        ability: (g: Game) => {
             const r = Math.random();
             if (r < 0.33) {
-                g.addStatus("player", "burn", 1);
+                g.player.status.add("burn", 1);
                 Logger.log(i18n.t("enemy.chaos_imp.ability.burn"));
             } else if (r < 0.66) {
-                g.spawnGarbage(1);
+                g.spawnRandom(1, "GARBAGE");
                 Logger.log(i18n.t("enemy.chaos_imp.ability.garbage"));
             } else {
-                g.enemyShield += 3;
+                g.enemy.DEF += 3;
                 Logger.log(i18n.t("enemy.chaos_imp.ability.shield"));
             }
         },
@@ -835,9 +836,9 @@ export const ENEMIES: IEnemy[] = [
         element: "earth",
         hpMod: 1.2,
         atkMod: 1.4,
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.2) {
-                g.gold = Math.max(0, g.gold - 5);
+                g.player.GOLD = Math.max(0, g.player.GOLD - 5);
                 Logger.log(i18n.t("enemy.mimic.ability"));
             }
         },
@@ -853,9 +854,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.8,
         atkMod: 0.8,
         trackId: "ethereal",
-        ability: (g) => {
+        ability: (g: Game) => {
             if (Math.random() < 0.4) {
-                g.addStatus("player", "weak", 2);
+                g.player.status.add("weak", 2);
                 Logger.log(i18n.t("enemy.void_whale.ability"));
             }
         },
@@ -873,9 +874,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.7,
         atkMod: 1.3,
         trackId: "boss_fire",
-        ability: (g) => {
-            g.addStatus("player", "burn", 3);
-            g.hp -= 3;
+        ability: (g: Game) => {
+            g.player.status.add("burn", 3);
+            g.player.HP -= 3;
             Logger.log(i18n.t("enemy.demon_lord.ability"));
         },
     },
@@ -890,8 +891,8 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 1.5,
         atkMod: 1.1,
         trackId: "boss_storm",
-        ability: (g) => {
-            g.addStatus("player", "shock", 2);
+        ability: (g: Game) => {
+            g.player.status.add("shock", 2);
             if (Math.random() < 0.2) {
                 g.discardsThisFight++;
                 Logger.log(i18n.t("enemy.quantum_core.ability"));
@@ -909,9 +910,9 @@ export const ENEMIES: IEnemy[] = [
         hpMod: 2.0,
         atkMod: 0.9,
         trackId: "boss_earth",
-        ability: (g) => {
-            g.healEnemy(15);
-            g.spawnRocks(2);
+        ability: (g: Game) => {
+            g.enemy.HP += 15;
+            g.spawnRandom(2, "ROCK");
             Logger.log(i18n.t("enemy.ancient_tree.ability"));
         },
     },
