@@ -9,9 +9,8 @@ import { Shop } from "./Shop";
 import { Rewards } from "./Rewards";
 import { Context } from "./Context";
 import { Enemy } from "./Enemy";
-import { EnemyContext } from "./EnemyContext";
 import { Player } from "./Player";
-import { PlayerContext } from "./PlayerContext";
+import { EntityContext } from "./EntityContext";
 import i18n from "./I18n";
 import type {
 	Artifact,
@@ -25,7 +24,7 @@ import type {
 export class Game {
     gridSize: number = 8;
     player!: Player;
-    playerContext: PlayerContext;
+    entityContext: EntityContext;
 	rewards: Rewards;
 	shop: Shop;
 	isMobile: boolean = false;
@@ -36,7 +35,6 @@ export class Game {
 	difficulty: Difficulty = "NORMAL";
 	artifacts: Artifact[] = [];
     enemy!: Enemy;
-    enemyContext: EnemyContext;
 	hand: (HandShape | null)[] = [];
 	draggedBlock: HandShape | null = null;
 	blocksPlaced: number = 0;
@@ -60,14 +58,13 @@ export class Game {
 	constructor() {
 		this.rewards = new Rewards(new Context(this));
 		this.shop = new Shop(new Context(this));
-        this.enemyContext = new EnemyContext(this);
-        this.playerContext = new PlayerContext(this);
+        this.entityContext = new EntityContext(this);
 		this.init();
 	}
 
 	resetRun() {
-        this.enemy = new Enemy(this.enemyContext);
-        this.player = new Player(this.playerContext);
+        this.enemy = new Enemy(this.entityContext);
+        this.player = new Player(this.entityContext);
 		this.isMobile = window.innerWidth < 950;
 		this.offsetY = this.isMobile ? -100 : 0;
 
@@ -425,7 +422,7 @@ export class Game {
 		UIElements.artifacts.innerHTML = "";
 		UIElements.affinity.innerHTML = "";
 		this.renderGrid();
-		this.enemy = new Enemy(this.enemyContext);
+		this.enemy = new Enemy(this.entityContext);
 		this.fillHand();
 		this.updateUI();
 		Logger.clear();
@@ -526,11 +523,11 @@ export class Game {
 		if (this.hazardMods.mask) this.applyMask(this.hazardMods.mask);
 
 		if (this.hazardMods.startRocks)
-			this.spawnRocks(this.hazardMods.startRocks);
+			this.spawnRandom(this.hazardMods.startRocks, "ROCK");
 		if (this.hazardMods.startGarbage)
-			this.spawnGarbage(this.hazardMods.startGarbage);
+			this.spawnRandom(this.hazardMods.startGarbage, "GARBAGE");
 		if (this.hazardMods.startMines)
-			this.spawnMines(this.hazardMods.startMines);
+			this.spawnRandom(this.hazardMods.startMines, "MINE");
 
 		if (this.hasArtifact("trowel")) {
 			const removed = this.removeRandomSpecificCells(
@@ -562,13 +559,13 @@ export class Game {
 		}
 
 		if (type === "shatter") {
-			const target = 10 + Math.floor(Math.random() * 6);
+			const target = Math.randInt(16,10);
 			let tries = 0;
 			let count = target;
 			while (count > 0 && tries < 400) {
 				tries++;
-				const r = Math.floor(Math.random() * this.gridSize);
-				const c = Math.floor(Math.random() * this.gridSize);
+				const r = Math.randInt(this.gridSize);
+				const c = Math.randInt(this.gridSize);
 				if (this.grid[r][c] === null) {
 					setMask(r, c);
 					count--;
@@ -630,43 +627,25 @@ export class Game {
 		}
 	}
 
-	spawnRocks(count: number) {
-		let tries = 0;
-		while (count > 0 && tries < 400) {
-			tries++;
-			const r = Math.floor(Math.random() * this.gridSize);
-			const c = Math.floor(Math.random() * this.gridSize);
-			if (this.grid[r][c] === null) {
-				this.grid[r][c] = "ROCK";
-				this.setCellClass(r, c, "cell rock");
-				count--;
-			}
-		}
+	randPos(): { r: number; c: number } {
+		return {
+			r: Math.randInt(this.gridSize),
+			c: Math.randInt(this.gridSize),
+		};
 	}
-
-	spawnGarbage(count: number) {
+	spawnRandom(
+		count: number,
+		value: "ROCK" | "GARBAGE" | "MINE"
+	) {
 		let tries = 0;
+
 		while (count > 0 && tries < 500) {
 			tries++;
-			const r = Math.floor(Math.random() * this.gridSize);
-			const c = Math.floor(Math.random() * this.gridSize);
-			if (this.grid[r][c] === null) {
-				this.grid[r][c] = "GARBAGE";
-				this.setCellClass(r, c, "cell garbage");
-				count--;
-			}
-		}
-	}
+			const { r, c } = this.randPos();
 
-	spawnMines(count: number) {
-		let tries = 0;
-		while (count > 0 && tries < 500) {
-			tries++;
-			const r = Math.floor(Math.random() * this.gridSize);
-			const c = Math.floor(Math.random() * this.gridSize);
 			if (this.grid[r][c] === null) {
-				this.grid[r][c] = "MINE";
-				this.setCellClass(r, c, "cell mine");
+				this.grid[r][c] = value;
+				this.setCellClass(r, c, `cell ${value.toLowerCase()}`);
 				count--;
 			}
 		}
@@ -682,7 +661,7 @@ export class Game {
 		}
 		let removed = 0;
 		for (let i = 0; i < count && filled.length > 0; i++) {
-			const idx = Math.floor(Math.random() * filled.length);
+			const idx = Math.randInt(filled.length);
 			const [r, c] = filled.splice(idx, 1)[0];
 			this.grid[r][c] = null;
 			this.setCellClass(r, c, "cell");
@@ -700,7 +679,7 @@ export class Game {
 			}
 		}
 		for (let i = 0; i < count && filled.length > 0; i++) {
-			const idx = Math.floor(Math.random() * filled.length);
+			const idx = Math.randInt(filled.length);
 			const [r, c] = filled.splice(idx, 1)[0];
 			this.grid[r][c] = null;
 			this.setCellClass(r, c, "cell");
@@ -1732,7 +1711,7 @@ export class Game {
 			}
 		}
 
-		this.enemy = new Enemy(this.enemyContext);
+		this.enemy = new Enemy(this.entityContext);
 
         const isBossFloor = this.level % 5 === 0;
 		UIElements.enemy.label.textContent = i18n.t(`label.${isBossFloor ? "boss" : "enemy"}`)
@@ -1798,7 +1777,7 @@ export class Game {
 		) {
 			this.resizeGrid(this.hazardMods.gridSize, this.hazardMods.cellSize);
 			Logger.log(
-				i18n.t("boon.this.gridSize", { size: this.hazardMods.gridSize })
+				i18n.t("boon.grid_size", { size: this.hazardMods.gridSize })
 			);
 		}
 
