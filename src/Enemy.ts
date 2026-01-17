@@ -1,10 +1,10 @@
 import { ENEMIES } from "./data/enemies";
 import { StatusContainer, ENEMY_STATUSES } from "./StatusContainer";
-import type { EnemyContext } from "./EnemyContext";
+import type { EntityContext } from "./EntityContext";
 import type { EnemyStatus, IEnemy } from "./types";
 
 export class Enemy {
-	private ctx: EnemyContext;
+	private ctx: EntityContext;
 
 	private hp = 10;
 	private max_hp = 10;
@@ -14,7 +14,7 @@ export class Enemy {
 	public readonly template: IEnemy;
 	public readonly status: StatusContainer<EnemyStatus>;
 
-	constructor(ctx: EnemyContext) {
+	constructor(ctx: EntityContext) {
 		this.ctx = ctx;
 
 		const { template, status } = this.spawn();
@@ -27,9 +27,10 @@ export class Enemy {
 	public get DEF() { return this.def; }
 	public get ATK() { return this.atk; }
 	public get ability() { return this.template.ability; }
-
+    
 	public set HP(amount: number) { this.hp = Math.max(0, Math.min(amount, this.max_hp)); }
 	public set DEF(amount: number) { this.def = Math.max(0, amount); }
+	public set ATK(amount: number) { this.atk = Math.max(0, amount); }
 
 	private chooseEnemyTemplate(): IEnemy {
 		const isBossFloor = this.ctx.level % 5 === 0;
