@@ -810,21 +810,17 @@ export class Game {
 					}
 
 					const shape =
-						validShapesCache[
-							Math.floor(Math.random() * validShapesCache.length)
-						];
+						validShapesCache[Math.randInt(validShapesCache.length)];
 
 					return {
 						...shape,
-						color: COLORS[
-							Math.floor(Math.random() * COLORS.length)
-						],
+						color: COLORS[Math.randInt(COLORS.length)],
 					};
 				}
 
 				return {
 					name: "random",
-					color: COLORS[Math.floor(Math.random() * COLORS.length)],
+					color: COLORS[Math.randInt(COLORS.length)],
 					layout: generateRandomLayout(),
 				};
 			}
@@ -839,12 +835,10 @@ export class Game {
 						validShapesCache = [...SHAPES];
 				}
 
-				return validShapesCache[
-					Math.floor(Math.random() * validShapesCache.length)
-				];
+				return validShapesCache[Math.randInt(validShapesCache.length)];
 			}
 
-			return SHAPES[Math.floor(Math.random() * SHAPES.length)];
+			return SHAPES[Math.randInt(SHAPES.length)];
 		};
 
 		for (let i = 0; i < size; i++) {
@@ -1661,7 +1655,7 @@ export class Game {
 				.map((b, i) => (b ? i : -1))
 				.filter((i) => i !== -1);
 			if (indices.length > 0) {
-				const idx = indices[Math.floor(Math.random() * indices.length)];
+				const idx = indices[Math.randInt(indices.length)];
 				const item = this.hand[idx];
 				if (item) {
 					const el = item.domElement;
@@ -1726,7 +1720,7 @@ export class Game {
 			if (Math.random() < 0.15) {
 				const ids = Object.keys(soundManager.tracks);
 				soundManager.setTrack(
-					ids[Math.floor(Math.random() * ids.length)]
+					ids[Math.randInt(ids.length)]
 				);
 			} else {
 				soundManager.setTrack(track);
@@ -1755,7 +1749,7 @@ export class Game {
             const activeStatuses = this.player.status.activeEntries();
             if (activeStatuses.length > 0) {
                 const status =
-                activeStatuses[Math.floor(Math.random() * activeStatuses.length)];
+                activeStatuses[Math.randInt(activeStatuses.length)];
                 this.player.status.decay(status[0]);
                 Logger.log(i18n.t("artifact.halo.use"));
             }
