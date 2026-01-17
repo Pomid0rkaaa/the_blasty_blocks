@@ -1,47 +1,8 @@
 import { Game } from "./Game";
 import { soundManager } from "./SoundManager";
-import { ARTIFACTS } from "./data/artifacts";
-import { ELEMENTS } from "./data/elements";
-import { ENEMIES } from "./data/enemies";
-import { HAZARDS } from "./data/hazards";
-import { SHAPES } from "./data/shapes";
-import { STATUS } from "./data/status";
 import { Logger } from "./Logger";
 import i18n from "./I18n";
-
-declare global {
-	interface Window {
-		game: Game;
-		soundManager: any;
-		Logger: typeof Logger;
-		data: any;
-	}
-	interface Array<T> {
-		choose<K extends keyof T>(
-			criteria: Partial<Record<K, T[K]>>
-		): T | undefined;
-		chooseAll<K extends keyof T>(criteria: Partial<Record<K, T[K]>>): T[];
-	}
-}
-
-Array.prototype.chooseAll = function <T, K extends keyof T>(
-	criteria: Partial<Record<K, T[K]>>
-): T[] {
-	return this.filter((item) =>
-		Object.entries(criteria).every(
-			([key, value]) => item[key as K] === value
-		)
-	);
-};
-
-Array.prototype.choose = function <T, K extends keyof T>(
-	criteria: Partial<Record<K, T[K]>>
-): T | undefined {
-	const matches = (this as T[]).chooseAll(criteria); // cast `this` so TS knows it has chooseAll
-	if (matches.length === 0) return undefined;
-	const randomIndex = Math.floor(Math.random() * matches.length);
-	return matches[randomIndex];
-};
+import "./helpers";
 
 const lang = i18n.getPreferredLanguage();
 i18n.load(lang);
@@ -122,17 +83,3 @@ document.addEventListener("mouseover", (e: MouseEvent) => {
 		soundManager.play("hover");
 	}
 });
-
-// Game manipulation from DevTools
-window.game = game;
-window.soundManager = soundManager;
-window.Logger = Logger;
-
-window.data = {
-	ARTIFACTS,
-	ELEMENTS,
-	ENEMIES,
-	HAZARDS,
-	SHAPES,
-	STATUS,
-};
