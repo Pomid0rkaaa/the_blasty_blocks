@@ -30,7 +30,7 @@ body {
 :root {
 	--cell-size: 36px;
 	--grid-gap: 4px;
-    --grid-size: 8;
+	--grid-size: 8;
 	--bg-color: #0f172a;
 	--ui-bg: #1e293b;
 	--accent-color: #3b82f6;
@@ -90,7 +90,7 @@ main {
 .cell {
 	width: var(--cell-size);
 	height: var(--cell-size);
-	background-color: #334155;
+	background: #334155;
 	border-radius: 6px;
 	transition: background-color 0.2s, transform 0.1s, filter 0.2s;
 	border: 1px solid rgba(255, 255, 255, 0.06);
@@ -120,6 +120,14 @@ main {
 .mini-cell[class*="bg-"] {
 	filter: var(--block-filter);
 	outline: rgba(255, 255, 255, 0.1) solid 1px;
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background: var(--cell-skin);
+		pointer-events: none;
+	}
 }
 
 .cell.maskrock {
@@ -294,16 +302,16 @@ main {
 	height: 40px;
 	font-size: 14px;
 	display: flex;
-    align-items: center;
-    justify-content: center;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    text-align: center;
-    &:focus {
-        outline: none;
-        border-color: #fff;
-    }
+	align-items: center;
+	justify-content: center;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	text-align: center;
+	&:focus {
+		outline: none;
+		border-color: #fff;
+	}
 }
 
 select.icon-btn::-moz-focus-inner {
