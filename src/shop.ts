@@ -1,9 +1,9 @@
 import { SHOP_ITEMS } from "./data/shopItems";
 import { ARTIFACTS } from "./data/artifacts";
-import { soundManager } from "./SoundManager";
-import { Logger } from "./Logger";
-import { UIElements } from "./UI";
-import i18n from "./I18n";
+import { soundManager } from "./soundManager";
+import { Logger } from "./logger";
+import { UIElements } from "./ui";
+import i18n from "./i18n";
 
 export class Shop {
 	ctx: any;

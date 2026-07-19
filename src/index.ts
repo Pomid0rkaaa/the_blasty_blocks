@@ -1,7 +1,7 @@
-import { Game } from "./Game";
-import { soundManager } from "./SoundManager";
-import { Logger } from "./Logger";
-import i18n from "./I18n";
+import { Game } from "./game";
+import { soundManager } from "./moundManager";
+import { Logger } from "./logger";
+import i18n from "./i18n";
 import "./helpers";
 
 const lang = i18n.getPreferredLanguage();

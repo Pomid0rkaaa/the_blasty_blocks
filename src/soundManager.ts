@@ -1,5 +1,5 @@
 import { TRACKS } from "./data/tracks";
-import { UIElements } from "./UI";
+import { UIElements } from "./ui";
 import type { Track } from "./types";
 
 export class SoundManager {

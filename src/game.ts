@@ -2,16 +2,16 @@ import { ELEMENTS } from "./data/elements";
 import { HAZARDS } from "./data/hazards";
 import { SHAPES } from "./data/shapes";
 import { STATUS } from "./data/status";
-import { soundManager } from "./SoundManager";
-import { UI, UIElements } from "./UI";
-import { Logger } from "./Logger";
-import { Shop } from "./Shop";
-import { Rewards } from "./Rewards";
-import { Context } from "./Context";
-import { Enemy } from "./Enemy";
-import { Player } from "./Player";
-import { EntityContext } from "./EntityContext";
-import i18n from "./I18n";
+import { soundManager } from "./soundManager";
+import { UI, UIElements } from "./ui";
+import { Logger } from "./logger";
+import { Shop } from "./shop";
+import { Rewards } from "./rewards";
+import { Context } from "./context";
+import { Enemy } from "./enemy";
+import { Player } from "./player";
+import { EntityContext } from "./entityContext";
+import i18n from "./i18n";
 import type {
 	Artifact,
 	Hazard,

@@ -1,4 +1,4 @@
-import { UIElements } from "./UI";
+import { UIElements } from "./ui";
 
 export class Logger {
 

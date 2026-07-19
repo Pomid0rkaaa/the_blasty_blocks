@@ -6,4 +6,7 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
   ],
+  resolve: {
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
+  }
 })

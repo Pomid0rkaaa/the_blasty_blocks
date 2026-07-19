@@ -1,6 +1,6 @@
 import { ENEMIES } from "./data/enemies";
 import { StatusContainer, ENEMY_STATUSES } from "./StatusContainer";
-import type { EntityContext } from "./EntityContext";
+import type { EntityContext } from "./entityContext";
 import type { EnemyStatus, IEnemy } from "./types";
 
 export class Enemy {

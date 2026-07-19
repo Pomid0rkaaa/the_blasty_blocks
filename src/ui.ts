@@ -1,7 +1,7 @@
 import { STATUS } from './data/status';
 import { ELEMENTS } from './data/elements';
-import i18n from './I18n';
-import type { Game } from './Game';
+import i18n from './i18n';
+import type { Game } from './game';
 
 const id = (value: string) => document.getElementById(value);
 

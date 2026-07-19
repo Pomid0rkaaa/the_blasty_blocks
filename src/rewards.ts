@@ -1,8 +1,8 @@
 import type { Artifact, Reward } from "./types";
 import { ARTIFACTS } from "./data/artifacts";
-import { soundManager } from "./SoundManager";
+import { soundManager } from "./soundManager";
 import { REWARDS } from "./data/rewards";
-import i18n from "./I18n";
+import i18n from "./i18n";
 
 export class Rewards {
 	ctx: any;

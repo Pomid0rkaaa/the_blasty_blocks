@@ -1,4 +1,4 @@
-import type { Game } from "./Game";
+import type { Game } from "./game";
 
 export class Context {
     private game: Game;

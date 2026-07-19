@@ -1,5 +1,5 @@
-import { StatusContainer, PLAYER_STATUSES } from "./StatusContainer";
-import type { EntityContext } from "./EntityContext";
+import { StatusContainer, PLAYER_STATUSES } from "./statusContainer";
+import type { EntityContext } from "./entityContext";
 import type { PlayerStatus } from "./types";
 
 export class Player {
