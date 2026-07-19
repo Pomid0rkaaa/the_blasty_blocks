@@ -1,5 +1,5 @@
 import { Game } from "./game";
-import { soundManager } from "./moundManager";
+import { soundManager } from "./soundManager";
 import { Logger } from "./logger";
 import i18n from "./i18n";
 import "./helpers";

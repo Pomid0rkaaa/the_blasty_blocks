@@ -1,9 +1,9 @@
-import { Logger } from "../Logger.js";
-import { UIElements } from "../UI.js";
-import i18n from "../I18n.js";
+import { Logger } from "../logger.js";
+import { UIElements } from "../ui.js";
+import i18n from "../i18n.js";
 
 import type { IEnemy } from "../types";
-import type { Game } from "../Game.js";
+import type { Game } from "../game.js";
 
 export const ENEMIES: IEnemy[] = [
     // Regular

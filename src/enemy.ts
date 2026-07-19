@@ -1,5 +1,5 @@
 import { ENEMIES } from "./data/enemies";
-import { StatusContainer, ENEMY_STATUSES } from "./StatusContainer";
+import { StatusContainer, ENEMY_STATUSES } from "./statusContainer";
 import type { EntityContext } from "./entityContext";
 import type { EnemyStatus, IEnemy } from "./types";
 
